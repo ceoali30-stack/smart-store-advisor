@@ -1,12 +1,16 @@
-export default function Home() {
-  return (
-    <main style={{ fontFamily: "Arial", padding: "60px", direction: "ltr" }}>
-      <h1>Smart Store Advisor</h1>
-      <p>
-        AI-powered analytics app for Salla merchants to identify slow-moving
-        products, top-performing products, and smart sales opportunities.
-      </p>
-      <p>Status: MVP under development.</p>
-    </main>
-  );
+{
+  "name": "smart-store-advisor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "@supabase/supabase-js": "latest"
+  }
 }
