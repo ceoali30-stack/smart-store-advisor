@@ -9,8 +9,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    console.log("SALLA WEBHOOK DATA:");
-    console.log(JSON.stringify(body, null, 2));
+    console.log("SALLA WEBHOOK DATA:", JSON.stringify(body, null, 2));
 
     const merchantId =
       body.merchant ||
@@ -38,24 +37,19 @@ export async function POST(request) {
 
     console.log("PARSED DATA:", {
       merchantId,
-      accessToken,
-      refreshToken,
+      hasAccessToken: Boolean(accessToken),
+      hasRefreshToken: Boolean(refreshToken),
       expiresAt,
     });
 
     const { data, error } = await supabase
       .from("merchants")
-      .upsert(
-        {
-          merchant_id: merchantId ? String(merchantId) : null,
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          expires_at: expiresAt,
-        },
-        {
-          onConflict: "merchant_id",
-        }
-      )
+      .insert({
+        merchant_id: merchantId ? String(merchantId) : null,
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_at: expiresAt,
+      })
       .select();
 
     if (error) {
@@ -73,7 +67,6 @@ export async function POST(request) {
 
     return Response.json({
       success: true,
-      received: body,
       saved: data,
     });
   } catch (error) {
