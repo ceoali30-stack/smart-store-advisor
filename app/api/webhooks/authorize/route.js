@@ -11,64 +11,33 @@ export async function POST(request) {
 
     console.log("SALLA WEBHOOK DATA:", JSON.stringify(body, null, 2));
 
-    const merchantId =
-      body.merchant ||
-      body.merchant_id ||
-      body.data?.merchant ||
-      body.data?.merchant_id ||
-      null;
-
-    const accessToken =
-      body.access_token ||
-      body.data?.access_token ||
-      body.token?.access_token ||
-      null;
-
-    const refreshToken =
-      body.refresh_token ||
-      body.data?.refresh_token ||
-      body.token?.refresh_token ||
-      null;
-
-    const expiresAt =
-      body.expires_at ||
-      body.data?.expires_at ||
-      null;
-
-    console.log("PARSED DATA:", {
-      merchantId,
-      hasAccessToken: Boolean(accessToken),
-      hasRefreshToken: Boolean(refreshToken),
-      expiresAt,
-    });
-
-   const { data, error } = await supabase
-  .from("merchants")
-  .insert([
-    {
-      merchant_id: merchantId ? String(merchantId) : null,
-      access_token: accessToken,
-      refresh_token: refreshToken
-    }
-  ])
-  .select();
+    const { data, error } = await supabase
+      .from("merchants")
+      .insert([
+        {
+          merchant_id: "test_merchant",
+          access_token: "test_access_token",
+          refresh_token: "test_refresh_token"
+        }
+      ])
+      .select();
 
     if (error) {
       console.error("SUPABASE INSERT ERROR:", error);
+
       return Response.json(
         {
           success: false,
-          error: error.message,
+          message: "Supabase insert failed",
+          error
         },
         { status: 500 }
       );
     }
 
-    console.log("SUPABASE INSERT SUCCESS:", data);
-
     return Response.json({
       success: true,
-      saved: data,
+      inserted: data
     });
   } catch (error) {
     console.error("WEBHOOK ERROR:", error);
@@ -76,16 +45,9 @@ export async function POST(request) {
     return Response.json(
       {
         success: false,
-        error: error.message,
+        error: error.message
       },
       { status: 500 }
     );
   }
-}
-
-export async function GET() {
-  return Response.json({
-    success: true,
-    message: "Authorize webhook is working",
-  });
 }
