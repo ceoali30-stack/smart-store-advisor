@@ -129,17 +129,16 @@ export async function POST(request) {
       ? new Date(expiresAtRaw).toISOString()
       : null;
 
-    const { error } = await supabase.from("merchants").upsert(
-      {
-        merchant_id: merchantId ? String(merchantId) : null,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        expires_at: expiresAt,
-      },
-      {
-        onConflict: "merchant_id",
-      }
-    );
+    const { data: insertedMerchant, error } = await supabase
+  .from("merchants")
+  .insert({
+    merchant_id: merchantId ? String(merchantId) : null,
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_at: expiresAt,
+  })
+  .select()
+  .single();
 
     if (error) {
       console.error("SUPABASE INSERT ERROR:", error);
@@ -153,11 +152,12 @@ export async function POST(request) {
       );
     }
 
-    return Response.json({
-      success: true,
-      saved: true,
-      merchant_id: merchantId,
-    });
+   return Response.json({
+  success: true,
+  saved: true,
+  merchant_id: merchantId,
+  inserted: insertedMerchant,
+});
   } catch (error) {
     console.error("WEBHOOK ERROR:", error);
 
