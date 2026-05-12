@@ -42,15 +42,16 @@ export async function POST(request) {
       expiresAt,
     });
 
-    const { data, error } = await supabase
-      .from("merchants")
-      .insert({
-        merchant_id: merchantId ? String(merchantId) : null,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        expires_at: expiresAt,
-      })
-      .select();
+   const { data, error } = await supabase
+  .from("merchants")
+  .insert([
+    {
+      merchant_id: merchantId ? String(merchantId) : null,
+      access_token: accessToken,
+      refresh_token: refreshToken
+    }
+  ])
+  .select();
 
     if (error) {
       console.error("SUPABASE INSERT ERROR:", error);
