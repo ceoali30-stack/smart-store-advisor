@@ -33,15 +33,18 @@ export async function POST(request) {
       null;
 
     const { data, error } = await supabase
-      .from("merchants")
-      .insert([
-        {
-          merchant_id: merchantId ? String(merchantId) : null,
-          access_token: accessToken,
-          refresh_token: refreshToken
-        }
-      ])
-      .select();
+  .from("merchants")
+  .upsert(
+    {
+      merchant_id: merchantId ? String(merchantId) : null,
+      access_token: accessToken,
+      refresh_token: refreshToken
+    },
+    {
+      onConflict: "merchant_id"
+    }
+  )
+  .select();
 
     if (error) {
       console.error("SUPABASE INSERT ERROR:", error);
