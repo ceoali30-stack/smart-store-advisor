@@ -1,4 +1,6 @@
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }) {
+  const merchantId = searchParams?.merchant_id || "210819854";
+
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://smart-store-advisor.vercel.app";
 
@@ -6,7 +8,7 @@ export default async function DashboardPage() {
   let error = null;
 
   try {
-    const res = await fetch(`${baseUrl}/api/dashboard?merchant_id=210819854`, {
+    const res = await fetch(`${baseUrl}/api/dashboard?merchant_id=${merchantId}`, {
       cache: "no-store",
     });
 
@@ -23,7 +25,10 @@ export default async function DashboardPage() {
     return (
       <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
         <h1>Smart Store Advisor</h1>
-        <p style={{ color: "red" }}>Error: {error}</p>
+
+        <MerchantLinks />
+
+        <p style={{ color: "red", marginTop: "30px" }}>Error: {error}</p>
       </main>
     );
   }
@@ -39,12 +44,15 @@ export default async function DashboardPage() {
     >
       <h1 style={{ marginBottom: "10px" }}>Smart Store Advisor Dashboard</h1>
 
-      <p style={{ marginBottom: "30px", color: "#555" }}>
+      <p style={{ marginBottom: "20px", color: "#555" }}>
         AI-powered analytics for Salla merchants.
       </p>
 
+      <MerchantLinks />
+
       <div
         style={{
+          marginTop: "30px",
           display: "grid",
           gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
           gap: "16px",
@@ -77,6 +85,31 @@ export default async function DashboardPage() {
         />
       </section>
     </main>
+  );
+}
+
+function MerchantLinks() {
+  const merchants = ["210819854", "905561820", "174453729"];
+
+  return (
+    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+      {merchants.map((id) => (
+        <a
+          key={id}
+          href={`/dashboard?merchant_id=${id}`}
+          style={{
+            background: "#111827",
+            color: "white",
+            padding: "10px 14px",
+            borderRadius: "10px",
+            textDecoration: "none",
+            fontSize: "14px",
+          }}
+        >
+          Store {id}
+        </a>
+      ))}
+    </div>
   );
 }
 
