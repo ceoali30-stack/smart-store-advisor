@@ -120,6 +120,9 @@ export default async function DashboardPage({ searchParams }) {
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
               Quantity
             </th>
+                <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+  Status
+</th>
           </tr>
         </thead>
 
@@ -145,6 +148,16 @@ export default async function DashboardPage({ searchParams }) {
               >
                 {product.quantity ?? "-"}
               </td>
+                <td
+  style={{
+    padding: "12px",
+    borderBottom: "1px solid #eee",
+    fontWeight: "700",
+    color: Number(product.quantity) === 0 ? "#dc2626" : "#b45309",
+  }}
+>
+  {Number(product.quantity) === 0 ? "Out of Stock" : "Low Stock"}
+</td>
             </tr>
           ))}
         </tbody>
