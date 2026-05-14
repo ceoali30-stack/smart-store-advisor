@@ -220,6 +220,70 @@ export default async function DashboardPage({ searchParams }) {
     </p>
   )}
 </section>
+    <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    Action Required
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(250px, 1fr))",
+      gap: "16px",
+    }}
+  >
+    <div
+      style={{
+        background: "#fef2f2",
+        border: "1px solid #fecaca",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
+        Immediate Restocking
+      </p>
+      <h3 style={{ margin: "8px 0", fontSize: "24px", color: "#dc2626" }}>
+        {data.low_stock_products.filter(
+          (product) => Number(product.quantity) === 0
+        ).length}
+      </h3>
+      <p style={{ margin: 0, color: "#7f1d1d", fontSize: "14px" }}>
+        Products are out of stock and should be restocked immediately.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#fffbeb",
+        border: "1px solid #fde68a",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        Review Soon
+      </p>
+      <h3 style={{ margin: "8px 0", fontSize: "24px", color: "#b45309" }}>
+        {data.low_stock_products.filter(
+          (product) =>
+            Number(product.quantity) > 0 && Number(product.quantity) <= 3
+        ).length}
+      </h3>
+      <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
+        Products are running low and should be reviewed within 24–48 hours.
+      </p>
+    </div>
+  </div>
+</section>
     </main>
   );
 }
