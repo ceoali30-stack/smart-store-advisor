@@ -61,24 +61,31 @@ export async function GET(request) {
     const highestPriceProduct = sortedByPrice[0] || null;
     const lowestPriceProduct = sortedByPrice[sortedByPrice.length - 1] || null;
 
-    return Response.json({
-      success: true,
-      merchant_id: merchantId,
-      total_products: totalProducts,
-      average_price: Number(averagePrice.toFixed(2)),
-      low_stock_products_count: lowStockProducts.length,
-      highest_price_product: highestPriceProduct
-        ? {
-            name: highestPriceProduct.name,
-            price: Number(highestPriceProduct.price)
-          }
-        : null,
-      lowest_price_product: lowestPriceProduct
-        ? {
-            name: lowestPriceProduct.name,
-            price: Number(lowestPriceProduct.price)
-          }
-        : null
+return Response.json({
+  success: true,
+  merchant_id: merchantId,
+  total_products: totalProducts,
+  average_price: Number(averagePrice.toFixed(2)),
+  low_stock_products_count: lowStockProducts.length,
+  low_stock_products: lowStockProducts.map((product) => ({
+    id: product.salla_product_id,
+    name: product.name,
+    price: Number(product.price),
+    quantity: Number(product.quantity),
+  })),
+  highest_price_product: highestPriceProduct
+    ? {
+        name: highestPriceProduct.name,
+        price: Number(highestPriceProduct.price),
+      }
+    : null,
+  lowest_price_product: lowestPriceProduct
+    ? {
+        name: lowestPriceProduct.name,
+        price: Number(lowestPriceProduct.price),
+      }
+    : null,
+});
     });
   } catch (error) {
     console.error("DASHBOARD API ERROR:", error);
