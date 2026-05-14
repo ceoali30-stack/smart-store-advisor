@@ -98,6 +98,56 @@ export default async function DashboardPage({ searchParams }) {
   </h2>
 
   {data.low_stock_products && data.low_stock_products.length > 0 ? (
+    <>
+    <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(180px, 1fr))",
+    gap: "12px",
+    marginBottom: "18px",
+  }}
+>
+  <div
+    style={{
+      background: "#fef2f2",
+      padding: "16px",
+      borderRadius: "12px",
+      border: "1px solid #fecaca",
+    }}
+  >
+    <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
+      Out of Stock
+    </p>
+    <h3 style={{ margin: "8px 0 0", color: "#dc2626", fontSize: "26px" }}>
+      {
+        data.low_stock_products.filter(
+          (product) => Number(product.quantity) === 0
+        ).length
+      }
+    </h3>
+  </div>
+
+  <div
+    style={{
+      background: "#fffbeb",
+      padding: "16px",
+      borderRadius: "12px",
+      border: "1px solid #fde68a",
+    }}
+  >
+    <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+      Low Stock
+    </p>
+    <h3 style={{ margin: "8px 0 0", color: "#b45309", fontSize: "26px" }}>
+      {
+        data.low_stock_products.filter(
+          (product) =>
+            Number(product.quantity) > 0 && Number(product.quantity) <= 3
+        ).length
+      }
+    </h3>
+  </div>
+</div>
     <div style={{ overflowX: "auto" }}>
       <table
         style={{
@@ -163,6 +213,7 @@ export default async function DashboardPage({ searchParams }) {
         </tbody>
       </table>
     </div>
+</>
   ) : (
     <p style={{ margin: 0, color: "#666" }}>
       No low stock products found.
