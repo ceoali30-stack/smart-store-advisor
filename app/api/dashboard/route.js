@@ -84,19 +84,18 @@ return Response.json({
         name: lowestPriceProduct.name,
         price: Number(lowestPriceProduct.price),
       }
-    : null,
-});
-    });
-  } catch (error) {
-    console.error("DASHBOARD API ERROR:", error);
+         : null,
+  });
+} catch (error) {
+  console.error("DASHBOARD API ERROR:", error);
 
-    return Response.json(
-      {
-        success: false,
-        message: "Unexpected server error",
-        error: String(error)
-      },
-      { status: 500 }
-    );
-  }
+  return Response.json(
+    {
+      success: false,
+      message: "Unexpected server error",
+      error: String(error)
+    },
+    { status: 500 }
+  );
+}
 }
