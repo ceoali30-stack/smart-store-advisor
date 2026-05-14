@@ -84,6 +84,78 @@ export default async function DashboardPage({ searchParams }) {
           price={data.lowest_price_product?.price}
         />
       </section>
+          <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    Low Stock Products
+  </h2>
+
+  {data.low_stock_products && data.low_stock_products.length > 0 ? (
+    <div style={{ overflowX: "auto" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          fontSize: "14px",
+        }}
+      >
+        <thead>
+          <tr style={{ background: "#f3f4f6", textAlign: "left" }}>
+            <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+              Product ID
+            </th>
+            <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+              Product Name
+            </th>
+            <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+              Price
+            </th>
+            <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+              Quantity
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {data.low_stock_products.map((product) => (
+            <tr key={product.id}>
+              <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
+                {product.id}
+              </td>
+              <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
+                {product.name || "-"}
+              </td>
+              <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
+                {product.price ?? "-"} SAR
+              </td>
+              <td
+                style={{
+                  padding: "12px",
+                  borderBottom: "1px solid #eee",
+                  fontWeight: "700",
+                  color: Number(product.quantity) === 0 ? "#dc2626" : "#b45309",
+                }}
+              >
+                {product.quantity ?? "-"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <p style={{ margin: 0, color: "#666" }}>
+      No low stock products found.
+    </p>
+  )}
+</section>
     </main>
   );
 }
