@@ -106,7 +106,59 @@ const filteredLowStockProducts =
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     Low Stock Products
   </h2>
+<div
+  style={{
+    display: "flex",
+    gap: "10px",
+    marginBottom: "16px",
+    flexWrap: "wrap",
+  }}
+>
+  <a
+    href="?stock=all"
+    style={{
+      padding: "8px 14px",
+      borderRadius: "999px",
+      textDecoration: "none",
+      background: stockFilter === "all" ? "#111827" : "#f3f4f6",
+      color: stockFilter === "all" ? "white" : "#111827",
+      fontWeight: "600",
+      fontSize: "14px",
+    }}
+  >
+    All
+  </a>
 
+  <a
+    href="?stock=out"
+    style={{
+      padding: "8px 14px",
+      borderRadius: "999px",
+      textDecoration: "none",
+      background: stockFilter === "out" ? "#dc2626" : "#fef2f2",
+      color: stockFilter === "out" ? "white" : "#991b1b",
+      fontWeight: "600",
+      fontSize: "14px",
+    }}
+  >
+    Out of Stock
+  </a>
+
+  <a
+    href="?stock=low"
+    style={{
+      padding: "8px 14px",
+      borderRadius: "999px",
+      textDecoration: "none",
+      background: stockFilter === "low" ? "#d97706" : "#fffbeb",
+      color: stockFilter === "low" ? "white" : "#92400e",
+      fontWeight: "600",
+      fontSize: "14px",
+    }}
+  >
+    Low Stock
+  </a>
+</div>
  {filteredLowStockProducts && filteredLowStockProducts.length > 0 ? (
     <>
     <div
