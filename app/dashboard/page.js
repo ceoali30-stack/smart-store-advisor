@@ -177,6 +177,9 @@ export default async function DashboardPage({ searchParams }) {
 <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
   Suggested Action
 </th>
+    <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+  Priority
+</th>
           </tr>
         </thead>
 
@@ -223,6 +226,16 @@ export default async function DashboardPage({ searchParams }) {
   {Number(product.quantity) === 0
     ? "Restock immediately"
     : "Review and reorder soon"}
+</td>
+  <td
+  style={{
+    padding: "12px",
+    borderBottom: "1px solid #eee",
+    fontWeight: "700",
+    color: Number(product.quantity) === 0 ? "#dc2626" : "#d97706",
+  }}
+>
+  {Number(product.quantity) === 0 ? "High" : "Medium"}
 </td>
             </tr>
           ))}
