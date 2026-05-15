@@ -1,4 +1,5 @@
 export default async function DashboardPage({ searchParams }) {
+  const stockFilter = searchParams?.stock || "all";
   const merchantId = searchParams?.merchant_id || "210819854";
 
   const baseUrl =
@@ -32,7 +33,16 @@ export default async function DashboardPage({ searchParams }) {
       </main>
     );
   }
-
+const filteredLowStockProducts =
+  stockFilter === "out"
+    ? data.low_stock_products.filter(
+        (product) => Number(product.quantity) === 0
+      )
+    : stockFilter === "low"
+    ? data.low_stock_products.filter(
+        (product) => Number(product.quantity) > 0
+      )
+    : data.low_stock_products;
   return (
     <main
       style={{
@@ -97,7 +107,7 @@ export default async function DashboardPage({ searchParams }) {
     Low Stock Products
   </h2>
 
-  {data.low_stock_products && data.low_stock_products.length > 0 ? (
+ {filteredLowStockProducts && filteredLowStockProducts.length > 0 ? (
     <>
     <div
   style={{
@@ -190,7 +200,7 @@ export default async function DashboardPage({ searchParams }) {
         </thead>
 
         <tbody>
-          {data.low_stock_products.map((product) => (
+          {filteredLowStockProducts.map((product) => (
             <tr key={product.id}>
               <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
                 {product.id}
