@@ -153,11 +153,17 @@ export default async function DashboardPage({ searchParams }) {
         style={{
           width: "100%",
           borderCollapse: "collapse",
-          fontSize: "14px",
+          fontSize: "15px",
         }}
       >
         <thead>
-          <tr style={{ background: "#f3f4f6", textAlign: "left" }}>
+          <tr
+  style={{
+    background: "#e5e7eb",
+    textAlign: "left",
+    color: "#111827",
+  }}
+>
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
               Product ID
             </th>
