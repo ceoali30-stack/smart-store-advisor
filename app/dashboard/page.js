@@ -259,6 +259,89 @@ export default async function DashboardPage({ searchParams }) {
   }}
 >
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    AI Recommendations
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+      gap: "16px",
+    }}
+  >
+    <div
+      style={{
+        background: "#fef2f2",
+        border: "1px solid #fecaca",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
+        Critical Stock Alert
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#dc2626", fontSize: "24px" }}>
+        {data.low_stock_products.filter(
+          (product) => Number(product.quantity) === 0
+        ).length}
+      </h3>
+      <p style={{ margin: 0, color: "#7f1d1d", fontSize: "14px" }}>
+        Products are completely out of stock and should be restocked immediately.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#fffbeb",
+        border: "1px solid #fde68a",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        Reorder Soon
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
+        {data.low_stock_products.filter(
+          (product) => Number(product.quantity) > 0
+        ).length}
+      </h3>
+      <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
+        Products are running low and should be reviewed before they run out.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#f0fdf4",
+        border: "1px solid #bbf7d0",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
+        Suggested Action
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#15803d", fontSize: "24px" }}>
+        Review Today
+      </h3>
+      <p style={{ margin: 0, color: "#14532d", fontSize: "14px" }}>
+        Start with high-priority products, then review medium-priority products
+        within 24–48 hours.
+      </p>
+    </div>
+  </div>
+</section>
+    <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     Action Required
   </h2>
 
