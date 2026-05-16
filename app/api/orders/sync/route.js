@@ -139,13 +139,16 @@ export async function GET(request) {
       }
     }
 
-    return Response.json({
-      success: true,
-      merchant_id: merchantId,
-      orders_count: ordersRows.length,
-      order_items_count: itemRows.length,
-      orders: ordersRows,
-    });
+   return Response.json({
+  success: true,
+  merchant_id: merchantId,
+  orders_count: ordersRows.length,
+  order_items_count: itemRows.length,
+  first_raw_order: orders[0] || null,
+  first_raw_item: orders[0]?.items?.[0] || null,
+  orders: ordersRows,
+  items: itemRows,
+});
   } catch (error) {
     return Response.json(
       {
