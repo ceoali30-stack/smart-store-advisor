@@ -128,7 +128,7 @@ const filteredLowStockProducts =
     }}
   >
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
-      Sales Insights
+      تحليلات المبيعات
     </h2>
 
     <div
@@ -177,30 +177,30 @@ const filteredLowStockProducts =
       }}
     >
       <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>Top Products</h3>
-        {salesInsights.top_products.slice(0, 5).map((product, index) => (
-          <p key={index} style={{ margin: "8px 0" }}>
-            {product.product_name} — {product.quantity_sold} sold — {product.revenue} SAR
-          </p>
-        ))}
+        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا</h3>
+       {salesInsights.top_products.slice(0, 5).map((product, index) => (
+  <p key={index} style={{ margin: "8px 0" }}>
+    {product.product_name} — {product.quantity_sold} مبيعات — {product.revenue} ريال
+  </p>
+))}
       </div>
 
       <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>Top Categories</h3>
+        <h3 style={{ marginTop: 0 }}>أكثر الأقسام مبيعًا</h3>
         {salesInsights.top_categories.slice(0, 5).map((category, index) => (
-          <p key={index} style={{ margin: "8px 0" }}>
-            {category.category_name} — {category.quantity_sold} sold — {category.revenue} SAR
-          </p>
-        ))}
+  <p key={index} style={{ margin: "8px 0" }}>
+    {category.category_name} — {category.quantity_sold} مبيعات — {category.revenue} ريال
+  </p>
+))}
       </div>
 
       <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>Top Products by City</h3>
-        {salesInsights.top_products_by_city.slice(0, 5).map((item, index) => (
-          <p key={index} style={{ margin: "8px 0" }}>
-            {item.city} — {item.product_name} — {item.quantity_sold} sold
-          </p>
-        ))}
+        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا حسب المدينة</h3>
+     {salesInsights.top_products_by_city.slice(0, 5).map((item, index) => (
+  <p key={index} style={{ margin: "8px 0" }}>
+    {item.city} — {item.product_name} — {item.quantity_sold} مبيعات
+  </p>
+))}
       </div>
     </div>
 
@@ -211,7 +211,7 @@ const filteredLowStockProducts =
         gap: "12px",
       }}
     >
-      {salesInsights.recommendations.map((rec, index) => (
+      {salesInsights.Recommendation.map((rec, index) => (
         <div
           key={index}
           style={{
