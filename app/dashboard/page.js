@@ -86,6 +86,7 @@ const filteredLowStockProducts =
   <a
     href={`/api/orders/sync?merchant_id=${merchantId}`}
     target="_blank"
+rel="noopener noreferrer"
     style={{
       background: "#16a34a",
       color: "white",
