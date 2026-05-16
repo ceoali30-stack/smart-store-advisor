@@ -75,7 +75,47 @@ const filteredLowStockProducts =
       </p>
 
       <MerchantLinks />
+<div
+  style={{
+    marginTop: "14px",
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "10px",
+  }}
+>
+  <a
+    href={`/api/orders/sync?merchant_id=${merchantId}`}
+    target="_blank"
+    style={{
+      background: "#16a34a",
+      color: "white",
+      padding: "10px 16px",
+      borderRadius: "10px",
+      textDecoration: "none",
+      fontWeight: "700",
+      fontSize: "14px",
+      display: "inline-block",
+    }}
+  >
+    مزامنة الطلبات الآن
+  </a>
 
+  <a
+    href={`/dashboard?merchant_id=${merchantId}`}
+    style={{
+      background: "#0f172a",
+      color: "white",
+      padding: "10px 16px",
+      borderRadius: "10px",
+      textDecoration: "none",
+      fontWeight: "700",
+      fontSize: "14px",
+      display: "inline-block",
+    }}
+  >
+    تحديث لوحة التحكم
+  </a>
+</div>
       <div
         style={{
           marginTop: "30px",
