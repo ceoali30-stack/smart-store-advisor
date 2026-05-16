@@ -26,13 +26,13 @@ export default function SyncOrdersButton({ merchantId }) {
         return;
       }
 
-      setMessage(
-        `تمت المزامنة بنجاح. عدد الطلبات: ${data.orders_count || 0}`
-      );
+      setMessage(`تمت المزامنة بنجاح. عدد الطلبات: ${data.orders_count || 0}`);
+
+      setLoading(false);
 
       setTimeout(() => {
-        router.refresh();
-      }, 1200);
+        window.location.href = `/dashboard?merchant_id=${merchantId}`;
+      }, 900);
     } catch (error) {
       setMessage("حدث خطأ أثناء المزامنة.");
       setLoading(false);
@@ -62,9 +62,10 @@ export default function SyncOrdersButton({ merchantId }) {
       {message && (
         <span
           style={{
-            color: message.includes("فشلت") || message.includes("خطأ")
-              ? "#dc2626"
-              : "#166534",
+            color:
+              message.includes("فشلت") || message.includes("خطأ")
+                ? "#dc2626"
+                : "#166534",
             fontSize: "14px",
             fontWeight: "600",
           }}
