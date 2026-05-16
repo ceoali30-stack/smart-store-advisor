@@ -467,7 +467,7 @@ const filteredLowStockProducts =
   }}
 >
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
-    AI Recommendations
+    توصيات ذكية
   </h2>
 
   <div
@@ -486,7 +486,7 @@ const filteredLowStockProducts =
       }}
     >
       <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
-        Critical Stock Alert
+        تنبيه مخزون حرج
       </p>
       <h3 style={{ margin: "8px 0", color: "#dc2626", fontSize: "24px" }}>
         {data.low_stock_products.filter(
@@ -494,7 +494,7 @@ const filteredLowStockProducts =
         ).length}
       </h3>
       <p style={{ margin: 0, color: "#7f1d1d", fontSize: "14px" }}>
-        Products are completely out of stock and should be restocked immediately.
+      منتجات نفد مخزونها بالكامل ويجب إعادة توريدها فورًا.
       </p>
     </div>
 
@@ -507,7 +507,7 @@ const filteredLowStockProducts =
       }}
     >
       <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
-        Reorder Soon
+        إعادة الطلب قريبًا
       </p>
       <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
         {data.low_stock_products.filter(
@@ -515,7 +515,7 @@ const filteredLowStockProducts =
         ).length}
       </h3>
       <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
-        Products are running low and should be reviewed before they run out.
+        منتجات أوشكت على النفاد ويجب مراجعتها قبل نفادها.
       </p>
     </div>
 
@@ -528,14 +528,13 @@ const filteredLowStockProducts =
       }}
     >
       <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
-        Suggested Action
+        الإجراء المقترح
       </p>
       <h3 style={{ margin: "8px 0", color: "#15803d", fontSize: "24px" }}>
-        Review Today
+        مراجعة اليوم
       </h3>
       <p style={{ margin: 0, color: "#14532d", fontSize: "14px" }}>
-        Start with high-priority products, then review medium-priority products
-        within 24–48 hours.
+       ابدأ بالمنتجات عالية الأولوية، ثم راجع المنتجات متوسطة الأولوية خلال 24 إلى 48 ساعة.
       </p>
     </div>
   </div>
