@@ -8,14 +8,23 @@ export default async function DashboardPage({ searchParams }) {
 
   let data = null;
   let error = null;
-
+let syncStatus = null;
   try {
     const res = await fetch(`${baseUrl}/api/dashboard?merchant_id=${merchantId}`, {
       cache: "no-store",
     });
 
     data = await res.json();
+try {
+  const syncRes = await fetch(
+    `${baseUrl}/api/sync/status?merchant_id=${merchantId}`,
+    { cache: "no-store" }
+  );
 
+  syncStatus = await syncRes.json();
+} catch (err) {
+  syncStatus = null;
+}
     if (!res.ok || data.success === false) {
       error = data.message || "Failed to load dashboard data";
     }
@@ -117,6 +126,33 @@ rel="noopener noreferrer"
     تحديث لوحة التحكم
   </a>
 </div>
+   <div
+  style={{
+    marginTop: "10px",
+    marginBottom: "24px",
+    background: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: "12px",
+    padding: "12px 16px",
+    color: "#334155",
+    fontSize: "14px",
+    display: "inline-block",
+  }}
+>
+  آخر مزامنة للبيانات:{" "}
+  <strong>
+    {syncStatus?.last_sync
+      ? new Date(syncStatus.last_sync).toLocaleString("ar-SA", {
+          timeZone: "Asia/Riyadh",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "لا توجد مزامنة بعد"}
+  </strong>
+</div>   
       <div
         style={{
           marginTop: "30px",
