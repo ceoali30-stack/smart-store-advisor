@@ -1,162 +1,119 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-export async function GET(request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const merchantId = searchParams.get("merchant_id");
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    );
 
-    if (!merchantId) {
-      return Response.json(
-        { success: false, message: "merchant_id is required" },
-        { status: 400 }
-      );
-    }
-
-    const { data: merchant, error: merchantError } = await supabase
+    // 1) جلب آخر تاجر محفوظ
+    const { data: merchants, error: merchantError } = await supabase
       .from("merchants")
-      .select("access_token")
-      .eq("merchant_id", merchantId)
-      .single();
+      .select("*")
+      .order("updated_at", { ascending: false })
+      .limit(1);
 
-    if (merchantError || !merchant?.access_token) {
-      return Response.json(
-        { success: false, message: "Merchant access token not found", error: merchantError },
-        { status: 404 }
-      );
+    if (merchantError) {
+      return Response.json({
+        success: false,
+        step: "get_merchant_failed",
+        error: merchantError.message,
+      });
     }
 
-    const res = await fetch("https://api.salla.dev/admin/v2/orders", {
-      headers: {
-        Authorization: `Bearer ${merchant.access_token}`,
-        Accept: "application/json",
-      },
-    });
+    if (!merchants || merchants.length === 0) {
+      return Response.json({
+        success: false,
+        error: "No merchant found. Please authorize Salla first.",
+      });
+    }
 
-    const json = await res.json();
+    const merchant = merchants[0];
 
-    if (!res.ok) {
-      return Response.json(
-        {
-          success: false,
-          message: "Failed to fetch orders from Salla",
-          status: res.status,
-          error: json,
+    if (!merchant.access_token) {
+      return Response.json({
+        success: false,
+        error: "Merchant has no access_token.",
+      });
+    }
+
+    // 2) جلب الطلبات من سلة
+    const sallaResponse = await fetch(
+      "https://api.salla.dev/admin/v2/orders?page=1",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${merchant.access_token}`,
+          Accept: "application/json",
         },
-        { status: res.status }
-      );
+      }
+    );
+
+    const sallaData = await sallaResponse.json();
+
+    if (!sallaResponse.ok || sallaData.success === false) {
+      return Response.json({
+        success: false,
+        step: "salla_orders_failed",
+        status: sallaResponse.status,
+        error: sallaData,
+      });
     }
 
-    const orders = json.data || [];
+    const orders = sallaData.data || [];
 
-    const ordersRows = orders.map((order) => ({
-      id: Number(order.id),
-      merchant_id: merchantId,
-      reference_id: order.reference_id || order.reference || null,
-      status: order.status?.name || order.status || null,
-      city: order.shipping?.address?.city || order.customer?.city || null,
-      country: order.shipping?.address?.country || null,
-      currency: order.amounts?.total?.currency || "SAR",
-      total_amount: Number(order.amounts?.total?.amount || order.total || 0),
-      items_count: Number(order.items?.length || 0),
-      customer_name: order.customer?.full_name || order.customer?.name || null,
-      customer_mobile: order.customer?.mobile || null,
-      created_at: order.created_at?.date || order.created_at || null,
-      updated_at: order.updated_at?.date || order.updated_at || null,
-      synced_at: new Date().toISOString(),
+    if (orders.length === 0) {
+      return Response.json({
+        success: true,
+        message: "No orders found.",
+        count: 0,
+      });
+    }
+
+    // 3) تجهيز الطلبات للحفظ
+    const ordersToSave = orders.map((order) => ({
+      merchant_id: merchant.merchant_id,
+      salla_order_id: String(order.id),
+      reference_id: order.reference_id ? String(order.reference_id) : null,
+      status_name: order.status?.name || null,
+      status_slug: order.status?.slug || null,
+      payment_method: order.payment_method || null,
+      total_amount: order.total?.amount || 0,
+      currency: order.total?.currency || "SAR",
+      order_date: order.date?.date || null,
+      raw_data: order,
+      updated_at: new Date().toISOString(),
     }));
 
-    if (ordersRows.length > 0) {
-      const { error: ordersError } = await supabase
-        .from("orders")
-        .upsert(ordersRows, { onConflict: "id" });
+    // 4) حفظ الطلبات في Supabase
+    const { data: savedOrders, error: saveError } = await supabase
+      .from("orders")
+      .upsert(ordersToSave, {
+        onConflict: "salla_order_id",
+      })
+      .select();
 
-      if (ordersError) {
-        return Response.json(
-          {
-            success: false,
-            message: "Supabase orders upsert failed",
-            error: ordersError,
-          },
-          { status: 500 }
-        );
-      }
-    }
-
-    const itemRows = [];
-
-    for (const order of orders) {
-      const items = order.items || [];
-
-      for (const item of items) {
-        itemRows.push({
-          order_id: Number(order.id),
-          merchant_id: merchantId,
-          product_id: item.product?.id || item.product_id || item.id || null,
-          product_name: item.product?.name || item.name || null,
-          category_name: item.product?.category?.name || null,
-          quantity: Number(item.quantity || 0),
-          unit_price: Number(
-            item.amounts?.price_without_tax?.amount ||
-              item.price?.amount ||
-              item.price ||
-              0
-          ),
-          total_price: Number(
-            item.amounts?.total?.amount ||
-              item.total?.amount ||
-              item.total ||
-              0
-          ),
-          sku: item.sku || item.product?.sku || null,
-        });
-      }
-    }
-
-    if (itemRows.length > 0) {
-      await supabase
-        .from("order_items")
-        .delete()
-        .eq("merchant_id", merchantId);
-
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(itemRows);
-
-      if (itemsError) {
-        return Response.json(
-          {
-            success: false,
-            message: "Supabase order items insert failed",
-            error: itemsError,
-          },
-          { status: 500 }
-        );
-      }
-    }
-
-   return Response.json({
-  success: true,
-  merchant_id: merchantId,
-  orders_count: ordersRows.length,
-  order_items_count: itemRows.length,
-  first_raw_order: orders[0] || null,
-  first_raw_item: orders[0]?.items?.[0] || null,
-  orders: ordersRows,
-  items: itemRows,
-});
-  } catch (error) {
-    return Response.json(
-      {
+    if (saveError) {
+      return Response.json({
         success: false,
-        message: "Unexpected server error",
-        error: String(error),
-      },
-      { status: 500 }
-    );
+        step: "save_orders_failed",
+        error: saveError.message,
+        details: saveError,
+      });
+    }
+
+    return Response.json({
+      success: true,
+      message: "Orders synced successfully",
+      count: savedOrders.length,
+      orders: savedOrders,
+    });
+  } catch (error) {
+    return Response.json({
+      success: false,
+      step: "unexpected_error",
+      error: error.message,
+    });
   }
 }
