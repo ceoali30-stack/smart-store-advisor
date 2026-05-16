@@ -42,185 +42,59 @@ export async function GET(request) {
     });
 
     const listJson = await listRes.json();
+    const firstOrder = listJson.data?.[0] || null;
+    const orderId = firstOrder?.id;
 
-    if (!listRes.ok) {
-      return Response.json(
-        {
-          success: false,
-          message: "Failed to fetch orders list from Salla",
-          status: listRes.status,
-          error: listJson,
+    if (!orderId) {
+      return Response.json({
+        success: false,
+        message: "No orders found",
+        list_status: listRes.status,
+        list_response: listJson,
+      });
+    }
+
+    const detailRes = await fetch(
+      `https://api.salla.dev/admin/v2/orders/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${merchant.access_token}`,
+          Accept: "application/json",
         },
-        { status: listRes.status }
-      );
-    }
-
-    const orderList = listJson.data || [];
-    const detailedOrders = [];
-
-    for (const order of orderList) {
-      const orderId = order.id;
-
-      const detailRes = await fetch(
-        `https://api.salla.dev/admin/v2/orders/${orderId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${merchant.access_token}`,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      const detailJson = await detailRes.json();
-
-      if (detailRes.ok && detailJson.data) {
-        detailedOrders.push(detailJson.data);
-      } else {
-        detailedOrders.push(order);
       }
-    }
+    );
 
-    const ordersRows = detailedOrders.map((order) => ({
-      id: Number(order.id),
+    const detailJson = await detailRes.json();
+
+    const itemsRes = await fetch(
+      `https://api.salla.dev/admin/v2/orders/${orderId}/items`,
+      {
+        headers: {
+          Authorization: `Bearer ${merchant.access_token}`,
+          Accept: "application/json",
+        },
+      }
+    );
+
+    const itemsJson = await itemsRes.json();
+
+    return Response.json({
+      success: true,
       merchant_id: merchantId,
-      reference_id: order.reference_id || order.reference || null,
-      status: order.status?.name || order.status || null,
-      city:
-        order.customer?.city ||
-        order.shipping?.address?.city ||
-        order.address?.city ||
-        null,
-      country:
-        order.customer?.country ||
-        order.shipping?.address?.country ||
-        order.address?.country ||
-        null,
-      currency:
-        order.amounts?.total?.currency ||
-        order.total?.currency ||
-        order.currency ||
-        "SAR",
-      total_amount: Number(
-        order.amounts?.total?.amount ||
-          order.total?.amount ||
-          order.total ||
-          order.paid_amount?.amount ||
-          0
-      ),
-      items_count: Number(order.items?.length || 0),
-      customer_name:
-        order.customer?.full_name ||
-        `${order.customer?.first_name || ""} ${order.customer?.last_name || ""}`.trim() ||
-        order.customer?.name ||
-        null,
-      customer_mobile: order.customer?.mobile || null,
-      created_at: order.created_at?.date || order.created_at || null,
-      updated_at: order.updated_at?.date || order.updated_at || null,
-      synced_at: new Date().toISOString(),
-    }));
 
-    if (ordersRows.length > 0) {
-      const { error: ordersError } = await supabase
-        .from("orders")
-        .upsert(ordersRows, { onConflict: "id" });
+      first_order_id: orderId,
 
-      if (ordersError) {
-        return Response.json(
-          {
-            success: false,
-            message: "Supabase orders upsert failed",
-            error: ordersError,
-          },
-          { status: 500 }
-        );
-      }
-    }
+      list_status: listRes.status,
+      detail_status: detailRes.status,
+      items_endpoint_status: itemsRes.status,
 
-    await supabase.from("order_items").delete().eq("merchant_id", merchantId);
+      first_order_from_list: firstOrder,
 
-    const itemRows = [];
+      detail_order_keys: detailJson.data ? Object.keys(detailJson.data) : [],
+      detail_order_items: detailJson.data?.items || null,
 
-    for (const order of detailedOrders) {
-      const items = order.items || [];
-
-      for (const item of items) {
-        const unitPrice = Number(
-          item.amounts?.price_without_tax?.amount ||
-            item.amounts?.price?.amount ||
-            item.price?.amount ||
-            item.price ||
-            0
-        );
-
-        const totalPrice = Number(
-          item.amounts?.total?.amount ||
-            item.total?.amount ||
-            item.total ||
-            unitPrice * Number(item.quantity || 0)
-        );
-
-        itemRows.push({
-          order_id: Number(order.id),
-          merchant_id: merchantId,
-          product_id:
-            item.product?.id ||
-            item.product_id ||
-            item.sku_id ||
-            null,
-          product_name:
-            item.product?.name ||
-            item.name ||
-            item.product_name ||
-            null,
-          category_name:
-            item.product?.category?.name ||
-            item.category?.name ||
-            null,
-          quantity: Number(item.quantity || 0),
-          unit_price: unitPrice,
-          total_price: totalPrice,
-          sku: item.sku || item.product?.sku || null,
-        });
-      }
-    }
-
-    if (itemRows.length > 0) {
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(itemRows);
-
-      if (itemsError) {
-        return Response.json(
-          {
-            success: false,
-            message: "Supabase order items insert failed",
-            error: itemsError,
-          },
-          { status: 500 }
-        );
-      }
-    }
-
-   return Response.json({
-  success: true,
-  merchant_id: merchantId,
-  orders_count: ordersRows.length,
-  order_items_count: itemRows.length,
-
-  debug_order_keys: detailedOrders[0] ? Object.keys(detailedOrders[0]) : [],
-  debug_order: detailedOrders[0] || null,
-
-  possible_items_fields: {
-    items: detailedOrders[0]?.items || null,
-    products: detailedOrders[0]?.products || null,
-    order_items: detailedOrders[0]?.order_items || null,
-    items_data: detailedOrders[0]?.items_data || null,
-    products_data: detailedOrders[0]?.products_data || null,
-  },
-
-  orders: ordersRows,
-  items: itemRows,
-});
+      items_endpoint_response: itemsJson,
+    });
   } catch (error) {
     return Response.json(
       {
