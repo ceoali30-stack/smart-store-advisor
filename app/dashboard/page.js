@@ -1,3 +1,4 @@
+import SyncOrdersButton from "./SyncOrdersButton";
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
   const stockFilter = params?.stock || "all";
@@ -92,23 +93,7 @@ const filteredLowStockProducts =
     gap: "10px",
   }}
 >
-  <a
-    href={`/api/orders/sync?merchant_id=${merchantId}`}
-    target="_blank"
-rel="noopener noreferrer"
-    style={{
-      background: "#16a34a",
-      color: "white",
-      padding: "10px 16px",
-      borderRadius: "10px",
-      textDecoration: "none",
-      fontWeight: "700",
-      fontSize: "14px",
-      display: "inline-block",
-    }}
-  >
-    مزامنة الطلبات الآن
-  </a>
+  <SyncOrdersButton merchantId={merchantId} />
 
   <a
     href={`/dashboard?merchant_id=${merchantId}`}
