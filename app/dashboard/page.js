@@ -34,6 +34,19 @@ export default async function DashboardPage({ searchParams }) {
       </main>
     );
   }
+let salesInsights = null;
+
+try {
+  const salesRes = await fetch(
+    `${baseUrl}/api/sales/insights?merchant_id=${merchantId}`,
+    { cache: "no-store" }
+  );
+
+  salesInsights = await salesRes.json();
+} catch (err) {
+  salesInsights = null;
+}
+
 const filteredLowStockProducts =
   stockFilter === "out"
     ? data.low_stock_products.filter(
@@ -104,6 +117,124 @@ const filteredLowStockProducts =
     boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
   }}
 >
+  {salesInsights?.success && (
+  <div
+    style={{
+      background: "white",
+      padding: "18px",
+      borderRadius: "14px",
+      marginBottom: "18px",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+    }}
+  >
+    <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+      Sales Insights
+    </h2>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
+        gap: "12px",
+        marginBottom: "18px",
+      }}
+    >
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Total Orders</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.total_orders}
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Total Revenue</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.total_revenue} SAR
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Average Order Value</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.average_order_value} SAR
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Avg Items / Order</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.average_items_per_order}
+        </h3>
+      </div>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+        gap: "14px",
+        marginBottom: "18px",
+      }}
+    >
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>Top Products</h3>
+        {salesInsights.top_products.slice(0, 5).map((product, index) => (
+          <p key={index} style={{ margin: "8px 0" }}>
+            {product.product_name} — {product.quantity_sold} sold — {product.revenue} SAR
+          </p>
+        ))}
+      </div>
+
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>Top Categories</h3>
+        {salesInsights.top_categories.slice(0, 5).map((category, index) => (
+          <p key={index} style={{ margin: "8px 0" }}>
+            {category.category_name} — {category.quantity_sold} sold — {category.revenue} SAR
+          </p>
+        ))}
+      </div>
+
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>Top Products by City</h3>
+        {salesInsights.top_products_by_city.slice(0, 5).map((item, index) => (
+          <p key={index} style={{ margin: "8px 0" }}>
+            {item.city} — {item.product_name} — {item.quantity_sold} sold
+          </p>
+        ))}
+      </div>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+        gap: "12px",
+      }}
+    >
+      {salesInsights.recommendations.map((rec, index) => (
+        <div
+          key={index}
+          style={{
+            background: "#ecfdf5",
+            border: "1px solid #bbf7d0",
+            borderRadius: "12px",
+            padding: "14px",
+          }}
+        >
+          <p style={{ margin: 0, color: "#166534", fontSize: "13px" }}>
+            {rec.title}
+          </p>
+          <h3 style={{ margin: "6px 0 8px", color: "#15803d" }}>
+            Recommendation
+          </h3>
+          <p style={{ margin: 0, color: "#14532d" }}>
+            {rec.message}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     Low Stock Products
   </h2>
