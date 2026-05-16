@@ -149,21 +149,21 @@ const filteredLowStockProducts =
       </div>
 
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Total Revenue</p>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الإرادات</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
           {salesInsights.summary.total_revenue} SAR
         </h3>
       </div>
 
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Average Order Value</p>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط قيمة الفاتورة</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
           {salesInsights.summary.average_order_value} SAR
         </h3>
       </div>
 
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Avg Items / Order</p>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط عدد المنتجات في الفاتورة</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
           {salesInsights.summary.average_items_per_order}
         </h3>
