@@ -115,7 +115,7 @@ const filteredLowStockProducts =
   }}
 >
   <a
-    href="?stock=all"
+    href={`?merchant_id=${merchantId}&stock=all`}
     style={{
       padding: "8px 14px",
       borderRadius: "999px",
@@ -130,7 +130,7 @@ const filteredLowStockProducts =
   </a>
 
   <a
-    href="?stock=out"
+   href={`?merchant_id=${merchantId}&stock=out`}
     style={{
       padding: "8px 14px",
       borderRadius: "999px",
@@ -145,7 +145,7 @@ const filteredLowStockProducts =
   </a>
 
   <a
-    href="?stock=low"
+    href={`?merchant_id=${merchantId}&stock=low`}
     style={{
       padding: "8px 14px",
       borderRadius: "999px",
