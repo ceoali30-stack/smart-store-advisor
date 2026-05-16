@@ -191,6 +191,115 @@ const filteredLowStockProducts =
       boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
     }}
   >
+    <section
+  style={{
+    background: "white",
+    padding: "22px",
+    borderRadius: "18px",
+    marginTop: "24px",
+    marginBottom: "24px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.05)",
+    border: "1px solid #eef2f7",
+  }}
+>
+  <h2
+    style={{
+      margin: "0 0 14px",
+      fontSize: "24px",
+      fontWeight: "800",
+      color: "#111827",
+    }}
+  >
+    الملخص التنفيذي الذكي
+  </h2>
+
+  <p
+    style={{
+      margin: "0 0 16px",
+      fontSize: "16px",
+      lineHeight: "1.9",
+      color: "#374151",
+    }}
+  >
+    حقق المتجر{" "}
+    <strong>{salesInsights?.summary?.total_revenue || 0} ريال</strong>{" "}
+    من خلال{" "}
+    <strong>{salesInsights?.summary?.total_orders || 0} طلبات</strong>.
+    متوسط قيمة الطلب هو{" "}
+    <strong>{salesInsights?.summary?.average_order_value || 0} ريال</strong>.
+    أفضل منتج مبيعًا هو{" "}
+    <strong>
+      {salesInsights?.top_products?.[0]?.product_name || "غير متوفر"}
+    </strong>
+    .
+  </p>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+      gap: "14px",
+      marginTop: "18px",
+    }}
+  >
+    <div
+      style={{
+        background: "#fef2f2",
+        border: "1px solid #fecaca",
+        borderRadius: "14px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
+        منتجات نافدة
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#7f1d1d", fontSize: "26px" }}>
+        {data?.out_of_stock_count || 0}
+      </h3>
+      <p style={{ margin: 0, color: "#991b1b", fontSize: "13px" }}>
+        تحتاج إلى إعادة توفير فورية.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#fffbeb",
+        border: "1px solid #fde68a",
+        borderRadius: "14px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        منتجات منخفضة المخزون
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#78350f", fontSize: "26px" }}>
+        {data?.low_stock_count || 0}
+      </h3>
+      <p style={{ margin: 0, color: "#92400e", fontSize: "13px" }}>
+        راجعها قبل نفادها من المتجر.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#ecfdf5",
+        border: "1px solid #bbf7d0",
+        borderRadius: "14px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
+        الإجراء المقترح
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#14532d", fontSize: "20px" }}>
+        ابدأ بالمخزون
+      </h3>
+      <p style={{ margin: 0, color: "#166534", fontSize: "13px" }}>
+        أعد توفير المنتجات النافدة ثم راجع المنتجات منخفضة المخزون خلال 48 ساعة.
+      </p>
+    </div>
+  </div>
+</section>
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
     </h2>
