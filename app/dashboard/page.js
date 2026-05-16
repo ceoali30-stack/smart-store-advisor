@@ -140,7 +140,7 @@ const filteredLowStockProducts =
       }}
     >
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>Total Orders</p>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الطلبات</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
           {salesInsights.summary.total_orders}
         </h3>
@@ -178,7 +178,7 @@ const filteredLowStockProducts =
     >
       <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
         <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا</h3>
-       {salesInsights.top_products.slice(0, 5).map((product, index) => (
+      {salesInsights.top_products.slice(0, 5).map((product, index) => (
   <p key={index} style={{ margin: "8px 0" }}>
     {product.product_name} — {product.quantity_sold} مبيعات — {product.revenue} ريال
   </p>
@@ -211,7 +211,7 @@ const filteredLowStockProducts =
         gap: "12px",
       }}
     >
-      {salesInsights.Recommendation.map((rec, index) => (
+      {salesInsights.recommendations.map((rec, index) => (
         <div
           key={index}
           style={{
@@ -225,7 +225,7 @@ const filteredLowStockProducts =
             {rec.title}
           </p>
           <h3 style={{ margin: "6px 0 8px", color: "#15803d" }}>
-            Recommendation
+            التوصية
           </h3>
           <p style={{ margin: 0, color: "#14532d" }}>
             {rec.message}
