@@ -201,14 +201,26 @@ export async function GET(request) {
       }
     }
 
-    return Response.json({
-      success: true,
-      merchant_id: merchantId,
-      orders_count: ordersRows.length,
-      order_items_count: itemRows.length,
-      orders: ordersRows,
-      items: itemRows,
-    });
+   return Response.json({
+  success: true,
+  merchant_id: merchantId,
+  orders_count: ordersRows.length,
+  order_items_count: itemRows.length,
+
+  debug_order_keys: detailedOrders[0] ? Object.keys(detailedOrders[0]) : [],
+  debug_order: detailedOrders[0] || null,
+
+  possible_items_fields: {
+    items: detailedOrders[0]?.items || null,
+    products: detailedOrders[0]?.products || null,
+    order_items: detailedOrders[0]?.order_items || null,
+    items_data: detailedOrders[0]?.items_data || null,
+    products_data: detailedOrders[0]?.products_data || null,
+  },
+
+  orders: ordersRows,
+  items: itemRows,
+});
   } catch (error) {
     return Response.json(
       {
