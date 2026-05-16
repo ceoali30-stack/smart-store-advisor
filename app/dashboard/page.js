@@ -60,8 +60,10 @@ const filteredLowStockProducts =
   return (
     <main
       style={{
-        padding: "40px",
-        fontFamily: "Arial, sans-serif",
+  direction: "rtl",
+  textAlign: "right",
+  padding: "40px",
+  fontFamily: "Arial, sans-serif",
         background: "#f6f7f9",
         minHeight: "100vh",
       }}
@@ -236,7 +238,7 @@ const filteredLowStockProducts =
   </div>
 )}
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
-    Low Stock Products
+    منتجات منخفضة المخزون
   </h2>
 <div
   style={{
@@ -258,7 +260,7 @@ const filteredLowStockProducts =
       fontSize: "14px",
     }}
   >
-    All
+    الكل
   </a>
 
   <a
@@ -273,7 +275,7 @@ const filteredLowStockProducts =
       fontSize: "14px",
     }}
   >
-    Out of Stock
+    نفد المخزون
   </a>
 
   <a
@@ -288,7 +290,7 @@ const filteredLowStockProducts =
       fontSize: "14px",
     }}
   >
-    Low Stock
+    مخزون منخفض
   </a>
 </div>
  {filteredLowStockProducts && filteredLowStockProducts.length > 0 ? (
@@ -359,26 +361,26 @@ const filteredLowStockProducts =
   }}
 >
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-              Product ID
+              رقم المنتج
             </th>
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-              Product Name
+              اسم المنتج
             </th>
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-              Price
+              السعر
             </th>
             <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-              Quantity
+              الكمية
             </th>
          <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-  Status
+  الحالة
 </th>
 
 <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-  Suggested Action
+  الإجراء المقترح
 </th>
     <th style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-  Priority
+  الأولوية
 </th>
           </tr>
         </thead>
@@ -399,7 +401,7 @@ const filteredLowStockProducts =
                 {product.name || "-"}
               </td>
               <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
-                {product.price ?? "-"} SAR
+                {product.price ?? "-"} ريال
               </td>
               <td
                 style={{
@@ -419,7 +421,7 @@ const filteredLowStockProducts =
     color: Number(product.quantity) === 0 ? "#dc2626" : "#b45309",
   }}
 >
-  {Number(product.quantity) === 0 ? "Out of Stock" : "Low Stock"}
+  {Number(product.quantity) === 0 ? "نفد المخزون" : "مخزون منخفض"}
 </td>
  <td
   style={{
@@ -430,8 +432,8 @@ const filteredLowStockProducts =
   }}
 >
   {Number(product.quantity) === 0
-    ? "Restock immediately"
-    : "Review and reorder soon"}
+    ? "إعادة التوريد فورًا"
+    : "المراجعة وإعادة الطلب قريبًا"}
 </td>
   <td
   style={{
@@ -441,7 +443,7 @@ const filteredLowStockProducts =
     color: Number(product.quantity) === 0 ? "#dc2626" : "#d97706",
   }}
 >
-  {Number(product.quantity) === 0 ? "High" : "Medium"}
+  {Number(product.quantity) === 0 ? "عالية" : "متوسطة"}
 </td>
             </tr>
           ))}
