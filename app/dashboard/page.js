@@ -68,10 +68,10 @@ const filteredLowStockProducts =
         minHeight: "100vh",
       }}
     >
-      <h1 style={{ marginBottom: "10px" }}>Smart Store Advisor Dashboard</h1>
+      <h1 style={{ marginBottom: "10px" }}>لوحة مستشار المتجر الذكي</h1>
 
       <p style={{ marginBottom: "20px", color: "#555" }}>
-        AI-powered analytics for Salla merchants.
+        تحليلات ذكية لمتاجر سلة.
       </p>
 
       <MerchantLinks />
@@ -85,10 +85,10 @@ const filteredLowStockProducts =
           marginBottom: "30px",
         }}
       >
-        <Card title="Merchant ID" value={data.merchant_id} />
-        <Card title="Total Products" value={data.total_products} />
-        <Card title="Average Price" value={`${data.average_price} SAR`} />
-        <Card title="Stock Alerts" value={data.low_stock_products_count} />
+        <Card title="رقم التاجر" value={data.merchant_id} />
+        <Card title="إجمالي المنتجات" value={data.total_products} />
+        <Card title="متوسط السعر" value={`${data.average_price} ريال`} />
+        <Card title="تنبيهات المخزون" value={data.low_stock_products_count} />
       </div>
 
       <section
@@ -99,13 +99,13 @@ const filteredLowStockProducts =
         }}
       >
         <InsightCard
-          title="Highest Price Product"
+          title="أعلى منتج سعرًا"
           name={data.highest_price_product?.name}
           price={data.highest_price_product?.price}
         />
 
         <InsightCard
-          title="Lowest Price Product"
+          title="أقل منتج سعرًا"
           name={data.lowest_price_product?.name}
           price={data.lowest_price_product?.price}
         />
@@ -151,14 +151,14 @@ const filteredLowStockProducts =
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
         <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الإرادات</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.total_revenue} SAR
+          {salesInsights.summary.total_revenue} ريال
         </h3>
       </div>
 
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
         <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط قيمة الفاتورة</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.average_order_value} SAR
+          {salesInsights.summary.average_order_value} ريال
         </h3>
       </div>
 
@@ -312,7 +312,7 @@ const filteredLowStockProducts =
     }}
   >
     <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
-      Out of Stock
+      نفد المخزون
     </p>
     <h3 style={{ margin: "8px 0 0", color: "#dc2626", fontSize: "26px" }}>
       {
@@ -332,7 +332,7 @@ const filteredLowStockProducts =
     }}
   >
     <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
-      Low Stock
+      مخزون منخفض
     </p>
     <h3 style={{ margin: "8px 0 0", color: "#b45309", fontSize: "26px" }}>
       {
@@ -563,7 +563,7 @@ function MerchantLinks() {
             fontSize: "14px",
           }}
         >
-          Store {id}
+          متجر {id}
         </a>
       ))}
     </div>
@@ -598,7 +598,7 @@ function InsightCard({ title, name, price }) {
     >
       <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>{title}</p>
       <h2 style={{ margin: "12px 0 8px", fontSize: "24px" }}>{name || "-"}</h2>
-      <p style={{ margin: 0, fontSize: "18px" }}>{price ?? "-"} SAR</p>
+      <p style={{ margin: 0, fontSize: "18px" }}>{price ?? "-"} ريال</p>
     </div>
   );
 }
