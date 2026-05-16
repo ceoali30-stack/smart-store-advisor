@@ -73,7 +73,7 @@ const filteredLowStockProducts =
         <Card title="Merchant ID" value={data.merchant_id} />
         <Card title="Total Products" value={data.total_products} />
         <Card title="Average Price" value={`${data.average_price} SAR`} />
-        <Card title="Low Stock Products" value={data.low_stock_products_count} />
+        <Card title="Stock Alerts" value={data.low_stock_products_count} />
       </div>
 
       <section
