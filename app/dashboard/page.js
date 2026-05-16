@@ -1,6 +1,7 @@
 export default async function DashboardPage({ searchParams }) {
-  const stockFilter = searchParams?.stock || "all";
-  const merchantId = searchParams?.merchant_id || "210819854";
+  const params = await searchParams;
+  const stockFilter = params?.stock || "all";
+  const merchantId = params?.merchant_id || "210819854";
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://smart-store-advisor.vercel.app";
