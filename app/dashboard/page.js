@@ -254,7 +254,13 @@ const filteredLowStockProducts =
 
         <tbody>
           {filteredLowStockProducts.map((product) => (
-            <tr key={product.id}>
+           <tr
+  key={product.id}
+  style={{
+    background:
+      Number(product.quantity) === 0 ? "#fff7f7" : "#fffdf2",
+  }}
+>
               <td style={{ padding: "12px", borderBottom: "1px solid #eee" }}>
                 {product.id}
               </td>
