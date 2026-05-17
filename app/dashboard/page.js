@@ -295,11 +295,13 @@ const filteredLowStockProducts =
   );
 
   const topProduct =
-    salesInsights?.top_products?.[0]?.product_name || "غير متوفر";
-
-  const hasOutOfStock = outOfStockProducts.length > 0;
-  const hasLowStock = lowStockProducts.length > 0;
-  const hasTopProduct = topProduct !== "غير متوفر";
+  salesInsights?.top_products?.[0]?.product_name ||
+  salesInsights?.topProducts?.[0]?.product_name ||
+  data?.top_products?.[0]?.product_name ||
+  data?.topProducts?.[0]?.product_name ||
+  data?.highest_selling_product?.name ||
+  data?.highestSellingProduct?.name ||
+  "غير متوفر";
 
   const priorities = [
     {
