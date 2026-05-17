@@ -833,7 +833,7 @@ const stagnantProducts = (data.low_stock_products || [])
   }}
 >
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
-    المنتجات الراكدة / التي لا تتحرك
+    منتجات تحتاج تنشيطًا
   </h2>
 
   <p style={{ margin: "0 0 18px", color: "#64748b", fontSize: "14px" }}>
