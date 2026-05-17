@@ -900,11 +900,13 @@ const filteredLowStockProducts =
     راجعها
   </h3>
 
-  <p style={{ margin: 0, color: "#701a75", fontSize: "14px" }}>
+    <p style={{ margin: 0, color: "#701a75", fontSize: "14px" }}>
     تابع المنتجات منخفضة المخزون خلال 48 ساعة.
   </p>
 </div>
- </section>     
+</div>
+</section>
+
 </main>
   );
 }
