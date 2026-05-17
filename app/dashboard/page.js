@@ -1060,7 +1060,7 @@ const stagnantProducts = (data.low_stock_products || [])
     </div>
   </div>
 </section>
-          <section
+ <section
   style={{
     marginTop: "28px",
     background: "white",
@@ -1075,42 +1075,19 @@ const stagnantProducts = (data.low_stock_products || [])
 
   <div
     style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
-      gap: "16px",
+      background: "#fff7ed",
+      border: "1px solid #fed7aa",
+      borderRadius: "12px",
+      padding: "18px",
+      color: "#92400e",
+      lineHeight: 1.8,
     }}
   >
-    <div
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: "12px",
-        padding: "16px",
-      }}
-    >
-      <h3 style={{ marginTop: 0 }}>أكثر طرق الدفع استخدامًا</h3>
-
-      {(salesInsights?.payment_methods_insights || []).slice(0, 5).map((item, index) => (
-        <p key={index} style={{ margin: "10px 0" }}>
-          {item.name} — {item.orders_count} طلب — {item.total_sales} ريال
-        </p>
-      ))}
-    </div>
-
-    <div
-      style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: "12px",
-        padding: "16px",
-      }}
-    >
-      <h3 style={{ marginTop: 0 }}>أكثر قنوات البيع جذبًا للعملاء</h3>
-
-      {(salesInsights?.sales_channels_insights || []).slice(0, 5).map((item, index) => (
-        <p key={index} style={{ margin: "10px 0" }}>
-          {item.name} — {item.orders_count} طلب — {item.total_sales} ريال
-        </p>
-      ))}
-    </div>
+    لا توجد بيانات كافية حاليًا لتحليل قنوات البيع أو طرق الدفع.
+    <br />
+    قد يكون السبب أن المتجر تجريبي أو أن الطلبات الحالية لا تحتوي على بيانات الدفع وقنوات البيع.
+    <br />
+    عند ربط متجر حقيقي وتوفر هذه البيانات، سيظهر التحليل تلقائيًا هنا.
   </div>
 </section>
     <section
