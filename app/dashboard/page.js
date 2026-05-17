@@ -819,7 +819,7 @@ const filteredLowStockProducts =
       No low stock products found.
     </p>
   )}
-</section>
+
     <section
   style={{
     marginTop: "28px",
