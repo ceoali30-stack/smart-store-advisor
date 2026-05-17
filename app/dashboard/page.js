@@ -904,10 +904,10 @@ const filteredLowStockProducts =
     تابع المنتجات منخفضة المخزون خلال 48 ساعة.
   </p>
 </div>
-      
+ </section>     
 </main>
   );
-
+}
 function MerchantLinks() {
   const merchants = ["210819854", "905561820", "174453729"];
 
