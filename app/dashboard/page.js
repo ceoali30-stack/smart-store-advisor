@@ -493,8 +493,7 @@ const filteredLowStockProducts =
         </div>
       </div>
     </section>
-  );
-})()}
+ 
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
     </h2>
