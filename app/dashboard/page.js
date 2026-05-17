@@ -600,7 +600,6 @@ const filteredLowStockProducts =
         </div>
     </div>
   </div>
-)}
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     منتجات منخفضة المخزون
   </h2>
