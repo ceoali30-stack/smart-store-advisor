@@ -70,14 +70,7 @@ const filteredLowStockProducts =
 const stagnantProducts = (data.low_stock_products || [])
   .filter((product) => Number(product.quantity || 0) > 0)
   .slice(0, 10);
-    const productName = String(product.name || product.product_name || product.title || "");
-    const topNames = (data.top_products || data.best_selling_products || []).map((item) =>
-      String(item.name || item.product_name || item.title || "")
-    );
 
-    return !topNames.includes(productName);
-  })
-  .slice(0, 10);
   return (
     <main
       style={{
