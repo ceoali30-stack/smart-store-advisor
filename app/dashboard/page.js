@@ -851,62 +851,63 @@ const filteredLowStockProducts =
       <p style={{ margin: 0, color: "#991b1b", fontSize: "14px" }}>
         تنبيه مخزون حرج
       </p>
+
       <h3 style={{ margin: "8px 0", color: "#dc2626", fontSize: "24px" }}>
         {data.low_stock_products.filter(
           (product) => Number(product.quantity) === 0
         ).length}
       </h3>
+
       <p style={{ margin: 0, color: "#7f1d1d", fontSize: "14px" }}>
-      منتجات نفد مخزونها بالكامل ويجب إعادة توريدها فورًا.
+        منتجات نفد مخزونها بالكامل ويجب إعادة توريدها فورًا.
       </p>
     </div>
 
-<div
-  style={{
-    background: "#fff7ed",
-    border: "1px solid #fed7aa",
-    borderRadius: "12px",
-    padding: "16px",
-  }}
->
-  <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
-    تنبيه
-  </p>
+    <div
+      style={{
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        تنبيه
+      </p>
 
-  <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
-    {data.low_stock_products.filter(
-      (product) => Number(product.quantity) > 0
-    ).length}
-  </h3>
+      <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
+        {data.low_stock_products.filter(
+          (product) => Number(product.quantity) > 0
+        ).length}
+      </h3>
 
-  <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
-    منتجات أوشكت على النفاد.
-  </p>
-</div>
+      <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
+        منتجات أوشكت على النفاد.
+      </p>
+    </div>
 
-<div
-  style={{
-    background: "#fdf4ff",
-    border: "1px solid #f0abfc",
-    borderRadius: "12px",
-    padding: "16px",
-  }}
->
-  <p style={{ margin: 0, color: "#86198f", fontSize: "14px" }}>
-    الإجراء المقترح
-  </p>
+    <div
+      style={{
+        background: "#fdf4ff",
+        border: "1px solid #f0abfc",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#86198f", fontSize: "14px" }}>
+        الإجراء المقترح
+      </p>
 
-  <h3 style={{ margin: "8px 0", color: "#581c87", fontSize: "24px" }}>
-    راجعها
-  </h3>
+      <h3 style={{ margin: "8px 0", color: "#581c87", fontSize: "24px" }}>
+        راجعها
+      </h3>
 
-    <p style={{ margin: 0, color: "#701a75", fontSize: "14px" }}>
-    تابع المنتجات منخفضة المخزون خلال 48 ساعة.
-  </p>
-</div>
-</div>
+      <p style={{ margin: 0, color: "#701a75", fontSize: "14px" }}>
+        تابع المنتجات منخفضة المخزون خلال 48 ساعة.
+      </p>
+    </div>
+  </div>
 </section>
-
 </main>
   );
 }
