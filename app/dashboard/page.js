@@ -298,6 +298,63 @@ const filteredLowStockProducts =
     salesInsights?.top_products?.[0]?.product_name || "غير متوفر";
 
   return (
+    <div
+  style={{
+    background: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: "18px",
+    padding: "22px",
+    marginBottom: "24px",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "24px" }}>
+    أولويات اليوم
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(240px, 1fr))",
+      gap: "14px",
+    }}
+  >
+    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "14px", padding: "16px" }}>
+      <h3 style={{ margin: "0 0 8px", color: "#991b1b" }}>
+        1. إعادة توفير المنتجات النافدة فورًا
+      </h3>
+      <p style={{ margin: 0, color: "#7f1d1d" }}>
+        ابدأ بالمنتجات التي وصلت كميتها إلى صفر لأنها قد تسبب فقدان طلبات مباشرة.
+      </p>
+    </div>
+
+    <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "14px", padding: "16px" }}>
+      <h3 style={{ margin: "0 0 8px", color: "#92400e" }}>
+        2. مراجعة المنتجات منخفضة المخزون خلال 48 ساعة
+      </h3>
+      <p style={{ margin: 0, color: "#78350f" }}>
+        راجع المنتجات ذات الكمية المنخفضة وحدد هل تحتاج إلى إعادة طلب قبل نفادها.
+      </p>
+    </div>
+
+    <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "16px" }}>
+      <h3 style={{ margin: "0 0 8px", color: "#1d4ed8" }}>
+        3. التركيز على المنتج الأعلى مبيعًا
+      </h3>
+      <p style={{ margin: 0, color: "#1e40af" }}>
+        اجعل المنتج الأعلى مبيعًا ظاهرًا في واجهة المتجر أو ضمن العروض.
+      </p>
+    </div>
+
+    <div style={{ background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: "14px", padding: "16px" }}>
+      <h3 style={{ margin: "0 0 8px", color: "#6d28d9" }}>
+        4. تحسين أو تسويق المنتجات التي لا تتحرك
+      </h3>
+      <p style={{ margin: 0, color: "#5b21b6" }}>
+        راجع المنتجات التي لا تحقق مبيعات وجرّب تحسين الصور أو السعر أو إضافتها في عرض.
+      </p>
+    </div>
+  </div>
+</div>
     <section
       style={{
         background: "white",
