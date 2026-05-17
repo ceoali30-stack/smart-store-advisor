@@ -67,9 +67,9 @@ const filteredLowStockProducts =
         (product) => Number(product.quantity) > 0
       )
     : data.low_stock_products;
-const stagnantProducts = (data.products || [])
-  .filter((product) => Number(product.quantity || product.stock || 0) > 0)
-  .filter((product) => {
+const stagnantProducts = (data.low_stock_products || [])
+  .filter((product) => Number(product.quantity || 0) > 0)
+  .slice(0, 10);
     const productName = String(product.name || product.product_name || product.title || "");
     const topNames = (data.top_products || data.best_selling_products || []).map((item) =>
       String(item.name || item.product_name || item.title || "")
