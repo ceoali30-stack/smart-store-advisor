@@ -861,52 +861,49 @@ const filteredLowStockProducts =
       </p>
     </div>
 
-    <div
-      style={{
-        background: "#fffbeb",
-        border: "1px solid #fde68a",
-        borderRadius: "12px",
-        padding: "16px",
-      }}
-    >
-      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
-        إعادة الطلب قريبًا
-      </p>
-      <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
-        {data.low_stock_products.filter(
-          (product) => Number(product.quantity) > 0
-        ).length}
-      </h3>
-      <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
-        منتجات أوشكت على النفاد ويجب مراجعتها قبل نفادها.
-      </p>
-    </div>
+<div
+  style={{
+    background: "#fff7ed",
+    border: "1px solid #fed7aa",
+    borderRadius: "12px",
+    padding: "16px",
+  }}
+>
+  <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+    تنبيه
+  </p>
 
-    <div
-      style={{
-        background: "#f0fdf4",
-        border: "1px solid #bbf7d0",
-        borderRadius: "12px",
-        padding: "16px",
-      }}
-    >
-      <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
-        الإجراء المقترح
-      </p>
-      <h3 style={{ margin: "8px 0", color: "#15803d", fontSize: "24px" }}>
-        مراجعة اليوم
-      </h3>
-      <p style={{ margin: 0, color: "#14532d", fontSize: "14px" }}>
-       ابدأ بالمنتجات عالية الأولوية، ثم راجع المنتجات متوسطة الأولوية خلال 24 إلى 48 ساعة.
-      </p>
-    </div>
-  </div>
-</section>
-   
-    </main>
-  );
-}
+  <h3 style={{ margin: "8px 0", color: "#d97706", fontSize: "24px" }}>
+    {data.low_stock_products.filter(
+      (product) => Number(product.quantity) > 0
+    ).length}
+  </h3>
 
+  <p style={{ margin: 0, color: "#78350f", fontSize: "14px" }}>
+    منتجات أوشكت على النفاد.
+  </p>
+</div>
+
+<div
+  style={{
+    background: "#fdf4ff",
+    border: "1px solid #f0abfc",
+    borderRadius: "12px",
+    padding: "16px",
+  }}
+>
+  <p style={{ margin: 0, color: "#86198f", fontSize: "14px" }}>
+    الإجراء المقترح
+  </p>
+
+  <h3 style={{ margin: "8px 0", color: "#581c87", fontSize: "24px" }}>
+    راجعها
+  </h3>
+
+  <p style={{ margin: 0, color: "#701a75", fontSize: "14px" }}>
+    تابع المنتجات منخفضة المخزون خلال 48 ساعة.
+  </p>
+</div>
 function MerchantLinks() {
   const merchants = ["210819854", "905561820", "174453729"];
 
