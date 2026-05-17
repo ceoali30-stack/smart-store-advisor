@@ -67,6 +67,17 @@ const filteredLowStockProducts =
         (product) => Number(product.quantity) > 0
       )
     : data.low_stock_products;
+const stagnantProducts = (data.products || [])
+  .filter((product) => Number(product.quantity || product.stock || 0) > 0)
+  .filter((product) => {
+    const productName = String(product.name || product.product_name || product.title || "");
+    const topNames = (data.top_products || data.best_selling_products || []).map((item) =>
+      String(item.name || item.product_name || item.title || "")
+    );
+
+    return !topNames.includes(productName);
+  })
+  .slice(0, 10);
   return (
     <main
       style={{
@@ -819,7 +830,165 @@ const filteredLowStockProducts =
       No low stock products found.
     </p>
   )}
+<section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    المنتجات الراكدة / التي لا تتحرك
+  </h2>
 
+  <p style={{ margin: "0 0 18px", color: "#64748b", fontSize: "14px" }}>
+    هذه المنتجات متوفرة في المخزون لكنها لا تظهر ضمن المنتجات الأعلى مبيعًا، لذلك تحتاج إلى مراجعة تسويقية أو عرض خاص أو تحسين ظهورها في المتجر.
+  </p>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+      gap: "16px",
+      marginBottom: "20px",
+    }}
+  >
+    <div
+      style={{
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        عدد المنتجات الراكدة
+      </p>
+
+      <h3 style={{ margin: "8px 0", color: "#c2410c", fontSize: "24px" }}>
+        {stagnantProducts.length}
+      </h3>
+
+      <p style={{ margin: 0, color: "#7c2d12", fontSize: "14px" }}>
+        منتجات متوفرة لكنها لا تتحرك بوضوح.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#fefce8",
+        border: "1px solid #fde68a",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#854d0e", fontSize: "14px" }}>
+        الخطر التجاري
+      </p>
+
+      <h3 style={{ margin: "8px 0", color: "#a16207", fontSize: "24px" }}>
+        تجميد رأس مال
+      </h3>
+
+      <p style={{ margin: 0, color: "#713f12", fontSize: "14px" }}>
+        بقاء المنتجات دون حركة يقلل السيولة ويرفع تكلفة التخزين.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#f0fdf4",
+        border: "1px solid #bbf7d0",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
+        الإجراء المقترح
+      </p>
+
+      <h3 style={{ margin: "8px 0", color: "#15803d", fontSize: "24px" }}>
+        عرض أو تحسين ظهور
+      </h3>
+
+      <p style={{ margin: 0, color: "#14532d", fontSize: "14px" }}>
+        جرّب خصمًا بسيطًا، باقة مع منتج سريع البيع، أو تحسين الصورة والوصف.
+      </p>
+    </div>
+  </div>
+
+  {stagnantProducts.length > 0 ? (
+    <table
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        fontSize: "14px",
+      }}
+    >
+      <thead>
+        <tr style={{ background: "#f1f5f9" }}>
+          <th style={{ padding: "12px", textAlign: "right" }}>رقم المنتج</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>اسم المنتج</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>السعر</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>الكمية</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>الحالة</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>الإجراء المقترح</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {stagnantProducts.map((product, index) => (
+          <tr
+            key={product.id || product.sku || index}
+            style={{
+              borderBottom: "1px solid #e5e7eb",
+              background: index % 2 === 0 ? "#ffffff" : "#f8fafc",
+            }}
+          >
+            <td style={{ padding: "12px" }}>
+              {product.id || product.sku || "-"}
+            </td>
+
+            <td style={{ padding: "12px", fontWeight: "600" }}>
+              {product.name || product.product_name || product.title || "منتج بدون اسم"}
+            </td>
+
+            <td style={{ padding: "12px" }}>
+              {product.price ? `${product.price} ريال` : "-"}
+            </td>
+
+            <td style={{ padding: "12px" }}>
+              {product.quantity || product.stock || 0}
+            </td>
+
+            <td style={{ padding: "12px", color: "#c2410c", fontWeight: "600" }}>
+              راكد
+            </td>
+
+            <td style={{ padding: "12px", color: "#15803d", fontWeight: "600" }}>
+              تسويق / عرض / تحسين ظهور
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <div
+      style={{
+        background: "#f0fdf4",
+        border: "1px solid #bbf7d0",
+        borderRadius: "12px",
+        padding: "16px",
+        color: "#166534",
+      }}
+    >
+      لا توجد منتجات راكدة واضحة حاليًا بناءً على البيانات المتاحة.
+    </div>
+  )}
+</section>
+    
     <section
   style={{
     marginTop: "28px",
