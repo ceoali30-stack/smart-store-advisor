@@ -598,7 +598,6 @@ const filteredLowStockProducts =
             {rec.message}
           </p>
         </div>
-      ))}
     </div>
   </div>
 )}
