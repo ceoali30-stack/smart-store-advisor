@@ -597,7 +597,6 @@ const filteredLowStockProducts =
           <p style={{ margin: 0, color: "#14532d" }}>
             {rec.message}
           </p>
-        </div>
     </div>
   </div>
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
