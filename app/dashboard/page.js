@@ -981,7 +981,85 @@ const stagnantProducts = (data.low_stock_products || [])
     </div>
   )}
 </section>
-    
+
+    <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    فرص زيادة المبيعات
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+      gap: "16px",
+    }}
+  >
+    <div
+      style={{
+        background: "#ecfdf5",
+        border: "1px solid #bbf7d0",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#166534", fontSize: "14px" }}>
+        فرصة فورية
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#15803d", fontSize: "22px" }}>
+        ركّز على المنتج الأعلى مبيعًا
+      </h3>
+      <p style={{ margin: 0, color: "#14532d", fontSize: "14px" }}>
+        اجعله ظاهرًا في الصفحة الرئيسية أو أضفه إلى حملة تسويقية قصيرة.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#eff6ff",
+        border: "1px solid #bfdbfe",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#1d4ed8", fontSize: "14px" }}>
+        زيادة متوسط الطلب
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#1e40af", fontSize: "22px" }}>
+        أنشئ باقة منتجات
+      </h3>
+      <p style={{ margin: 0, color: "#1e3a8a", fontSize: "14px" }}>
+        اربط منتجًا سريع البيع مع منتج يحتاج تنشيطًا لرفع قيمة الفاتورة.
+      </p>
+    </div>
+
+    <div
+      style={{
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <p style={{ margin: 0, color: "#92400e", fontSize: "14px" }}>
+        حماية المبيعات
+      </p>
+      <h3 style={{ margin: "8px 0", color: "#c2410c", fontSize: "22px" }}>
+        لا تدع المنتجات النافدة تخسرك طلبات
+      </h3>
+      <p style={{ margin: 0, color: "#7c2d12", fontSize: "14px" }}>
+        أعد توريد المنتجات النافدة أولًا لأنها تمثل خسارة مباشرة للطلبات.
+      </p>
+    </div>
+  </div>
+</section>
     <section
   style={{
     marginTop: "28px",
