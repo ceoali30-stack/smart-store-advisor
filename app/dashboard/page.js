@@ -907,7 +907,6 @@ const filteredLowStockProducts =
       
 </main>
   );
-}
 
 function MerchantLinks() {
   const merchants = ["210819854", "905561820", "174453729"];
