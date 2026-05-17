@@ -1060,6 +1060,59 @@ const stagnantProducts = (data.low_stock_products || [])
     </div>
   </div>
 </section>
+          <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    تحليل قنوات البيع وطرق الدفع
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+      gap: "16px",
+    }}
+  >
+    <div
+      style={{
+        border: "1px solid #e5e7eb",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <h3 style={{ marginTop: 0 }}>أكثر طرق الدفع استخدامًا</h3>
+
+      {(salesInsights?.payment_methods_insights || []).slice(0, 5).map((item, index) => (
+        <p key={index} style={{ margin: "10px 0" }}>
+          {item.name} — {item.orders_count} طلب — {item.total_sales} ريال
+        </p>
+      ))}
+    </div>
+
+    <div
+      style={{
+        border: "1px solid #e5e7eb",
+        borderRadius: "12px",
+        padding: "16px",
+      }}
+    >
+      <h3 style={{ marginTop: 0 }}>أكثر قنوات البيع جذبًا للعملاء</h3>
+
+      {(salesInsights?.sales_channels_insights || []).slice(0, 5).map((item, index) => (
+        <p key={index} style={{ margin: "10px 0" }}>
+          {item.name} — {item.orders_count} طلب — {item.total_sales} ريال
+        </p>
+      ))}
+    </div>
+  </div>
+</section>
     <section
   style={{
     marginTop: "28px",
