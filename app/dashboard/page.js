@@ -355,7 +355,6 @@ const filteredLowStockProducts =
       </p>
     </div>
   </div>
-          <>
 </div>
     <section
       style={{
