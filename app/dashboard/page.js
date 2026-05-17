@@ -297,7 +297,8 @@ const filteredLowStockProducts =
   const topProduct =
     salesInsights?.top_products?.[0]?.product_name || "غير متوفر";
 
-  return (
+ return (
+  <>
     <div
   style={{
     background: "#ffffff",
@@ -354,6 +355,7 @@ const filteredLowStockProducts =
       </p>
     </div>
   </div>
+          <>
 </div>
     <section
       style={{
