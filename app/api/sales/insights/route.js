@@ -166,6 +166,54 @@ export async function GET(request) {
       });
     }
 
+    const salesByPaymentMethod = {};
+const salesBySource = {};
+
+orders.forEach((order) => {
+  const paymentMethod =
+    order.payment_method_label ||
+    order.payment_method ||
+    order.payment_method_name ||
+    "غير محدد";
+
+  const source =
+    order.source ||
+    order.source_details ||
+    order.utm_source ||
+    "غير محدد";
+
+  const orderTotal = Number(order.total || order.amount || order.grand_total || 0);
+
+  if (!salesByPaymentMethod[paymentMethod]) {
+    salesByPaymentMethod[paymentMethod] = {
+      name: paymentMethod,
+      orders_count: 0,
+      total_sales: 0,
+    };
+  }
+
+  salesByPaymentMethod[paymentMethod].orders_count += 1;
+  salesByPaymentMethod[paymentMethod].total_sales += orderTotal;
+
+  if (!salesBySource[source]) {
+    salesBySource[source] = {
+      name: source,
+      orders_count: 0,
+      total_sales: 0,
+    };
+  }
+
+  salesBySource[source].orders_count += 1;
+  salesBySource[source].total_sales += orderTotal;
+});
+
+const paymentMethodsInsights = Object.values(salesByPaymentMethod).sort(
+  (a, b) => b.total_sales - a.total_sales
+);
+
+const salesChannelsInsights = Object.values(salesBySource).sort(
+  (a, b) => b.total_sales - a.total_sales
+);
     return Response.json({
       success: true,
       merchant_id: merchantId,
@@ -177,9 +225,11 @@ export async function GET(request) {
         average_items_per_order: averageItemsPerOrder,
       },
       top_products: topProducts,
-      top_categories: topCategories,
-      top_products_by_city: topProductsByCity,
-      recommendations,
+top_categories: topCategories,
+top_products_by_city: topProductsByCity,
+payment_methods_insights: paymentMethodsInsights,
+sales_channels_insights: salesChannelsInsights,
+recommendations,
     });
   } catch (error) {
     return Response.json(
