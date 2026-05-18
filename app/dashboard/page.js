@@ -457,21 +457,20 @@ textAlign: "center",
   الرسوم البيانية
 </a>
 
-<button
-  onClick={() => window.print()}
+<a
+  href="javascript:window.print()"
   style={{
     background: "#2563eb",
     color: "white",
     padding: "10px 14px",
     borderRadius: "10px",
-    border: "none",
+    textDecoration: "none",
     fontWeight: "700",
     fontSize: "14px",
-    cursor: "pointer",
   }}
 >
   طباعة التقرير PDF
-</button>
+</a>
   <SyncOrdersButton merchantId={merchantId} />
 
   <a
