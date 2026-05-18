@@ -733,7 +733,8 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
   )}
 </section>
- <section
+
+   <section
   style={{
     marginTop: "28px",
     background: "white",
@@ -835,6 +836,7 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
   )}
 </section>
+  
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
     </h2>
