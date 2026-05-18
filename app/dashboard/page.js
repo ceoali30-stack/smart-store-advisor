@@ -442,6 +442,36 @@ textAlign: "center",
     gap: "10px",
   }}
 >
+  <a
+  href={`/charts?merchant_id=${merchantId}`}
+  style={{
+    background: "#111827",
+    color: "white",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    textDecoration: "none",
+    fontWeight: "700",
+    fontSize: "14px",
+  }}
+>
+  الرسوم البيانية
+</a>
+
+<button
+  onClick={() => window.print()}
+  style={{
+    background: "#2563eb",
+    color: "white",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    border: "none",
+    fontWeight: "700",
+    fontSize: "14px",
+    cursor: "pointer",
+  }}
+>
+  طباعة التقرير PDF
+</button>
   <SyncOrdersButton merchantId={merchantId} />
 
   <a
