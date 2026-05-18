@@ -61,16 +61,31 @@ export async function GET(request) {
 
     const products = Array.isArray(sallaData.data) ? sallaData.data : [];
 
-    console.log("FIRST_PRODUCT_SAMPLE", JSON.stringify(products[0], null, 2));
-    const rows = products.map((product) => ({
-      merchant_id: String(merchantId),
-      salla_product_id: String(product.id),
-      name: product.name || null,
-      price: product.price?.amount || product.price || null,
-      quantity: product.quantity || product.stock_quantity || null,
-      status: product.status || null,
-      raw_data: product
-    }));
+   const rows = products.map((product) => {
+  const skuCostPrices = Array.isArray(product.skus)
+    ? product.skus
+        .map((sku) => Number(sku.cost_price || 0))
+        .filter((value) => value > 0)
+    : [];
+
+  const costPrice =
+    Number(product.cost_price || 0) > 0
+      ? Number(product.cost_price)
+      : skuCostPrices.length > 0
+      ? skuCostPrices[0]
+      : null;
+
+  return {
+    merchant_id: String(merchantId),
+    salla_product_id: String(product.id),
+    name: product.name || null,
+    price: product.price?.amount || product.price || null,
+    quantity: product.quantity || product.stock_quantity || null,
+    status: product.status || null,
+    cost_price: costPrice,
+    raw_data: product,
+  };
+});
 
     if (rows.length === 0) {
       return Response.json({
