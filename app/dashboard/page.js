@@ -320,31 +320,53 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
   }}
 >
   {[
-    {
-      label: "صحة المخزون",
-      value: Math.round(stockHealthScore),
-      max: 25,
-    },
-    {
-      label: "المنتجات الراكدة",
-      value: Math.round(stagnantHealthScore),
-      max: 20,
-    },
-    {
-      label: "نشاط المبيعات",
-      value: Math.round(salesHealthScore),
-      max: 20,
-    },
-    {
-      label: "متوسط قيمة الطلب",
-      value: Math.round(averageOrderHealthScore),
-      max: 15,
-    },
-    {
-      label: "اكتمال بيانات المنتجات",
-      value: Math.round(productDataHealthScore),
-      max: 20,
-    },
+   {
+  label: "صحة المخزون",
+  value: Math.round(stockHealthScore),
+  max: 25,
+  note:
+    lowStockCount > 0
+      ? "توجد منتجات منخفضة المخزون"
+      : "المخزون مستقر",
+},
+{
+  label: "المنتجات الراكدة",
+  value: Math.round(stagnantHealthScore),
+  max: 20,
+  note:
+    stagnantCount > 0
+      ? "توجد منتجات راكدة"
+      : "لا توجد منتجات راكدة",
+},
+{
+  label: "نشاط المبيعات",
+  value: Math.round(salesHealthScore),
+  max: 20,
+  note:
+    totalOrdersCount > 0
+      ? "توجد مبيعات نشطة"
+      : "لا توجد طلبات كافية",
+},
+{
+  label: "متوسط قيمة الطلب",
+  value: Math.round(averageOrderHealthScore),
+  max: 15,
+  note:
+    averageOrderValue >= 100
+      ? "متوسط الطلب جيد"
+      : averageOrderValue >= 50
+      ? "متوسط الطلب مقبول"
+      : "متوسط الطلب منخفض",
+},
+{
+  label: "اكتمال بيانات المنتجات",
+  value: Math.round(productDataHealthScore),
+  max: 20,
+  note:
+    productsWithCost < totalProductsCount
+      ? "بيانات التكلفة غير مكتملة"
+      : "بيانات المنتجات مكتملة",
+},
   ].map((item) => (
     <div
       key={item.label}
@@ -370,6 +392,16 @@ textAlign: "center",
       <strong style={{ fontSize: "18px" }}>
         {item.value} / {item.max}
       </strong>
+          <p
+  style={{
+    margin: "8px 0 0",
+    color: "#64748b",
+    fontSize: "12px",
+    lineHeight: "1.6",
+  }}
+>
+  {item.note}
+</p>
     </div>
   ))}
 </div>
