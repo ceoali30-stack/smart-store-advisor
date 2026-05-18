@@ -123,6 +123,35 @@ const profitableProducts = (data.low_stock_products || [])
   .filter((product) => product.costPrice > 0 && product.profit > 0)
   .sort((a, b) => b.profit - a.profit)
   .slice(0, 10);
+const marketingSuggestions = [];
+
+if (data?.sales_insights?.top_products?.length > 0) {
+  marketingSuggestions.push({
+    title: "روّج للمنتج الأعلى مبيعًا",
+    message: `المنتج "${data.sales_insights.top_products[0].name}" يحقق مبيعات جيدة. اجعله ظاهرًا في الصفحة الرئيسية أو أضفه إلى حملة قصيرة.`
+  });
+}
+
+if (data?.low_stock_products?.length > 0) {
+  marketingSuggestions.push({
+    title: "لا تروّج لمنتجات منخفضة المخزون",
+    message: "تجنب إطلاق حملات على منتجات مخزونها منخفض حتى لا تزيد الطلبات على منتجات قد تنفد سريعًا."
+  });
+}
+
+if (data?.stagnant_products?.length > 0) {
+  marketingSuggestions.push({
+    title: "حملة تصريف للمنتجات الراكدة",
+    message: "أنشئ عرضًا محدودًا أو حسّن صور ووصف المنتجات الراكدة لرفع فرص ظهورها وبيعها."
+  });
+}
+
+if (data?.sales_insights?.summary?.average_order_value > 0) {
+  marketingSuggestions.push({
+    title: "ارفع متوسط قيمة الطلب",
+    message: `متوسط قيمة الطلب هو ${data.sales_insights.summary.average_order_value} ريال. جرّب عروض مثل: اشترِ منتجين واحصل على خصم أو شحن مجاني فوق مبلغ معين.`
+  });
+}
   return (
     <main
       style={{
