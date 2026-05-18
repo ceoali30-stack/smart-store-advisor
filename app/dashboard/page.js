@@ -308,6 +308,31 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
 
       <p style={{ margin: "10px 0 0", fontWeight: "700" }}>
         {storeHealthLabel}
+<div
+  style={{
+    marginTop: "12px",
+    width: "160px",
+    height: "10px",
+    background: "#e5e7eb",
+    borderRadius: "999px",
+    overflow: "hidden",
+  }}
+>
+  <div
+    style={{
+      width: `${storeHealthPercentage}%`,
+      height: "100%",
+      background:
+        storeHealthPercentage >= 85
+          ? "#22c55e"
+          : storeHealthPercentage >= 70
+          ? "#3b82f6"
+          : storeHealthPercentage >= 50
+          ? "#f59e0b"
+          : "#ef4444",
+    }}
+  />
+</div>
       </p>
 <div
   style={{
