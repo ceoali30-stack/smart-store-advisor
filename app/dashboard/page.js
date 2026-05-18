@@ -1,3 +1,4 @@
+import PrintButton from "./PrintButton";
 import SyncOrdersButton from "./SyncOrdersButton";
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
@@ -456,21 +457,9 @@ textAlign: "center",
 >
   الرسوم البيانية
 </a>
-
-<a
-  href="javascript:window.print()"
-  style={{
-    background: "#2563eb",
-    color: "white",
-    padding: "10px 14px",
-    borderRadius: "10px",
-    textDecoration: "none",
-    fontWeight: "700",
-    fontSize: "14px",
-  }}
->
-  طباعة التقرير PDF
-</a>
+    
+<PrintButton />
+    
   <SyncOrdersButton merchantId={merchantId} />
 
   <a
