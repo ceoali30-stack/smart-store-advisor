@@ -123,6 +123,69 @@ const profitableProducts = (data.low_stock_products || [])
   .filter((product) => product.costPrice > 0 && product.profit > 0)
   .sort((a, b) => b.profit - a.profit)
   .slice(0, 10);
+const lowStockCount = Number(data.low_stock_products?.length || 0);
+const stagnantCount = Number(stagnantProducts?.length || 0);
+const totalProductsCount = Number(data.products?.length || 0);
+
+const totalOrdersCount = Number(salesInsights?.summary?.total_orders || 0);
+const totalRevenueValue = Number(salesInsights?.summary?.total_revenue || 0);
+const averageOrderValue = Number(salesInsights?.summary?.average_order_value || 0);
+
+const productsWithPrice = Number(
+  data.products?.filter((product) => Number(product.price || 0) > 0).length || 0
+);
+
+const productsWithCost = Number(
+  data.products?.filter((product) => Number(product.cost_price || 0) > 0).length || 0
+);
+
+const stockHealthScore =
+  totalProductsCount > 0
+    ? Math.max(0, 25 - Math.min(25, (lowStockCount / totalProductsCount) * 25))
+    : 0;
+
+const stagnantHealthScore =
+  totalProductsCount > 0
+    ? Math.max(0, 20 - Math.min(20, (stagnantCount / totalProductsCount) * 20))
+    : 0;
+
+const salesHealthScore =
+  totalOrdersCount > 0 && totalRevenueValue > 0 ? 20 : 0;
+
+const averageOrderHealthScore =
+  averageOrderValue >= 100 ? 15 : averageOrderValue >= 50 ? 10 : averageOrderValue > 0 ? 5 : 0;
+
+const productDataHealthScore =
+  totalProductsCount > 0
+    ? Math.round(((productsWithPrice + productsWithCost) / (totalProductsCount * 2)) * 20)
+    : 0;
+
+const storeHealthPercentage = Math.round(
+  stockHealthScore +
+    stagnantHealthScore +
+    salesHealthScore +
+    averageOrderHealthScore +
+    productDataHealthScore
+);
+
+const storeHealthLabel =
+  storeHealthPercentage >= 85
+    ? "ممتاز"
+    : storeHealthPercentage >= 70
+    ? "جيد"
+    : storeHealthPercentage >= 50
+    ? "متوسط"
+    : "يحتاج تحسين";
+
+const storeHealthMessage =
+  storeHealthPercentage >= 85
+    ? "المتجر في حالة قوية، ركّز على التوسع وزيادة الحملات."
+    : storeHealthPercentage >= 70
+    ? "المتجر جيد، لكن توجد فرص لتحسين المخزون والمبيعات."
+    : storeHealthPercentage >= 50
+    ? "المتجر متوسط ويحتاج متابعة المنتجات الراكدة والمخزون."
+    : "المتجر يحتاج تدخل واضح في المخزون والمبيعات وبيانات المنتجات.";
+
 const marketingSuggestions = [];
 
 if (data?.sales_insights?.top_products?.length > 0) {
@@ -170,6 +233,79 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
       </p>
 
       <MerchantLinks />
+          <section
+  style={{
+    marginBottom: "28px",
+    background:
+      storeHealthPercentage >= 85
+        ? "#ecfdf5"
+        : storeHealthPercentage >= 70
+        ? "#eff6ff"
+        : storeHealthPercentage >= 50
+        ? "#fffbeb"
+        : "#fef2f2",
+    border:
+      storeHealthPercentage >= 85
+        ? "1px solid #bbf7d0"
+        : storeHealthPercentage >= 70
+        ? "1px solid #bfdbfe"
+        : storeHealthPercentage >= 50
+        ? "1px solid #fde68a"
+        : "1px solid #fecaca",
+    borderRadius: "18px",
+    padding: "24px",
+    boxShadow: "0 8px 22px rgba(0,0,0,0.06)",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "20px",
+      flexWrap: "wrap",
+    }}
+  >
+    <div>
+      <p style={{ margin: 0, color: "#64748b", fontSize: "14px" }}>
+        مؤشر عام
+      </p>
+
+      <h2 style={{ margin: "8px 0", fontSize: "26px" }}>
+        درجة صحة المتجر
+      </h2>
+
+      <p style={{ margin: 0, color: "#475569", fontSize: "14px", lineHeight: "1.8" }}>
+        {storeHealthMessage}
+      </p>
+    </div>
+
+    <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          width: "120px",
+          height: "120px",
+          borderRadius: "999px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "white",
+          border: "8px solid #22c55e",
+          boxShadow: "0 8px 18px rgba(0,0,0,0.08)",
+        }}
+      >
+        <strong style={{ fontSize: "28px" }}>
+          {storeHealthPercentage}%
+        </strong>
+      </div>
+
+      <p style={{ margin: "10px 0 0", fontWeight: "700" }}>
+        {storeHealthLabel}
+      </p>
+    </div>
+  </div>
+</section>
+        
 <div
   style={{
     marginTop: "14px",
