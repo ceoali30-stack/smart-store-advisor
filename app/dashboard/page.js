@@ -624,7 +624,9 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
       <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
         <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط عدد المنتجات في الفاتورة</p>
         <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.average_items_per_order}
+         {Number(salesInsights.summary.average_items_per_order) > 0
+  ? salesInsights.summary.average_items_per_order
+  : "غير متوفر"}
         </h3>
       </div>
     </div>
