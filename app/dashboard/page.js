@@ -71,6 +71,24 @@ const stagnantProducts = (data.low_stock_products || [])
   .filter((product) => Number(product.quantity || 0) > 0)
   .slice(0, 10);
 
+const profitableProducts = (data.low_stock_products || [])
+  .map((product) => {
+    const price = Number(product.price || 0);
+    const costPrice = Number(product.cost_price || product.raw_data?.cost_price || 0);
+    const profit = price - costPrice;
+    const margin = price > 0 ? Math.round((profit / price) * 100) : 0;
+
+    return {
+      ...product,
+      price,
+      costPrice,
+      profit,
+      margin,
+    };
+  })
+  .filter((product) => product.costPrice > 0 && product.profit > 0)
+  .sort((a, b) => b.profit - a.profit)
+  .slice(0, 10);
   return (
     <main
       style={{
@@ -575,6 +593,82 @@ const stagnantProducts = (data.low_stock_products || [])
       </p>
     </div>
   </div>
+</section>
+          <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    أفضل المنتجات ربحية
+  </h2>
+
+  {profitableProducts.length > 0 ? (
+    <table
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        fontSize: "14px",
+      }}
+    >
+      <thead>
+        <tr style={{ background: "#f1f5f9" }}>
+          <th style={{ padding: "12px", textAlign: "right" }}>اسم المنتج</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>سعر البيع</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>سعر التكلفة</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>الربح التقريبي</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>هامش الربح</th>
+          <th style={{ padding: "12px", textAlign: "right" }}>الإجراء المقترح</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {profitableProducts.map((product, index) => (
+          <tr
+            key={product.id || product.sku || index}
+            style={{
+              borderBottom: "1px solid #e5e7eb",
+              background: index % 2 === 0 ? "#ffffff" : "#f8fafc",
+            }}
+          >
+            <td style={{ padding: "12px", fontWeight: "700" }}>
+              {product.name || product.product_name || "منتج بدون اسم"}
+            </td>
+            <td style={{ padding: "12px" }}>{product.price} ريال</td>
+            <td style={{ padding: "12px" }}>{product.costPrice} ريال</td>
+            <td style={{ padding: "12px", color: "#15803d", fontWeight: "700" }}>
+              {product.profit} ريال
+            </td>
+            <td style={{ padding: "12px", color: "#166534", fontWeight: "700" }}>
+              {product.margin}%
+            </td>
+            <td style={{ padding: "12px", color: "#1d4ed8", fontWeight: "700" }}>
+              ركّز عليه في الحملات والعروض
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <div
+      style={{
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: "12px",
+        padding: "18px",
+        color: "#92400e",
+        lineHeight: 1.8,
+      }}
+    >
+      لا توجد بيانات تكلفة كافية حاليًا لحساب أفضل المنتجات ربحية.
+      <br />
+      عند توفر سعر التكلفة من سلة، سيظهر هذا القسم تلقائيًا بأعلى المنتجات ربحًا.
+    </div>
+  )}
 </section>
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
