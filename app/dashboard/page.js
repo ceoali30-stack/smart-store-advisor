@@ -836,7 +836,16 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
   )}
 </section>
-  
+
+  <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
     </h2>
@@ -943,6 +952,8 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
             ))}
 </div>
+    </section>
+              
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     منتجات منخفضة المخزون
   </h2>
