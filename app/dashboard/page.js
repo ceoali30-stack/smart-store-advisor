@@ -309,12 +309,14 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
       <p style={{ margin: "10px 0 0", fontWeight: "700" }}>
         {storeHealthLabel}
       </p>
-        <div
+<div
   style={{
     marginTop: "22px",
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gridTemplateColumns: "repeat(5, minmax(140px, 1fr))",
     gap: "12px",
+    width: "100%",
+    alignItems: "stretch",
   }}
 >
   {[
@@ -350,7 +352,8 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
         background: "rgba(255,255,255,0.75)",
         border: "1px solid rgba(148,163,184,0.25)",
         borderRadius: "14px",
-        padding: "12px",
+      padding: "14px",
+textAlign: "center",
       }}
     >
       <p
