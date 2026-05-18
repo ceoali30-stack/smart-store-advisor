@@ -309,6 +309,67 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
       <p style={{ margin: "10px 0 0", fontWeight: "700" }}>
         {storeHealthLabel}
       </p>
+        <div
+  style={{
+    marginTop: "22px",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "12px",
+  }}
+>
+  {[
+    {
+      label: "صحة المخزون",
+      value: Math.round(stockHealthScore),
+      max: 25,
+    },
+    {
+      label: "المنتجات الراكدة",
+      value: Math.round(stagnantHealthScore),
+      max: 20,
+    },
+    {
+      label: "نشاط المبيعات",
+      value: Math.round(salesHealthScore),
+      max: 20,
+    },
+    {
+      label: "متوسط قيمة الطلب",
+      value: Math.round(averageOrderHealthScore),
+      max: 15,
+    },
+    {
+      label: "اكتمال بيانات المنتجات",
+      value: Math.round(productDataHealthScore),
+      max: 20,
+    },
+  ].map((item) => (
+    <div
+      key={item.label}
+      style={{
+        background: "rgba(255,255,255,0.75)",
+        border: "1px solid rgba(148,163,184,0.25)",
+        borderRadius: "14px",
+        padding: "12px",
+      }}
+    >
+      <p
+        style={{
+          margin: "0 0 8px",
+          color: "#64748b",
+          fontSize: "13px",
+          fontWeight: "700",
+        }}
+      >
+        {item.label}
+      </p>
+
+      <strong style={{ fontSize: "18px" }}>
+        {item.value} / {item.max}
+      </strong>
+    </div>
+  ))}
+</div>
     </div>
   </div>
 </section>
