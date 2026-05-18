@@ -579,6 +579,122 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
       </div>
     </section>
 
+      <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+    <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+      تحليلات المبيعات
+    </h2>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
+        gap: "12px",
+        marginBottom: "18px",
+      }}
+    >
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الطلبات</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.total_orders}
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الإرادات</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.total_revenue} ريال
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط قيمة الفاتورة</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.average_order_value} ريال
+        </h3>
+      </div>
+
+      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط عدد المنتجات في الفاتورة</p>
+        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
+          {salesInsights.summary.average_items_per_order}
+        </h3>
+      </div>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+        gap: "14px",
+        marginBottom: "18px",
+      }}
+    >
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا</h3>
+      {salesInsights.top_products.slice(0, 5).map((product, index) => (
+  <p key={index} style={{ margin: "8px 0" }}>
+    {product.product_name} — {product.quantity_sold} مبيعات — {product.revenue} ريال
+  </p>
+))}
+      </div>
+
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>أكثر الأقسام مبيعًا</h3>
+        {salesInsights.top_categories.slice(0, 5).map((category, index) => (
+  <p key={index} style={{ margin: "8px 0" }}>
+    {category.category_name} — {category.quantity_sold} مبيعات — {category.revenue} ريال
+  </p>
+))}
+      </div>
+
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
+        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا حسب المدينة</h3>
+     {salesInsights.top_products_by_city.slice(0, 5).map((item, index) => (
+  <p key={index} style={{ margin: "8px 0" }}>
+    {item.city} — {item.product_name} — {item.quantity_sold} مبيعات
+  </p>
+))}
+      </div>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+        gap: "12px",
+      }}
+    >
+      {salesInsights.recommendations.map((rec, index) => (
+        <div
+          key={index}
+          style={{
+            background: "#ecfdf5",
+            border: "1px solid #bbf7d0",
+            borderRadius: "12px",
+            padding: "14px",
+          }}
+        >
+          <p style={{ margin: 0, color: "#166534", fontSize: "13px" }}>
+            {rec.title}
+          </p>
+          <h3 style={{ margin: "6px 0 8px", color: "#15803d" }}>
+            التوصية
+          </h3>
+          <p style={{ margin: 0, color: "#14532d" }}>
+            {rec.message}
+          </p>
+    </div>
+            ))}
+</div>
+    </section>
                   <section
   style={{
     marginTop: "28px",
@@ -836,123 +952,6 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
   )}
 </section>
-
-  <section
-  style={{
-    marginTop: "28px",
-    background: "white",
-    padding: "24px",
-    borderRadius: "14px",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
-  }}
->
-    <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
-      تحليلات المبيعات
-    </h2>
-
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
-        gap: "12px",
-        marginBottom: "18px",
-      }}
-    >
-      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الطلبات</p>
-        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.total_orders}
-        </h3>
-      </div>
-
-      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>إجمالي الإرادات</p>
-        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.total_revenue} ريال
-        </h3>
-      </div>
-
-      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط قيمة الفاتورة</p>
-        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.average_order_value} ريال
-        </h3>
-      </div>
-
-      <div style={{ background: "#f8fafc", padding: "14px", borderRadius: "12px" }}>
-        <p style={{ margin: 0, color: "#64748b", fontSize: "13px" }}>متوسط عدد المنتجات في الفاتورة</p>
-        <h3 style={{ margin: "8px 0 0", fontSize: "24px" }}>
-          {salesInsights.summary.average_items_per_order}
-        </h3>
-      </div>
-    </div>
-
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
-        gap: "14px",
-        marginBottom: "18px",
-      }}
-    >
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا</h3>
-      {salesInsights.top_products.slice(0, 5).map((product, index) => (
-  <p key={index} style={{ margin: "8px 0" }}>
-    {product.product_name} — {product.quantity_sold} مبيعات — {product.revenue} ريال
-  </p>
-))}
-      </div>
-
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>أكثر الأقسام مبيعًا</h3>
-        {salesInsights.top_categories.slice(0, 5).map((category, index) => (
-  <p key={index} style={{ margin: "8px 0" }}>
-    {category.category_name} — {category.quantity_sold} مبيعات — {category.revenue} ريال
-  </p>
-))}
-      </div>
-
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: "12px", padding: "14px" }}>
-        <h3 style={{ marginTop: 0 }}>أكثر المنتجات مبيعًا حسب المدينة</h3>
-     {salesInsights.top_products_by_city.slice(0, 5).map((item, index) => (
-  <p key={index} style={{ margin: "8px 0" }}>
-    {item.city} — {item.product_name} — {item.quantity_sold} مبيعات
-  </p>
-))}
-      </div>
-    </div>
-
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
-        gap: "12px",
-      }}
-    >
-      {salesInsights.recommendations.map((rec, index) => (
-        <div
-          key={index}
-          style={{
-            background: "#ecfdf5",
-            border: "1px solid #bbf7d0",
-            borderRadius: "12px",
-            padding: "14px",
-          }}
-        >
-          <p style={{ margin: 0, color: "#166534", fontSize: "13px" }}>
-            {rec.title}
-          </p>
-          <h3 style={{ margin: "6px 0 8px", color: "#15803d" }}>
-            التوصية
-          </h3>
-          <p style={{ margin: 0, color: "#14532d" }}>
-            {rec.message}
-          </p>
-    </div>
-            ))}
-</div>
-    </section>
               
   <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
     منتجات منخفضة المخزون
