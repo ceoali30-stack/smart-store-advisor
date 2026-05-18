@@ -733,7 +733,7 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     </div>
   )}
 </section>
-  <section
+ <section
   style={{
     marginTop: "28px",
     background: "white",
@@ -742,61 +742,98 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
     boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
   }}
 >
-  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+  <h2 style={{ margin: "0 0 18px", fontSize: "24px" }}>
     اقتراحات تسويقية تلقائية
   </h2>
 
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
-      gap: "16px",
-    }}
-  >
-    {marketingSuggestions.map((item, index) => (
-      <div
-        key={index}
-        style={{
-          background: item.color,
-          border: `1px solid ${item.border}`,
-          borderRadius: "12px",
-          padding: "18px",
-        }}
-      >
-        <h3
+  {marketingSuggestions.length > 0 ? (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "14px",
+      }}
+    >
+      {marketingSuggestions.map((item, index) => (
+        <div
+          key={index}
           style={{
-            margin: "0 0 10px",
-            color: item.titleColor,
-            fontSize: "18px",
+            background:
+              index === 0
+                ? "#ecfdf5"
+                : index === 1
+                ? "#fff7ed"
+                : index === 2
+                ? "#eff6ff"
+                : "#f5f3ff",
+            border:
+              index === 0
+                ? "1px solid #bbf7d0"
+                : index === 1
+                ? "1px solid #fed7aa"
+                : index === 2
+                ? "1px solid #bfdbfe"
+                : "1px solid #ddd6fe",
+            borderRadius: "14px",
+            padding: "18px",
           }}
         >
-          {item.title}
-        </h3>
+          <p
+            style={{
+              margin: "0 0 8px",
+              fontSize: "13px",
+              color:
+                index === 0
+                  ? "#15803d"
+                  : index === 1
+                  ? "#c2410c"
+                  : index === 2
+                  ? "#1d4ed8"
+                  : "#6d28d9",
+              fontWeight: "700",
+            }}
+          >
+            توصية #{index + 1}
+          </p>
 
-        <p
-          style={{
-            margin: "0 0 8px",
-            fontWeight: "700",
-            color: "#111827",
-            lineHeight: 1.8,
-          }}
-        >
-          {item.action}
-        </p>
+          <h3
+            style={{
+              margin: "0 0 10px",
+              fontSize: "20px",
+              color: "#111827",
+            }}
+          >
+            {item.title}
+          </h3>
 
-        <p
-          style={{
-            margin: 0,
-            color: "#4b5563",
-            lineHeight: 1.8,
-            fontSize: "14px",
-          }}
-        >
-          {item.reason}
-        </p>
-      </div>
-    ))}
-  </div>
+          <p
+            style={{
+              margin: 0,
+              fontSize: "14px",
+              lineHeight: "1.8",
+              color: "#374151",
+            }}
+          >
+            {item.message}
+          </p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div
+      style={{
+        background: "#f9fafb",
+        border: "1px solid #e5e7eb",
+        borderRadius: "12px",
+        padding: "18px",
+        color: "#6b7280",
+        lineHeight: "1.8",
+      }}
+    >
+      لا توجد اقتراحات تسويقية حاليًا. عند توفر بيانات المبيعات والمخزون
+      سيتم توليد توصيات تلقائية لتحسين الأداء.
+    </div>
+  )}
 </section>
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
