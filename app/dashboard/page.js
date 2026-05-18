@@ -78,6 +78,40 @@ const profitableProducts = (data.low_stock_products || [])
     const profit = price - costPrice;
     const margin = price > 0 ? Math.round((profit / price) * 100) : 0;
 
+    const marketingSuggestions = [
+  {
+    title: "حملة للمنتج الأعلى مبيعًا",
+    action: "ضع المنتج الأعلى مبيعًا في واجهة المتجر أو الصفحة الرئيسية.",
+    reason: "المنتج الذي يبيع أكثر يستحق ظهورًا أكبر لزيادة التحويلات.",
+    color: "#ecfdf5",
+    border: "#bbf7d0",
+    titleColor: "#166534",
+  },
+  {
+    title: "تنشيط المنتجات الراكدة",
+    action: "أنشئ عرضًا محدودًا أو خصمًا بسيطًا على المنتجات التي لا تتحرك.",
+    reason: "المنتجات الراكدة تستهلك مساحة ومخزونًا دون مساهمة فعلية في الإيرادات.",
+    color: "#fff7ed",
+    border: "#fed7aa",
+    titleColor: "#9a3412",
+  },
+  {
+    title: "استعادة المنتجات النافدة",
+    action: "أعد توريد المنتجات النافدة أولًا قبل إطلاق حملات تسويقية جديدة.",
+    reason: "تسويق منتج غير متوفر يؤدي إلى خسارة طلبات وفرص بيع مباشرة.",
+    color: "#fef2f2",
+    border: "#fecaca",
+    titleColor: "#991b1b",
+  },
+  {
+    title: "رفع متوسط قيمة الطلب",
+    action: "استخدم عروض مثل: اشتر منتجين واحصل على خصم أو شحن مجاني عند مبلغ معين.",
+    reason: "رفع متوسط قيمة الطلب يزيد الإيرادات دون الحاجة إلى زيادة عدد الزوار.",
+    color: "#eff6ff",
+    border: "#bfdbfe",
+    titleColor: "#1d4ed8",
+  },
+];
     return {
       ...product,
       price,
@@ -669,6 +703,71 @@ const profitableProducts = (data.low_stock_products || [])
       عند توفر سعر التكلفة من سلة، سيظهر هذا القسم تلقائيًا بأعلى المنتجات ربحًا.
     </div>
   )}
+</section>
+  <section
+  style={{
+    marginTop: "28px",
+    background: "white",
+    padding: "24px",
+    borderRadius: "14px",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  }}
+>
+  <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
+    اقتراحات تسويقية تلقائية
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+      gap: "16px",
+    }}
+  >
+    {marketingSuggestions.map((item, index) => (
+      <div
+        key={index}
+        style={{
+          background: item.color,
+          border: `1px solid ${item.border}`,
+          borderRadius: "12px",
+          padding: "18px",
+        }}
+      >
+        <h3
+          style={{
+            margin: "0 0 10px",
+            color: item.titleColor,
+            fontSize: "18px",
+          }}
+        >
+          {item.title}
+        </h3>
+
+        <p
+          style={{
+            margin: "0 0 8px",
+            fontWeight: "700",
+            color: "#111827",
+            lineHeight: 1.8,
+          }}
+        >
+          {item.action}
+        </p>
+
+        <p
+          style={{
+            margin: 0,
+            color: "#4b5563",
+            lineHeight: 1.8,
+            fontSize: "14px",
+          }}
+        >
+          {item.reason}
+        </p>
+      </div>
+    ))}
+  </div>
 </section>
     <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>
       تحليلات المبيعات
