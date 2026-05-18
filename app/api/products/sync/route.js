@@ -61,6 +61,7 @@ export async function GET(request) {
 
     const products = Array.isArray(sallaData.data) ? sallaData.data : [];
 
+    console.log("FIRST_PRODUCT_SAMPLE", JSON.stringify(products[0], null, 2));
     const rows = products.map((product) => ({
       merchant_id: String(merchantId),
       salla_product_id: String(product.id),
