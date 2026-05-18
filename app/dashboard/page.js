@@ -290,7 +290,14 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
           alignItems: "center",
           justifyContent: "center",
           background: "white",
-          border: "8px solid #22c55e",
+         border:
+  storeHealthPercentage >= 85
+    ? "8px solid #22c55e"
+    : storeHealthPercentage >= 70
+    ? "8px solid #3b82f6"
+    : storeHealthPercentage >= 50
+    ? "8px solid #f59e0b"
+    : "8px solid #ef4444",
           boxShadow: "0 8px 18px rgba(0,0,0,0.08)",
         }}
       >
