@@ -169,7 +169,6 @@ export async function GET(request) {
     const salesByPaymentMethod = {};
 const salesBySource = {};
 
-    console.log("FIRST_ORDER_SAMPLE", JSON.stringify(orders[0], null, 2));
 orders.forEach((order) => {
   const paymentMethod =
     order.payment_method_label ||
