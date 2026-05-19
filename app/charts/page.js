@@ -163,7 +163,25 @@ export default async function ChartsPage({ searchParams }) {
           </strong>
         </ChartBox>
       </div>
+<ChartBox title="ملخص الأداء البياني">
+  <BarItem
+    label="إجمالي الطلبات"
+    value={summary.total_orders || 0}
+    max={Math.max(Number(summary.total_orders || 0), 1)}
+  />
 
+  <BarItem
+    label="إجمالي الإيرادات"
+    value={summary.total_revenue || 0}
+    max={Math.max(Number(summary.total_revenue || 0), 1)}
+  />
+
+  <BarItem
+    label="متوسط قيمة الطلب"
+    value={summary.average_order_value || 0}
+    max={Math.max(Number(summary.average_order_value || 0), 1)}
+  />
+</ChartBox>
       <div
         style={{
           display: "grid",
