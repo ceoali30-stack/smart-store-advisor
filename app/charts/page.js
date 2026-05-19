@@ -55,7 +55,7 @@ function ChartBox({ title, children }) {
 
 export default async function ChartsPage({ searchParams }) {
   const merchantId = searchParams?.merchant_id || "210819854";
-  const baseUrl = getBaseUrl();
+  const baseUrl = "https://smart-store-advisor.vercel.app";
 
   let salesInsights = null;
 
