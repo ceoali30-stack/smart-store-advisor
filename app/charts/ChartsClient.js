@@ -14,7 +14,7 @@ import {
   Legend,
 } from "recharts";
 
-export default function ChartsClient({ summary, topCities }) {
+export default function ChartsClient({ summary, topCities, paymentMethods }) {
   const colors = ["#2563eb", "#22c55e", "#f97316", "#a855f7"];
 
   const performanceData = [
@@ -24,9 +24,8 @@ export default function ChartsClient({ summary, topCities }) {
   ];
 
 const pieData =
-  
-  summary?.payment_methods_insights?.length > 0
-    ? summary.payment_methods_insights.map((item) => ({
+  paymentMethods?.length > 0
+    ? paymentMethods.map((item) => ({
         name: item.name || "غير محدد",
         value: Number(item.orders_count || 0),
       }))
