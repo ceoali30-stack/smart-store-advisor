@@ -38,7 +38,9 @@ const pieData =
 const topCitiesData = (topCities || []).map((item) => ({
   name: item.city || "غير محدد",
   value: Number(item.total_orders || 0),
-  const salesChannelsData = (salesChannels || []).map((item) => ({
+}));
+
+const salesChannelsData = (salesChannels || []).map((item) => ({
   name: item.name || "غير محدد",
   value: Number(item.orders_count || 0),
 }));
