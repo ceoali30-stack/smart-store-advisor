@@ -214,6 +214,31 @@ const paymentMethodsInsights = Object.values(salesByPaymentMethod).sort(
 const salesChannelsInsights = Object.values(salesBySource).sort(
   (a, b) => b.total_sales - a.total_sales
 );
+        const ordersByCity = {};
+
+    orders.forEach((order) => {
+      const city =
+        order.city ||
+        order.customer_city ||
+        order.shipping_city ||
+        order.billing_city ||
+        "غير محدد";
+
+      if (!ordersByCity[city]) {
+        ordersByCity[city] = {
+          city,
+          total_orders: 0,
+          total_revenue: 0,
+        };
+      }
+
+      ordersByCity[city].total_orders += 1;
+      ordersByCity[city].total_revenue += Number(order.total || order.amount || 0);
+    });
+
+    const topCities = Object.values(ordersByCity)
+      .sort((a, b) => b.total_orders - a.total_orders)
+      .slice(0, 3);
     return Response.json({
       success: true,
       merchant_id: merchantId,
@@ -226,8 +251,9 @@ const salesChannelsInsights = Object.values(salesBySource).sort(
       },
       top_products: topProducts,
 top_categories: topCategories,
-top_products_by_city: topProductsByCity,
-payment_methods_insights: paymentMethodsInsights,
+      top_products_by_city: topProductsByCity,
+      top_cities: topCities,
+      payment_methods_insights: paymentMethodsInsights,
 sales_channels_insights: salesChannelsInsights,
 recommendations,
     });
