@@ -14,7 +14,7 @@ import {
   Legend,
 } from "recharts";
 
-export default function ChartsClient({ summary, topCities, paymentMethods }) {
+export default function ChartsClient({ summary, topCities, paymentMethods, salesChannels }) {
   const colors = ["#2563eb", "#22c55e", "#f97316", "#a855f7"];
 
   const performanceData = [
@@ -38,6 +38,10 @@ const pieData =
 const topCitiesData = (topCities || []).map((item) => ({
   name: item.city || "غير محدد",
   value: Number(item.total_orders || 0),
+  const salesChannelsData = (salesChannels || []).map((item) => ({
+  name: item.name || "غير محدد",
+  value: Number(item.orders_count || 0),
+}));
 }));
   return (
     <section
@@ -148,6 +152,30 @@ const topCitiesData = (topCities || []).map((item) => ({
         <YAxis stroke="#e5e7eb" />
         <Tooltip />
         <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#22c55e" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+</div>
+      <div
+  style={{
+    marginTop: "22px",
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: "20px",
+    padding: "18px",
+  }}
+>
+  <h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
+    قنوات البيع
+  </h3>
+
+  <div style={{ width: "100%", height: "260px" }}>
+    <ResponsiveContainer>
+      <BarChart data={salesChannelsData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
+        <XAxis dataKey="name" stroke="#e5e7eb" />
+        <YAxis stroke="#e5e7eb" />
+        <Tooltip />
+        <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#a855f7" />
       </BarChart>
     </ResponsiveContainer>
   </div>
