@@ -207,13 +207,6 @@ export default async function ChartsPage({ searchParams }) {
             <p style={{ color: "#64748b" }}>لا توجد بيانات كافية للأقسام.</p>
           )}
         </ChartBox>
-
-        <ChartBox title="قنوات البيع وطرق الدفع">
-          <p style={{ color: "#64748b", lineHeight: "1.8" }}>
-            سيتم عرض قنوات السوشال وطرق الدفع هنا عند توفرها من بيانات الطلبات أو عند
-            تخزينها أثناء المزامنة.
-          </p>
-        </ChartBox>
       </div>
     </main>
   );
