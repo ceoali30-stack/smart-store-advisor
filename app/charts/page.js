@@ -7,7 +7,8 @@ function getBaseUrl() {
 }
 
 function BarItem({ label, value, max }) {
-  const percent = max > 0 ? Math.round((Number(value || 0) / max) * 100) : 0;
+ const numericValue = Number(String(value || 0).replace(/[^\d.]/g, ""));
+const percent = max > 0 ? Math.min(100, Math.round((numericValue / max) * 100)) : 0;
 
   return (
     <div style={{ marginBottom: "14px" }}>
@@ -165,21 +166,21 @@ export default async function ChartsPage({ searchParams }) {
       </div>
 <ChartBox title="ملخص الأداء البياني">
   <BarItem
-    label="إجمالي الطلبات"
-    value={summary.total_orders || 0}
-    max={Math.max(Number(summary.total_orders || 0), 1)}
-  />
-
-  <BarItem
     label="إجمالي الإيرادات"
-    value={summary.total_revenue || 0}
-    max={Math.max(Number(summary.total_revenue || 0), 1)}
+    value={`${summary.total_revenue || 0} ريال`}
+    max={100}
   />
 
   <BarItem
     label="متوسط قيمة الطلب"
-    value={summary.average_order_value || 0}
-    max={Math.max(Number(summary.average_order_value || 0), 1)}
+    value={`${summary.average_order_value || 0} ريال`}
+    max={100}
+  />
+
+  <BarItem
+    label="إجمالي الطلبات"
+    value={summary.total_orders || 0}
+    max={10}
   />
 </ChartBox>
       <div
