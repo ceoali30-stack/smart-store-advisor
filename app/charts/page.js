@@ -203,7 +203,7 @@ export default async function ChartsPage({ searchParams }) {
           )}
         </ChartBox>
 
-        <ChartBox title="أكثر 3 مدن طلبًا">
+        </ChartBox>
           {topCities.length > 0 ? (
             topCities.slice(0, 3).map((item, index) => (
               <BarItem
