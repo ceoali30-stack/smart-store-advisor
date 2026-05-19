@@ -165,7 +165,7 @@ export default async function ChartsPage({ searchParams }) {
           </strong>
         </ChartBox>
       </div>
-<ChartsClient summary={summary} />
+<ChartsClient summary={summary} topCities={topCities} />
       <div
         style={{
           display: "grid",
