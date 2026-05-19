@@ -23,11 +23,18 @@ export default function ChartsClient({ summary }) {
     { name: "الإيرادات", value: Number(summary?.total_revenue || 0) },
   ];
 
-  const pieData = [
-    { name: "إجمالي الطلبات", value: Number(summary?.total_orders || 0) },
-    { name: "متوسط الطلب", value: Number(summary?.average_order_value || 0) },
-    { name: "الإيرادات", value: Number(summary?.total_revenue || 0) },
-  ].filter((item) => item.value > 0);
+const pieData =
+  summary?.payment_methods_insights?.length > 0
+    ? summary.payment_methods_insights.map((item) => ({
+        name: item.name || "غير محدد",
+        value: Number(item.orders_count || 0),
+      }))
+    : [
+        {
+          name: "طريقة الدفع غير محددة",
+          value: Number(summary?.total_orders || 0),
+        },
+      ];
 
   return (
     <section
