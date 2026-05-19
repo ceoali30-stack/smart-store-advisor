@@ -44,6 +44,10 @@ const salesChannelsData = (salesChannels || []).map((item) => ({
   name: item.name || "غير محدد",
   value: Number(item.orders_count || 0),
 }));
+  const paymentMethodsData = (paymentMethods || []).map((item) => ({
+  name: item.name || "غير محدد",
+  value: Number(item.orders_count || 0),
+}));
   return (
     <section
       style={{
@@ -177,6 +181,30 @@ const salesChannelsData = (salesChannels || []).map((item) => ({
         <YAxis stroke="#e5e7eb" />
         <Tooltip />
         <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#a855f7" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+</div>
+      <div
+  style={{
+    marginTop: "22px",
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: "20px",
+    padding: "18px",
+  }}
+>
+  <h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
+    طرق الدفع الأكثر استخدامًا
+  </h3>
+
+  <div style={{ width: "100%", height: "260px" }}>
+    <ResponsiveContainer>
+      <BarChart data={paymentMethodsData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
+        <XAxis dataKey="name" stroke="#e5e7eb" />
+        <YAxis stroke="#e5e7eb" />
+        <Tooltip />
+        <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#f97316" />
       </BarChart>
     </ResponsiveContainer>
   </div>
