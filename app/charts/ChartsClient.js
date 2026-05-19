@@ -42,7 +42,6 @@ const topCitiesData = (topCities || []).map((item) => ({
   name: item.name || "غير محدد",
   value: Number(item.orders_count || 0),
 }));
-}));
   return (
     <section
       style={{
