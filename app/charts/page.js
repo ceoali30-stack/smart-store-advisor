@@ -1,3 +1,4 @@
+import ChartsClient from "./ChartsClient";
 import PrintButton from "../dashboard/PrintButton";
 
 function getBaseUrl() {
@@ -164,25 +165,7 @@ export default async function ChartsPage({ searchParams }) {
           </strong>
         </ChartBox>
       </div>
-<ChartBox title="ملخص الأداء البياني">
-  <BarItem
-    label="إجمالي الإيرادات"
-    value={`${summary.total_revenue || 0} ريال`}
-    max={100}
-  />
-
-  <BarItem
-    label="متوسط قيمة الطلب"
-    value={`${summary.average_order_value || 0} ريال`}
-    max={100}
-  />
-
-  <BarItem
-    label="إجمالي الطلبات"
-    value={summary.total_orders || 0}
-    max={10}
-  />
-</ChartBox>
+<ChartsClient summary={summary} />
       <div
         style={{
           display: "grid",
