@@ -169,6 +169,7 @@ export default async function ChartsPage({ searchParams }) {
   summary={summary}
   topCities={topCities}
   paymentMethods={salesInsights?.payment_methods_insights || []}
+  salesChannels={salesInsights?.sales_channels_insights || []}
 />
       <div
         style={{
