@@ -14,7 +14,7 @@ import {
   Legend,
 } from "recharts";
 
-export default function ChartsClient({ summary }) {
+export default function ChartsClient({ summary, topCities }) {
   const colors = ["#2563eb", "#22c55e", "#f97316", "#a855f7"];
 
   const performanceData = [
@@ -24,6 +24,7 @@ export default function ChartsClient({ summary }) {
   ];
 
 const pieData =
+  
   summary?.payment_methods_insights?.length > 0
     ? summary.payment_methods_insights.map((item) => ({
         name: item.name || "غير محدد",
@@ -35,7 +36,10 @@ const pieData =
           value: Number(summary?.total_orders || 0),
         },
       ];
-
+const topCitiesData = (topCities || []).map((item) => ({
+  name: item.city || "غير محدد",
+  value: Number(item.total_orders || 0),
+}));
   return (
     <section
       style={{
@@ -125,6 +129,30 @@ const pieData =
           </div>
         </div>
       </div>
+                  <div
+  style={{
+    marginTop: "22px",
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: "20px",
+    padding: "18px",
+  }}
+>
+  <h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
+    أكثر 3 مدن طلبًا
+  </h3>
+
+  <div style={{ width: "100%", height: "260px" }}>
+    <ResponsiveContainer>
+      <BarChart data={topCitiesData}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
+        <XAxis dataKey="name" stroke="#e5e7eb" />
+        <YAxis stroke="#e5e7eb" />
+        <Tooltip />
+        <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#22c55e" />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+</div>
     </section>
   );
 }
