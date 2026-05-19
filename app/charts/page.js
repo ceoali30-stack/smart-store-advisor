@@ -54,8 +54,7 @@ function ChartBox({ title, children }) {
 }
 
 export default async function ChartsPage({ searchParams }) {
-  const params = await searchParams;
-  const merchantId = params?.merchant_id || "210819854";
+  const merchantId = searchParams?.merchant_id || "210819854";
   const baseUrl = getBaseUrl();
 
   let salesInsights = null;
