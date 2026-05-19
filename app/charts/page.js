@@ -165,7 +165,11 @@ export default async function ChartsPage({ searchParams }) {
           </strong>
         </ChartBox>
       </div>
-<ChartsClient summary={summary} topCities={topCities} />
+<ChartsClient
+  summary={summary}
+  topCities={topCities}
+  paymentMethods={salesInsights?.payment_methods_insights || []}
+/>
       <div
         style={{
           display: "grid",
