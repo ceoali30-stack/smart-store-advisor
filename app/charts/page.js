@@ -203,23 +203,6 @@ export default async function ChartsPage({ searchParams }) {
           )}
         </ChartBox>
 
-        </ChartBox>
-          {topCities.length > 0 ? (
-            topCities.slice(0, 3).map((item, index) => (
-              <BarItem
-                key={index}
-                label={item.city || "مدينة غير محددة"}
-                value={item.total_orders || item.orders || 0}
-                max={Math.max(...topCities.map((city) => Number(city.total_orders || city.orders || 0)), 1)}
-              />
-            ))
-          ) : (
-            <p style={{ color: "#64748b" }}>
-              لا توجد بيانات مدن كافية حاليًا. سنربطها لاحقًا من جدول الطلبات.
-            </p>
-          )}
-        </ChartBox>
-
         <ChartBox title="قنوات البيع وطرق الدفع">
           <p style={{ color: "#64748b", lineHeight: "1.8" }}>
             سيتم عرض قنوات السوشال وطرق الدفع هنا عند توفرها من بيانات الطلبات أو عند
