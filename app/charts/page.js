@@ -75,7 +75,7 @@ export default async function ChartsPage({ searchParams }) {
   const summary = salesInsights?.summary || {};
   const topProducts = salesInsights?.top_products || [];
   const topCategories = salesInsights?.top_categories || [];
-  const topCities = salesInsights?.top_products_by_city || [];
+  const topCities = salesInsights?.top_cities || [];
 
   const maxProductValue = Math.max(
     ...topProducts.map((item) => Number(item.total_quantity || item.quantity || 0)),
