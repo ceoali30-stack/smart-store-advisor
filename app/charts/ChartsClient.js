@@ -98,9 +98,9 @@ const pieData =
             padding: "18px",
           }}
         >
-          <h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
-            توزيع المؤشرات
-          </h3>
+<h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
+  توزيع طرق الدفع
+</h3>
 
           <div style={{ width: "100%", height: "300px" }}>
             <ResponsiveContainer>
