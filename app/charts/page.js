@@ -340,7 +340,12 @@ const topSalesChannel = salesInsights?.sales_channels_insights?.[0];
               />
             ))
           ) : (
-            <p style={{ color: "#64748b" }}>لا توجد بيانات كافية للمنتجات.</p>
+           <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
+  <strong style={{ color: "#0f172a" }}>لا توجد بيانات منتجات كافية حتى الآن.</strong>
+  <p style={{ margin: "10px 0 0" }}>
+    عند توفر تفاصيل عناصر الطلبات، سيظهر هنا أكثر المنتجات مبيعًا لمساعدة التاجر على زيادة المخزون والترويج للمنتجات الأقوى.
+  </p>
+</div>
           )}
         </ChartBox>
 
@@ -355,7 +360,12 @@ const topSalesChannel = salesInsights?.sales_channels_insights?.[0];
               />
             ))
           ) : (
-            <p style={{ color: "#64748b" }}>لا توجد بيانات كافية للأقسام.</p>
+           <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
+  <strong style={{ color: "#0f172a" }}>لا توجد بيانات أقسام كافية حتى الآن.</strong>
+  <p style={{ margin: "10px 0 0" }}>
+    عند توفر تصنيف المنتجات داخل الطلبات، سيظهر هنا أداء الأقسام لمساعدة التاجر على معرفة الأقسام الأعلى طلبًا.
+  </p>
+</div>
           )}
         </ChartBox>
       </div>
