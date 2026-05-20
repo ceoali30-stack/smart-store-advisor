@@ -73,16 +73,14 @@ function ChartBox({ title, children, accent = "#2563eb" }) {
         {title}
       </h2>
 
-      <div
-        style={{
-          fontSize: "30px",
-          fontWeight: "900",
-          color: "#0f172a",
-          lineHeight: "1.2",
-        }}
-      >
-        {children}
-      </div>
+     <div
+  style={{
+    color: "#0f172a",
+    lineHeight: "1.6",
+  }}
+>
+  {children}
+</div>
     </section>
   );
 }
@@ -206,23 +204,29 @@ const maxCustomerValue = Math.max(
         }}
       >
        <ChartBox title="إجمالي الطلبات" accent="#2563eb">
-  <strong>{summary.total_orders || 0}</strong>
+ <strong style={{ fontSize: "30px", fontWeight: "900" }}>
+  {summary.total_orders || 0}
+</strong>
 </ChartBox>
 
 <ChartBox title="إجمالي الإيرادات" accent="#f97316">
-  <strong>{summary.total_revenue || 0} ريال</strong>
+  <strong style={{ fontSize: "30px", fontWeight: "900" }}>
+  {summary.total_revenue || 0} ريال
+</strong>
 </ChartBox>
 
 <ChartBox title="متوسط قيمة الطلب" accent="#22c55e">
-  <strong>{summary.average_order_value || 0} ريال</strong>
+ <strong style={{ fontSize: "30px", fontWeight: "900" }}>
+  {summary.average_order_value || 0} ريال
+</strong>
 </ChartBox>
 
 <ChartBox title="متوسط المنتجات بالفاتورة" accent="#a855f7">
-  <strong>
-    {Number(summary.average_items_per_order || 0) > 0
-      ? summary.average_items_per_order
-      : "غير متوفر"}
-  </strong>
+ <strong style={{ fontSize: "30px", fontWeight: "900" }}>
+  {Number(summary.average_items_per_order || 0) > 0
+    ? summary.average_items_per_order
+    : "غير متوفر"}
+</strong>
 </ChartBox>
       </div>
     <div
