@@ -49,7 +49,6 @@ function ChartBox({ title, children, accent = "#2563eb" }) {
         boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
         border: "1px solid #e5e7eb",
         overflow: "hidden",
-        height: "100%",
       }}
     >
       <div
@@ -199,7 +198,7 @@ const maxCustomerValue = Math.max(
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
+         gridTemplateColumns: "repeat(2, minmax(320px, 1fr))",
           gap: "14px",
           marginBottom: "22px",
         }}
@@ -337,7 +336,7 @@ const maxCustomerValue = Math.max(
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(360px, 1fr))",
   gap: "22px",
-  alignItems: "stretch",
+  alignItems: "start",
   marginTop: "26px",
 }}
       >
