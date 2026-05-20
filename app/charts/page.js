@@ -338,6 +338,78 @@ const maxCustomerValue = Math.max(
           gap: "18px",
         }}
       >
+        <ChartBox title="ملخص قرارات التاجر" accent="#f97316">
+  <div
+    style={{
+      display: "grid",
+      gap: "12px",
+      color: "#334155",
+      lineHeight: "1.9",
+      fontSize: "15px",
+    }}
+  >
+    <div
+      style={{
+        background: "#fff7ed",
+        border: "1px solid #fed7aa",
+        borderRadius: "14px",
+        padding: "12px",
+      }}
+    >
+      <strong style={{ color: "#9a3412" }}>متوسط قيمة الطلب:</strong>{" "}
+      {summary.average_order_value || 0} ريال
+      <br />
+      <span>
+        كلما ارتفع متوسط الفاتورة، زادت قدرة المتجر على تحقيق ربح أعلى من نفس عدد العملاء.
+      </span>
+    </div>
+
+    <div
+      style={{
+        background: "#eff6ff",
+        border: "1px solid #bfdbfe",
+        borderRadius: "14px",
+        padding: "12px",
+      }}
+    >
+      <strong style={{ color: "#1d4ed8" }}>إجمالي الطلبات:</strong>{" "}
+      {summary.total_orders || 0} طلب
+      <br />
+      <span>
+        هذا الرقم يساعد التاجر على قياس نشاط المتجر وحجم الطلب الفعلي.
+      </span>
+    </div>
+
+    <div
+      style={{
+        background: "#f0fdf4",
+        border: "1px solid #bbf7d0",
+        borderRadius: "14px",
+        padding: "12px",
+      }}
+    >
+      <strong style={{ color: "#15803d" }}>أفضل مدينة طلبًا:</strong>{" "}
+      {topCities.length > 0 ? topCities[0].city || "غير محدد" : "غير متوفر"}
+      <br />
+      <span>
+        يمكن استهداف هذه المدينة بعروض خاصة أو حملات تسويقية محلية.
+      </span>
+    </div>
+
+    <div
+      style={{
+        background: "#f8fafc",
+        border: "1px solid #e2e8f0",
+        borderRadius: "14px",
+        padding: "12px",
+      }}
+    >
+      <strong style={{ color: "#0f172a" }}>ملاحظة بيانات:</strong>{" "}
+      إذا كانت المنتجات أو الأقسام غير ظاهرة، فهذا يعني أن بيانات عناصر الطلب أو تصنيف المنتجات لم تكتمل بعد في المزامنة.
+    </div>
+  </div>
+</ChartBox>
+        
         <ChartBox title="أكثر المنتجات مبيعًا">
           {topProducts.length > 0 ? (
             topProducts.slice(0, 5).map((item, index) => (
