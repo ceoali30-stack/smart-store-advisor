@@ -88,16 +88,16 @@ export default async function ChartsPage({ searchParams }) {
   );
 
   return (
-    <main
-      style={{
-        direction: "rtl",
-        textAlign: "right",
-        padding: "40px",
-        fontFamily: "Arial, sans-serif",
-        background: "#f8fafc",
-        minHeight: "100vh",
-      }}
-    >
+   <main
+  style={{
+    direction: "rtl",
+    textAlign: "right",
+    padding: "32px",
+    fontFamily: "Arial, sans-serif",
+    background: "linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)",
+    minHeight: "100vh",
+  }}
+>
       <div
         style={{
           display: "flex",
@@ -109,10 +109,26 @@ export default async function ChartsPage({ searchParams }) {
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: "32px" }}>الرسوم البيانية</h1>
-          <p style={{ margin: "8px 0 0", color: "#64748b" }}>
-            عرض بصري سريع لأداء المتجر والمبيعات.
-          </p>
+         <div>
+  <p
+    style={{
+      margin: "0 0 8px",
+      color: "#2563eb",
+      fontWeight: "800",
+      fontSize: "14px",
+    }}
+  >
+    Smart Store Advisor
+  </p>
+
+  <h1 style={{ margin: 0, fontSize: "34px", fontWeight: "900", color: "#0f172a" }}>
+    لوحة الرسوم والتحليلات
+  </h1>
+
+  <p style={{ margin: "10px 0 0", color: "#64748b", fontSize: "15px" }}>
+    مؤشرات ورسوم تساعد التاجر على فهم المبيعات واتخاذ قرارات أسرع.
+  </p>
+</div>
         </div>
 
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
