@@ -233,3 +233,5 @@ export default async function ChartsPage({ searchParams }) {
     </main>
   );
 }
+</div>
+</main>
