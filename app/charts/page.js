@@ -381,14 +381,43 @@ const maxCustomerValue = Math.max(
 
 <ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
   {topCustomers.length > 0 ? (
-    topCustomers.slice(0, 5).map((item, index) => (
-      <BarItem
-        key={index}
-        label={item.name || "عميل غير محدد"}
-        value={`${item.total_revenue || 0} ريال / ${item.total_orders || 0} طلب`}
-        max={maxCustomerValue}
-      />
-    ))
+    <div style={{ overflowX: "auto" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          fontSize: "14px",
+        }}
+      >
+        <thead>
+          <tr style={{ background: "#f1f5f9" }}>
+            <th style={{ padding: "12px", textAlign: "right" }}>العميل</th>
+            <th style={{ padding: "12px", textAlign: "right" }}>عدد الطلبات</th>
+            <th style={{ padding: "12px", textAlign: "right" }}>إجمالي الشراء</th>
+            <th style={{ padding: "12px", textAlign: "right" }}>متوسط الفاتورة</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {topCustomers.slice(0, 5).map((customer, index) => (
+            <tr key={index} style={{ borderBottom: "1px solid #e5e7eb" }}>
+              <td style={{ padding: "12px", fontWeight: "700" }}>
+                {customer.name || "عميل غير محدد"}
+              </td>
+              <td style={{ padding: "12px" }}>
+                {customer.total_orders || 0}
+              </td>
+              <td style={{ padding: "12px" }}>
+                {customer.total_revenue || 0} ريال
+              </td>
+              <td style={{ padding: "12px" }}>
+                {customer.average_order_value || 0} ريال
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   ) : (
     <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
       <strong style={{ color: "#0f172a" }}>
@@ -399,8 +428,7 @@ const maxCustomerValue = Math.max(
       </p>
     </div>
   )}
-
-        </ChartBox>
+</ChartBox>
       </div>
     </div>
     </main>
