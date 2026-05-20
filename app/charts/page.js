@@ -88,16 +88,22 @@ export default async function ChartsPage({ searchParams }) {
   );
 
   return (
-   <main
+  <main
   style={{
     direction: "rtl",
     textAlign: "right",
-    padding: "32px",
+    padding: "28px",
     fontFamily: "Arial, sans-serif",
     background: "linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)",
     minHeight: "100vh",
   }}
 >
+  <div
+    style={{
+      maxWidth: "1280px",
+      margin: "0 auto",
+    }}
+  >
       <div
         style={{
           display: "flex",
