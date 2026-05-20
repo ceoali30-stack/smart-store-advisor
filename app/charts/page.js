@@ -230,6 +230,7 @@ export default async function ChartsPage({ searchParams }) {
           )}
         </ChartBox>
       </div>
+    </div>
     </main>
   );
 }
