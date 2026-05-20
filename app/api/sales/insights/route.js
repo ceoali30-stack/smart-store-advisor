@@ -239,6 +239,55 @@ const salesChannelsInsights = Object.values(salesBySource).sort(
     const topCities = Object.values(ordersByCity)
       .sort((a, b) => b.total_orders - a.total_orders)
       .slice(0, 3);
+    const customersByKey = {};
+
+orders.forEach((order) => {
+  const customerName =
+    order.customer_name ||
+    order.customer?.name ||
+    order.client_name ||
+    "عميل غير محدد";
+
+  const customerPhone =
+    order.customer_mobile ||
+    order.customer_phone ||
+    order.mobile ||
+    order.phone ||
+    order.customer?.mobile ||
+    "";
+
+  const customerKey = customerPhone || customerName;
+
+  if (!customersByKey[customerKey]) {
+    customersByKey[customerKey] = {
+      name: customerName,
+      phone: customerPhone,
+      total_orders: 0,
+      total_revenue: 0,
+      average_order_value: 0,
+    };
+  }
+
+  customersByKey[customerKey].total_orders += 1;
+  customersByKey[customerKey].total_revenue += Number(order.total || order.amount || 0);
+});
+
+const topCustomers = Object.values(customersByKey)
+  .map((customer) => ({
+    ...customer,
+    average_order_value:
+      customer.total_orders > 0
+        ? Number((customer.total_revenue / customer.total_orders).toFixed(2))
+        : 0,
+  }))
+  .sort((a, b) => {
+    if (b.total_orders !== a.total_orders) {
+      return b.total_orders - a.total_orders;
+    }
+
+    return b.total_revenue - a.total_revenue;
+  })
+  .slice(0, 5);
     return Response.json({
       success: true,
       merchant_id: merchantId,
@@ -253,6 +302,7 @@ const salesChannelsInsights = Object.values(salesBySource).sort(
 top_categories: topCategories,
       top_products_by_city: topProductsByCity,
       top_cities: topCities,
+      top_customers: topCustomers,
       payment_methods_insights: paymentMethodsInsights,
 sales_channels_insights: salesChannelsInsights,
 recommendations,
