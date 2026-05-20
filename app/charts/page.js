@@ -357,24 +357,29 @@ const maxCustomerValue = Math.max(
 </div>
           )}
         </ChartBox>
+<ChartBox title="أكثر الأقسام مبيعًا">
+  {topCategories.length > 0 ? (
+    topCategories.slice(0, 5).map((item, index) => (
+      <BarItem
+        key={index}
+        label={item.category_name || item.name || "قسم غير معروف"}
+        value={item.total_quantity || item.quantity || 0}
+        max={maxCategoryValue}
+      />
+    ))
+  ) : (
+    <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
+      <strong style={{ color: "#0f172a" }}>
+        لا توجد بيانات أقسام كافية حتى الآن.
+      </strong>
+      <p style={{ margin: "10px 0 0" }}>
+        عند توفر تصنيف المنتجات داخل الطلبات، سيظهر هنا أداء الأقسام لمساعدة التاجر على معرفة الأقسام الأعلى طلبًا.
+      </p>
+    </div>
+  )}
+</ChartBox>
 
-        <ChartBox title="أكثر الأقسام مبيعًا">
-          {topCategories.length > 0 ? (
-            topCategories.slice(0, 5).map((item, index) => (
-              <BarItem
-                key={index}
-                label={item.category_name || item.name || "قسم غير معروف"}
-                value={item.total_quantity || item.quantity || 0}
-                max={maxCategoryValue}
-              />
-            ))
-          ) : (
-           <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
-  <strong style={{ color: "#0f172a" }}>لا توجد بيانات أقسام كافية حتى الآن.</strong>
-  <p style={{ margin: "10px 0 0" }}>
-    عند توفر تصنيف المنتجات داخل الطلبات، سيظهر هنا أداء الأقسام لمساعدة التاجر على معرفة الأقسام الأعلى طلبًا.
-  </p>
-      <ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
+<ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
   {topCustomers.length > 0 ? (
     topCustomers.slice(0, 5).map((item, index) => (
       <BarItem
@@ -395,7 +400,6 @@ const maxCustomerValue = Math.max(
     </div>
   )}
 </ChartBox>
-</div>
           )}
         </ChartBox>
       </div>
