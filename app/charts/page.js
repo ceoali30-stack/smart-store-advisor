@@ -38,19 +38,51 @@ const percent = max > 0 ? Math.min(100, Math.round((numericValue / max) * 100)) 
   );
 }
 
-function ChartBox({ title, children }) {
+function ChartBox({ title, children, accent = "#2563eb" }) {
   return (
     <section
       style={{
+        position: "relative",
         background: "white",
         padding: "22px",
         borderRadius: "18px",
-        boxShadow: "0 6px 18px rgba(0,0,0,0.05)",
-        border: "1px solid #eef2f7",
+        boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
+        border: "1px solid #e5e7eb",
+        overflow: "hidden",
       }}
     >
-      <h2 style={{ margin: "0 0 18px", fontSize: "22px" }}>{title}</h2>
-      {children}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          width: "6px",
+          height: "100%",
+          background: accent,
+        }}
+      />
+
+      <h2
+        style={{
+          margin: "0 0 14px",
+          fontSize: "15px",
+          fontWeight: "800",
+          color: "#64748b",
+        }}
+      >
+        {title}
+      </h2>
+
+      <div
+        style={{
+          fontSize: "30px",
+          fontWeight: "900",
+          color: "#0f172a",
+          lineHeight: "1.2",
+        }}
+      >
+        {children}
+      </div>
     </section>
   );
 }
@@ -165,27 +197,25 @@ export default async function ChartsPage({ searchParams }) {
           marginBottom: "22px",
         }}
       >
-        <ChartBox title="إجمالي الطلبات">
-          <strong style={{ fontSize: "30px" }}>{summary.total_orders || 0}</strong>
-        </ChartBox>
+       <ChartBox title="إجمالي الطلبات" accent="#2563eb">
+  <strong>{summary.total_orders || 0}</strong>
+</ChartBox>
 
-        <ChartBox title="إجمالي الإيرادات">
-          <strong style={{ fontSize: "30px" }}>{summary.total_revenue || 0} ريال</strong>
-        </ChartBox>
+<ChartBox title="إجمالي الإيرادات" accent="#f97316">
+  <strong>{summary.total_revenue || 0} ريال</strong>
+</ChartBox>
 
-        <ChartBox title="متوسط قيمة الطلب">
-          <strong style={{ fontSize: "30px" }}>
-            {summary.average_order_value || 0} ريال
-          </strong>
-        </ChartBox>
+<ChartBox title="متوسط قيمة الطلب" accent="#22c55e">
+  <strong>{summary.average_order_value || 0} ريال</strong>
+</ChartBox>
 
-        <ChartBox title="متوسط المنتجات بالفاتورة">
-          <strong style={{ fontSize: "30px" }}>
-            {Number(summary.average_items_per_order || 0) > 0
-              ? summary.average_items_per_order
-              : "غير متوفر"}
-          </strong>
-        </ChartBox>
+<ChartBox title="متوسط المنتجات بالفاتورة" accent="#a855f7">
+  <strong>
+    {Number(summary.average_items_per_order || 0) > 0
+      ? summary.average_items_per_order
+      : "غير متوفر"}
+  </strong>
+</ChartBox>
       </div>
 <ChartsClient
   summary={summary}
