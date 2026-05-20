@@ -399,8 +399,7 @@ const maxCustomerValue = Math.max(
       </p>
     </div>
   )}
-</ChartBox>
-          )}
+
         </ChartBox>
       </div>
     </div>
