@@ -108,6 +108,7 @@ export default async function ChartsPage({ searchParams }) {
   const topProducts = salesInsights?.top_products || [];
   const topCategories = salesInsights?.top_categories || [];
   const topCities = salesInsights?.top_cities || [];
+  const topCustomers = salesInsights?.top_customers || [];
 const recommendations = salesInsights?.recommendations || [];
 const topCity = salesInsights?.top_cities?.[0];
 const topPaymentMethod = salesInsights?.payment_methods_insights?.[0];
@@ -121,7 +122,11 @@ const topSalesChannel = salesInsights?.sales_channels_insights?.[0];
     ...topCategories.map((item) => Number(item.total_quantity || item.quantity || 0)),
     1
   );
-
+const maxCustomerValue = Math.max(
+  ...topCustomers.map((item) => Number(item.total_revenue || 0)),
+  1
+);
+  
  return (
   <main
     style={{
@@ -365,6 +370,27 @@ const topSalesChannel = salesInsights?.sales_channels_insights?.[0];
   <p style={{ margin: "10px 0 0" }}>
     عند توفر تصنيف المنتجات داخل الطلبات، سيظهر هنا أداء الأقسام لمساعدة التاجر على معرفة الأقسام الأعلى طلبًا.
   </p>
+      <ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
+  {topCustomers.length > 0 ? (
+    topCustomers.slice(0, 5).map((item, index) => (
+      <BarItem
+        key={index}
+        label={item.name || "عميل غير محدد"}
+        value={`${item.total_revenue || 0} ريال / ${item.total_orders || 0} طلب`}
+        max={maxCustomerValue}
+      />
+    ))
+  ) : (
+    <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
+      <strong style={{ color: "#0f172a" }}>
+        لا توجد بيانات عملاء كافية حتى الآن.
+      </strong>
+      <p style={{ margin: "10px 0 0" }}>
+        عند توفر بيانات العملاء، سيظهر هنا أكثر العملاء تكرارًا وشراءً لمساعدة التاجر على بناء عروض ولاء واستهداف العملاء الأعلى قيمة.
+      </p>
+    </div>
+  )}
+</ChartBox>
 </div>
           )}
         </ChartBox>
