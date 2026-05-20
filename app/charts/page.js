@@ -325,31 +325,18 @@ const maxCustomerValue = Math.max(
     </p>
   </div>
 </div>
-<ChartsClient
-  summary={summary}
-  topCities={topCities}
-  paymentMethods={salesInsights?.payment_methods_insights || []}
-  salesChannels={salesInsights?.sales_channels_insights || []}
-/>
-      <div
-        style={{
-  display: "grid",
-  gridTemplateColumns: "repeat(2, minmax(360px, 1fr))",
-  gap: "22px",
-  alignItems: "start",
-  marginTop: "26px",
-}}
-      >
-        <ChartBox title="ملخص قرارات التاجر" accent="#f97316">
+  <ChartBox title="ملخص قرارات التاجر" accent="#f97316">
   <div
     style={{
       display: "grid",
-      gap: "12px",
+      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+      gap: "14px",
       color: "#334155",
-      lineHeight: "1.9",
+      lineHeight: "1.8",
       fontSize: "15px",
     }}
   >
+    <div style={{ marginBottom: "24px" }} />
     <div
       style={{
         background: "#fff7ed",
@@ -411,6 +398,22 @@ const maxCustomerValue = Math.max(
     </div>
   </div>
 </ChartBox>
+
+<ChartsClient
+  summary={summary}
+  topCities={topCities}
+  paymentMethods={salesInsights?.payment_methods_insights || []}
+  salesChannels={salesInsights?.sales_channels_insights || []}
+/>
+      <div
+        style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(360px, 1fr))",
+  gap: "22px",
+  alignItems: "start",
+  marginTop: "26px",
+}}
+      >
         
         <ChartBox title="أكثر المنتجات مبيعًا">
           {topProducts.length > 0 ? (
