@@ -327,14 +327,15 @@ const maxCustomerValue = Math.max(
 </div>
   <ChartBox title="ملخص قرارات التاجر" accent="#f97316">
   <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
-      gap: "14px",
-      color: "#334155",
-      lineHeight: "1.8",
-      fontSize: "15px",
-    }}
+style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(260px, 1fr))",
+  gap: "14px",
+  alignItems: "stretch",
+  color: "#334155",
+  lineHeight: "1.8",
+  fontSize: "15px",
+}}
   >
     <div style={{ marginBottom: "24px" }} />
     <div
@@ -343,6 +344,10 @@ const maxCustomerValue = Math.max(
         border: "1px solid #fed7aa",
         borderRadius: "14px",
         padding: "12px",
+        minHeight: "92px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <strong style={{ color: "#9a3412" }}>متوسط قيمة الطلب:</strong>{" "}
@@ -359,6 +364,10 @@ const maxCustomerValue = Math.max(
         border: "1px solid #bfdbfe",
         borderRadius: "14px",
         padding: "12px",
+        minHeight: "92px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <strong style={{ color: "#1d4ed8" }}>إجمالي الطلبات:</strong>{" "}
@@ -375,6 +384,10 @@ const maxCustomerValue = Math.max(
         border: "1px solid #bbf7d0",
         borderRadius: "14px",
         padding: "12px",
+        minHeight: "92px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <strong style={{ color: "#15803d" }}>أفضل مدينة طلبًا:</strong>{" "}
@@ -391,6 +404,10 @@ const maxCustomerValue = Math.max(
         border: "1px solid #e2e8f0",
         borderRadius: "14px",
         padding: "12px",
+        minHeight: "92px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <strong style={{ color: "#0f172a" }}>ملاحظة بيانات:</strong>{" "}
