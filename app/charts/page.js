@@ -488,8 +488,6 @@ const maxCustomerValue = Math.max(
     );
   })}
 </div>
-      </table>
-    </div>
   ) : (
     <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
       <strong style={{ color: "#0f172a" }}>
