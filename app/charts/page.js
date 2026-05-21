@@ -438,39 +438,58 @@ const maxCustomerValue = Math.max(
   {topCustomers.length > 0 ? (
     <div style={{ overflowX: "auto" }}>
       <table
+<div style={{ display: "grid", gap: "12px" }}>
+  {topCustomers.slice(0, 5).map((item, index) => {
+    const totalRevenue = Number(item.total_revenue || 0);
+    const totalOrders = Number(item.total_orders || 0);
+    const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    return (
+      <div
+        key={index}
         style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          fontSize: "14px",
+          display: "grid",
+          gridTemplateColumns: "1.4fr 0.8fr 1fr 1fr",
+          gap: "12px",
+          alignItems: "center",
+          background: index === 0 ? "#eff6ff" : "#f8fafc",
+          border: index === 0 ? "1px solid #93c5fd" : "1px solid #e2e8f0",
+          borderRadius: "14px",
+          padding: "12px 14px",
         }}
       >
-        <thead>
-          <tr style={{ background: "#f1f5f9" }}>
-            <th style={{ padding: "12px", textAlign: "right" }}>العميل</th>
-            <th style={{ padding: "12px", textAlign: "right" }}>عدد الطلبات</th>
-            <th style={{ padding: "12px", textAlign: "right" }}>إجمالي الشراء</th>
-            <th style={{ padding: "12px", textAlign: "right" }}>متوسط الفاتورة</th>
-          </tr>
-        </thead>
+        <div>
+          <div style={{ fontWeight: "800", color: "#0f172a" }}>
+            {index === 0 ? "🏆 " : ""}
+            {item.name || "عميل غير محدد"}
+          </div>
+          <div style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
+            العميل رقم {index + 1}
+          </div>
+        </div>
 
-        <tbody>
-          {topCustomers.slice(0, 5).map((customer, index) => (
-            <tr key={index} style={{ borderBottom: "1px solid #e5e7eb" }}>
-              <td style={{ padding: "12px", fontWeight: "700" }}>
-                {customer.name || "عميل غير محدد"}
-              </td>
-              <td style={{ padding: "12px" }}>
-                {customer.total_orders || 0}
-              </td>
-              <td style={{ padding: "12px" }}>
-                {customer.total_revenue || 0} ريال
-              </td>
-              <td style={{ padding: "12px" }}>
-                {customer.average_order_value || 0} ريال
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "12px", color: "#64748b" }}>الطلبات</div>
+          <strong style={{ color: "#0f172a" }}>{totalOrders}</strong>
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "12px", color: "#64748b" }}>إجمالي الشراء</div>
+          <strong style={{ color: "#16a34a" }}>
+            {totalRevenue.toLocaleString("ar-SA")} ريال
+          </strong>
+        </div>
+
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "12px", color: "#64748b" }}>متوسط الفاتورة</div>
+          <strong style={{ color: "#2563eb" }}>
+            {Math.round(avgOrder).toLocaleString("ar-SA")} ريال
+          </strong>
+        </div>
+      </div>
+    );
+  })}
+</div>
       </table>
     </div>
   ) : (
