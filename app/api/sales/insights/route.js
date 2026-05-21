@@ -269,7 +269,17 @@ orders.forEach((order) => {
   }
 
   customersByKey[customerKey].total_orders += 1;
-  customersByKey[customerKey].total_revenue += Number(order.total || order.amount || 0);
+  customersByKey[customerKey].total_revenue += Number(
+  order.total ||
+  order.total_price ||
+  order.total_amount ||
+  order.amount ||
+  order.grand_total ||
+  order.raw_data?.amounts?.total?.amount ||
+  order.raw_data?.total?.amount ||
+  order.raw_data?.total ||
+  0
+);
 });
 
 const topCustomers = Object.values(customersByKey)
