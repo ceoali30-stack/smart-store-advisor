@@ -107,6 +107,7 @@ export default async function ChartsPage({ searchParams }) {
   const topCategories = salesInsights?.top_categories || [];
   const topCities = salesInsights?.top_cities || [];
   const topCustomers = salesInsights?.top_customers || [];
+  const abandonedCartsSummary = salesInsights?.abandoned_carts_summary || {};
 const recommendations = salesInsights?.recommendations || [];
 const topCity = salesInsights?.top_cities?.[0];
 const topPaymentMethod = salesInsights?.payment_methods_insights?.[0];
@@ -422,7 +423,7 @@ const maxCustomerValue = Math.max(
   </div>
 </section>
 
- <section
+<section
   style={{
     background: "white",
     padding: "22px",
@@ -439,22 +440,55 @@ const maxCustomerValue = Math.max(
 
   <div
     style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(4, minmax(160px, 1fr))",
+      gap: "14px",
+      marginBottom: "16px",
+    }}
+  >
+    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "14px", padding: "14px" }}>
+      <p style={{ margin: 0, color: "#991b1b" }}>عدد السلات</p>
+      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
+        {abandonedCartsSummary.total_carts || 0}
+      </strong>
+    </div>
+
+    <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "14px" }}>
+      <p style={{ margin: 0, color: "#9a3412" }}>قيمة السلات</p>
+      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
+        {abandonedCartsSummary.total_value || 0} ريال
+      </strong>
+    </div>
+
+    <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "14px" }}>
+      <p style={{ margin: 0, color: "#1d4ed8" }}>عدد المنتجات</p>
+      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
+        {abandonedCartsSummary.total_items || 0}
+      </strong>
+    </div>
+
+    <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "14px" }}>
+      <p style={{ margin: 0, color: "#475569" }}>متوسط السلة</p>
+      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
+        {Math.round(abandonedCartsSummary.average_cart_value || 0)} ريال
+      </strong>
+    </div>
+  </div>
+
+  <div
+    style={{
       background: "#fef2f2",
       border: "1px solid #fecaca",
       borderRadius: "14px",
-      padding: "16px",
+      padding: "14px",
       color: "#334155",
-      lineHeight: "1.9",
+      lineHeight: "1.8",
     }}
   >
-    <strong style={{ color: "#b91c1c" }}>
-      لم يتم ربط بيانات السلات المتروكة بعد.
-    </strong>
-
-    <p style={{ margin: "8px 0 0" }}>
-      عند توفر البيانات، سيعرض هذا القسم عدد السلات المتروكة، قيمتها، أكثر المنتجات المتروكة،
-      وتوصيات لاسترجاع العملاء مثل كوبونات الخصم أو رسائل التذكير.
-    </p>
+    <strong style={{ color: "#b91c1c" }}>توصية:</strong>{" "}
+    {Number(abandonedCartsSummary.total_carts || 0) > 0
+      ? "فعّل رسائل تذكير أو كوبون استرجاع للعملاء الذين تركوا السلة قبل إتمام الشراء."
+      : "لا توجد سلات متروكة حاليًا، وهذا مؤشر جيد أو يعني أن بيانات السلات لم تظهر بعد من مزامنة سلة."}
   </div>
 </section>         
           
