@@ -21,7 +21,11 @@ export async function GET(request) {
       .from("orders")
       .select("*")
       .eq("merchant_id", merchantId);
-
+const { data: abandonedCarts, error: abandonedCartsError } = await supabase
+  .from("abandoned_carts")
+  .select("*")
+  .eq("merchant_id", merchantId);
+    
     if (ordersError) {
       return Response.json(
         {
@@ -33,6 +37,33 @@ export async function GET(request) {
       );
     }
 
+if (abandonedCartsError) {
+  return Response.json(
+    {
+      success: false,
+      message: "Failed to fetch abandoned carts",
+      error: abandonedCartsError,
+    },
+    { status: 500 }
+  );
+}
+  const safeAbandonedCarts = abandonedCarts || [];
+
+const abandonedCartsCount = safeAbandonedCarts.length;
+
+const abandonedCartsValue = safeAbandonedCarts.reduce(
+  (sum, cart) => sum + Number(cart.total_amount || 0),
+  0
+);
+
+const abandonedCartsItems = safeAbandonedCarts.reduce(
+  (sum, cart) => sum + Number(cart.items_count || 0),
+  0
+);
+
+const averageAbandonedCartValue =
+  abandonedCartsCount > 0 ? abandonedCartsValue / abandonedCartsCount : 0;
+    
     const { data: items, error: itemsError } = await supabase
       .from("order_items")
       .select("*")
@@ -302,6 +333,12 @@ const topCustomers = Object.values(customersByKey)
       success: true,
       merchant_id: merchantId,
       summary: {
+        abandoned_carts_summary: {
+  total_carts: abandonedCartsCount,
+  total_value: abandonedCartsValue,
+  total_items: abandonedCartsItems,
+  average_cart_value: averageAbandonedCartValue,
+},
         total_orders: totalOrders,
         total_revenue: totalRevenue,
         total_items_sold: totalItemsSold,
