@@ -421,6 +421,42 @@ const maxCustomerValue = Math.max(
     </div>
   </div>
 </section>
+
+ <section
+  style={{
+    background: "white",
+    padding: "22px",
+    borderRadius: "22px",
+    boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
+    border: "1px solid #e5e7eb",
+    borderRight: "6px solid #ef4444",
+    marginBottom: "24px",
+  }}
+>
+  <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
+    السلات المتروكة
+  </h2>
+
+  <div
+    style={{
+      background: "#fef2f2",
+      border: "1px solid #fecaca",
+      borderRadius: "14px",
+      padding: "16px",
+      color: "#334155",
+      lineHeight: "1.9",
+    }}
+  >
+    <strong style={{ color: "#b91c1c" }}>
+      لم يتم ربط بيانات السلات المتروكة بعد.
+    </strong>
+
+    <p style={{ margin: "8px 0 0" }}>
+      عند توفر البيانات، سيعرض هذا القسم عدد السلات المتروكة، قيمتها، أكثر المنتجات المتروكة،
+      وتوصيات لاسترجاع العملاء مثل كوبونات الخصم أو رسائل التذكير.
+    </p>
+  </div>
+</section>         
           
 <ChartsClient
   summary={summary}
