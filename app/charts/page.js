@@ -436,8 +436,6 @@ const maxCustomerValue = Math.max(
 
 <ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
   {topCustomers.length > 0 ? (
-    <div style={{ overflowX: "auto" }}>
-      <table
 <div style={{ display: "grid", gap: "12px" }}>
   {topCustomers.slice(0, 5).map((item, index) => {
     const totalRevenue = Number(item.total_revenue || 0);
