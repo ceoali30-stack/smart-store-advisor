@@ -116,7 +116,6 @@ const sortedRegions = [...regionsInsights].sort(
   );
 })}
           </div>
-        </div>
 
         <div
           style={{
