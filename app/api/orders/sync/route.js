@@ -91,6 +91,34 @@ export async function GET(request) {
         )
       );
 
+const testUrls = [
+  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/items`,
+  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/products`,
+  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/shipments`,
+  `https://api.salla.dev/admin/v2/orders/items?order_id=${sallaOrderId}`,
+];
+
+for (const testUrl of testUrls) {
+  const testRes = await fetch(testUrl, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+
+  const testData = await testRes.json().catch(() => null);
+
+  console.log("SALLA ORDER ITEMS ENDPOINT TEST:", {
+    order_id: sallaOrderId,
+    url: testUrl,
+    status: testRes.status,
+    ok: testRes.ok,
+    data: testData,
+  });
+}
+      
       // اختبار مؤقت: هل يوجد Endpoint مستقل لعناصر الطلب؟
       let orderItemsFromEndpoint = [];
 
