@@ -34,9 +34,12 @@ export async function GET(request) {
       );
     }
 
+    const accessToken = merchant.access_token;
+
+    // 1) جلب قائمة الطلبات من سلة
     const listRes = await fetch("https://api.salla.dev/admin/v2/orders", {
       headers: {
-        Authorization: `Bearer ${merchant.access_token}`,
+        Authorization: `Bearer ${accessToken}`,
         Accept: "application/json",
       },
     });
@@ -58,6 +61,7 @@ export async function GET(request) {
     const orderList = listJson.data || [];
     const detailedOrders = [];
 
+    // 2) جلب تفاصيل كل طلب + اختبار Endpoint المنتجات
     for (const order of orderList) {
       const orderId = order.id;
 
@@ -65,86 +69,144 @@ export async function GET(request) {
         `https://api.salla.dev/admin/v2/orders/${orderId}`,
         {
           headers: {
-            Authorization: `Bearer ${merchant.access_token}`,
+            Authorization: `Bearer ${accessToken}`,
             Accept: "application/json",
           },
         }
       );
 
       const detailJson = await detailRes.json();
-console.log("SALLA ORDER DETAIL:", JSON.stringify(detailJson.data, null, 2));
-      
-      if (detailRes.ok && detailJson.data) {
-        detailedOrders.push(detailJson.data);
-      } else {
-        detailedOrders.push(order);
+
+      console.log(
+        "SALLA ORDER DETAIL:",
+        JSON.stringify(
+          {
+            order_id: orderId,
+            status: detailRes.status,
+            ok: detailRes.ok,
+            data: detailJson.data || detailJson,
+          },
+          null,
+          2
+        )
+      );
+
+      // اختبار مؤقت: هل يوجد Endpoint مستقل لعناصر الطلب؟
+      let orderItemsFromEndpoint = [];
+
+      try {
+        const itemsTestRes = await fetch(
+          `https://api.salla.dev/admin/v2/orders/${orderId}/items`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const itemsTestJson = await itemsTestRes.json();
+
+        console.log(
+          "SALLA ORDER ITEMS TEST:",
+          JSON.stringify(
+            {
+              order_id: orderId,
+              status: itemsTestRes.status,
+              ok: itemsTestRes.ok,
+              data: itemsTestJson,
+            },
+            null,
+            2
+          )
+        );
+
+        if (itemsTestRes.ok) {
+          if (Array.isArray(itemsTestJson?.data)) {
+            orderItemsFromEndpoint = itemsTestJson.data;
+          } else if (Array.isArray(itemsTestJson?.data?.items)) {
+            orderItemsFromEndpoint = itemsTestJson.data.items;
+          } else if (Array.isArray(itemsTestJson?.items)) {
+            orderItemsFromEndpoint = itemsTestJson.items;
+          }
+        }
+      } catch (itemsError) {
+        console.log(
+          "SALLA ORDER ITEMS TEST ERROR:",
+          JSON.stringify(
+            {
+              order_id: orderId,
+              error: String(itemsError),
+            },
+            null,
+            2
+          )
+        );
       }
+
+      const detailedOrder =
+        detailRes.ok && detailJson.data ? detailJson.data : order;
+
+      // نضيف المنتجات التي جاءت من Endpoint الاختبار داخل الطلب نفسه
+      detailedOrders.push({
+        ...detailedOrder,
+        __items_from_endpoint: orderItemsFromEndpoint,
+      });
     }
 
-const itemsTestRes = await fetch(
-  `https://api.salla.dev/admin/v2/orders/${order.id}/items`,
-  {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      Accept: "application/json",
-    },
-  }
-);
+    // 3) تجهيز صفوف الطلبات
+    const ordersRows = detailedOrders.map((order) => {
+      const detectedItems =
+        order.__items_from_endpoint ||
+        order.items ||
+        order.items?.data ||
+        order.products ||
+        order.order_items ||
+        [];
 
-const itemsTestJson = await itemsTestRes.json();
+      return {
+        id: Number(order.id),
+        merchant_id: merchantId,
+        reference_id: order.reference_id || order.reference || null,
+        status: order.status?.name || order.status || null,
+        city:
+          order.customer?.city ||
+          order.shipping?.address?.city ||
+          order.address?.city ||
+          null,
+        country:
+          order.customer?.country ||
+          order.shipping?.address?.country ||
+          order.address?.country ||
+          null,
+        currency:
+          order.amounts?.total?.currency ||
+          order.total?.currency ||
+          order.currency ||
+          "SAR",
+        total_amount: Number(
+          order.amounts?.total?.amount ||
+            order.total?.amount ||
+            order.total ||
+            order.paid_amount?.amount ||
+            0
+        ),
+        items_count: Number(detectedItems.length || 0),
+        customer_name:
+          order.customer?.full_name ||
+          `${order.customer?.first_name || ""} ${
+            order.customer?.last_name || ""
+          }`.trim() ||
+          order.customer?.name ||
+          null,
+        customer_mobile: order.customer?.mobile || null,
+        created_at: order.created_at?.date || order.date?.date || order.created_at || null,
+        updated_at: order.updated_at?.date || order.updated_at || null,
+        synced_at: new Date().toISOString(),
+      };
+    });
 
-console.log(
-  "SALLA ORDER ITEMS TEST:",
-  JSON.stringify(
-    {
-      status: itemsTestRes.status,
-      ok: itemsTestRes.ok,
-      data: itemsTestJson,
-    },
-    null,
-    2
-  )
-);
-    
-    const ordersRows = detailedOrders.map((order) => ({
-      id: Number(order.id),
-      merchant_id: merchantId,
-      reference_id: order.reference_id || order.reference || null,
-      status: order.status?.name || order.status || null,
-      city:
-        order.customer?.city ||
-        order.shipping?.address?.city ||
-        order.address?.city ||
-        null,
-      country:
-        order.customer?.country ||
-        order.shipping?.address?.country ||
-        order.address?.country ||
-        null,
-      currency:
-        order.amounts?.total?.currency ||
-        order.total?.currency ||
-        order.currency ||
-        "SAR",
-      total_amount: Number(
-        order.amounts?.total?.amount ||
-          order.total?.amount ||
-          order.total ||
-          order.paid_amount?.amount ||
-          0
-      ),
-      items_count: Number(order.items?.length || 0),
-      customer_name:
-        order.customer?.full_name ||
-        `${order.customer?.first_name || ""} ${order.customer?.last_name || ""}`.trim() ||
-        order.customer?.name ||
-        null,
-      customer_mobile: order.customer?.mobile || null,
-      created_at: order.created_at?.date || order.created_at || null,
-      updated_at: order.updated_at?.date || order.updated_at || null,
-      synced_at: new Date().toISOString(),
-    }));
-
+    // 4) حفظ الطلبات في Supabase
     if (ordersRows.length > 0) {
       const { error: ordersError } = await supabase
         .from("orders")
@@ -162,12 +224,20 @@ console.log(
       }
     }
 
+    // 5) حذف منتجات هذا التاجر القديمة قبل إعادة إدخالها
     await supabase.from("order_items").delete().eq("merchant_id", merchantId);
 
+    // 6) تجهيز صفوف المنتجات
     const itemRows = [];
 
     for (const order of detailedOrders) {
-      const items = order.items || [];
+      const items =
+        order.__items_from_endpoint ||
+        order.items ||
+        order.items?.data ||
+        order.products ||
+        order.order_items ||
+        [];
 
       for (const item of items) {
         const unitPrice = Number(
@@ -175,25 +245,42 @@ console.log(
             item.amounts?.price?.amount ||
             item.price?.amount ||
             item.price ||
+            item.unit_price ||
             0
         );
+
+        const quantity = Number(item.quantity || item.qty || 0);
 
         const totalPrice = Number(
           item.amounts?.total?.amount ||
             item.total?.amount ||
             item.total ||
-            unitPrice * Number(item.quantity || 0)
+            item.total_price ||
+            unitPrice * quantity ||
+            0
         );
 
         itemRows.push({
           order_id: Number(order.id),
           merchant_id: merchantId,
-          product_id: item.product?.id || item.product_id || item.sku_id || null,
+          product_id:
+            item.product?.id ||
+            item.product_id ||
+            item.sku_id ||
+            item.id ||
+            null,
           product_name:
-            item.product?.name || item.name || item.product_name || null,
+            item.product?.name ||
+            item.name ||
+            item.product_name ||
+            item.title ||
+            null,
           category_name:
-            item.product?.category?.name || item.category?.name || null,
-          quantity: Number(item.quantity || 0),
+            item.product?.category?.name ||
+            item.category?.name ||
+            item.category_name ||
+            null,
+          quantity,
           unit_price: unitPrice,
           total_price: totalPrice,
           sku: item.sku || item.product?.sku || null,
@@ -201,6 +288,7 @@ console.log(
       }
     }
 
+    // 7) حفظ المنتجات في Supabase
     if (itemRows.length > 0) {
       const { error: itemsError } = await supabase
         .from("order_items")
