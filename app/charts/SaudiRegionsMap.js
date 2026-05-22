@@ -59,7 +59,15 @@ export default function SaudiRegionsMap({ regionsInsights = [] }) {
                 totalOrders > 0
                   ? Math.round((Number(region.total_orders || 0) / totalOrders) * 100)
                   : 0;
+const selectedRegionPercent =
+  totalOrders > 0 && selectedRegion
+    ? Math.round((Number(selectedRegion.total_orders || 0) / totalOrders) * 100)
+    : 0;
 
+const selectedRegionAverageOrder =
+  selectedRegion?.total_orders > 0
+    ? Math.round(Number(selectedRegion.total_revenue || 0) / Number(selectedRegion.total_orders || 1))
+    : 0;
               return (
                 <button
                   key={index}
@@ -117,25 +125,62 @@ export default function SaudiRegionsMap({ regionsInsights = [] }) {
             padding: "18px",
           }}
         >
-          <h3 style={{ marginTop: 0 }}>
-            {selectedRegion?.region || "اختر منطقة"}
-          </h3>
+<h3 style={{ marginTop: 0, color: "#0f172a" }}>
+  {selectedRegion?.region || "اختر منطقة"}
+</h3>
 
-          <p>
-            إجمالي الطلبات: <strong>{selectedRegion?.total_orders || 0}</strong>
-          </p>
+<div style={{ display: "grid", gap: "12px", marginTop: "16px" }}>
+  <div>
+    <span style={{ color: "#64748b" }}>إجمالي الطلبات</span>
+    <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
+      {selectedRegion?.total_orders || 0}
+    </strong>
+  </div>
 
-          <p>
-            إجمالي الإيرادات:{" "}
-            <strong>{selectedRegion?.total_revenue || 0} ريال</strong>
-          </p>
+  <div>
+    <span style={{ color: "#64748b" }}>إجمالي الإيرادات</span>
+    <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
+      {selectedRegion?.total_revenue || 0} ريال
+    </strong>
+  </div>
 
-          <p>
-            المدن:{" "}
-            <strong>{selectedRegion?.cities?.join("، ") || "غير محدد"}</strong>
-          </p>
-        </div>
-      </div>
+  <div>
+    <span style={{ color: "#64748b" }}>متوسط قيمة الطلب</span>
+    <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
+      {selectedRegionAverageOrder} ريال
+    </strong>
+  </div>
+
+  <div>
+    <span style={{ color: "#64748b" }}>نسبة المنطقة من الطلبات</span>
+    <strong style={{ display: "block", fontSize: "24px", color: "#16a34a" }}>
+      {selectedRegionPercent}%
+    </strong>
+  </div>
+
+  <div>
+    <span style={{ color: "#64748b" }}>المدن</span>
+    <strong style={{ display: "block", color: "#0f172a" }}>
+      {selectedRegion?.cities?.join("، ") || "غير محدد"}
+    </strong>
+  </div>
+
+  <div
+    style={{
+      background: "white",
+      border: "1px solid #bbf7d0",
+      borderRadius: "14px",
+      padding: "12px",
+      color: "#166534",
+      lineHeight: "1.8",
+    }}
+  >
+    <strong>توصية:</strong>{" "}
+    {selectedRegion?.total_orders > 0
+      ? "هذه المنطقة تستحق متابعة تسويقية، جرّب تخصيص عرض أو حملة محلية لها."
+      : "لا توجد طلبات كافية لهذه المنطقة حتى الآن."}
+  </div>
+</div>
     </section>
   );
 }
