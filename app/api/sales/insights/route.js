@@ -254,7 +254,7 @@ const salesChannelsInsights = Object.values(salesBySource).sort(
         order.shipping_city ||
         order.billing_city ||
         "غير محدد";
-
+      
       if (!ordersByCity[city]) {
         ordersByCity[city] = {
           city,
@@ -270,6 +270,63 @@ const salesChannelsInsights = Object.values(salesBySource).sort(
     const topCities = Object.values(ordersByCity)
       .sort((a, b) => b.total_orders - a.total_orders)
       .slice(0, 3);
+
+const cityToRegion = {
+  "الرياض": "منطقة الرياض",
+  "جدة": "منطقة مكة المكرمة",
+  "مكة": "منطقة مكة المكرمة",
+  "مكة المكرمة": "منطقة مكة المكرمة",
+  "الطائف": "منطقة مكة المكرمة",
+  "الدمام": "المنطقة الشرقية",
+  "الخبر": "المنطقة الشرقية",
+  "الظهران": "المنطقة الشرقية",
+  "الأحساء": "المنطقة الشرقية",
+  "الهفوف": "المنطقة الشرقية",
+  "المدينة": "منطقة المدينة المنورة",
+  "المدينة المنورة": "منطقة المدينة المنورة",
+  "ينبع": "منطقة المدينة المنورة",
+  "بريدة": "منطقة القصيم",
+  "عنيزة": "منطقة القصيم",
+  "الرس": "منطقة القصيم",
+  "أبها": "منطقة عسير",
+  "خميس مشيط": "منطقة عسير",
+  "النماص": "منطقة عسير",
+  "تبوك": "منطقة تبوك",
+  "حائل": "منطقة حائل",
+  "جازان": "منطقة جازان",
+  "جيزان": "منطقة جازان",
+  "نجران": "منطقة نجران",
+  "الباحة": "منطقة الباحة",
+  "عرعر": "منطقة الحدود الشمالية",
+  "سكاكا": "منطقة الجوف",
+  "القريات": "منطقة الجوف",
+};
+
+const ordersByRegion = {};
+
+Object.values(ordersByCity).forEach((cityItem) => {
+  const region = cityToRegion[cityItem.city] || "غير محدد";
+
+  if (!ordersByRegion[region]) {
+    ordersByRegion[region] = {
+      region,
+      total_orders: 0,
+      total_revenue: 0,
+      cities: [],
+    };
+  }
+
+  ordersByRegion[region].total_orders += Number(cityItem.total_orders || 0);
+  ordersByRegion[region].total_revenue += Number(cityItem.total_revenue || 0);
+
+  if (cityItem.city && !ordersByRegion[region].cities.includes(cityItem.city)) {
+    ordersByRegion[region].cities.push(cityItem.city);
+  }
+});
+
+const regionsInsights = Object.values(ordersByRegion)
+  .sort((a, b) => b.total_orders - a.total_orders);
+    
     const customersByKey = {};
 
 orders.forEach((order) => {
@@ -349,6 +406,7 @@ const topCustomers = Object.values(customersByKey)
 top_categories: topCategories,
       top_products_by_city: topProductsByCity,
       top_cities: topCities,
+      regions_insights: regionsInsights,
       top_customers: topCustomers,
       payment_methods_insights: paymentMethodsInsights,
 sales_channels_insights: salesChannelsInsights,
