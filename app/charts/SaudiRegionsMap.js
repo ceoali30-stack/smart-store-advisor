@@ -3,17 +3,17 @@
 import { useState } from "react";
 
 export default function SaudiRegionsMap({ regionsInsights = [] }) {
-  const [selectedRegion, setSelectedRegion] = useState(regionsInsights[0] || null);
+  const sortedRegions = [...regionsInsights].sort(
+    (a, b) => Number(b.total_orders || 0) - Number(a.total_orders || 0)
+  );
 
-const totalOrders = regionsInsights.reduce(
-  (sum, region) => sum + Number(region.total_orders || 0),
-  0
-);
+  const [selectedRegion, setSelectedRegion] = useState(sortedRegions[0] || null);
 
-const sortedRegions = [...regionsInsights].sort(
-  (a, b) => Number(b.total_orders || 0) - Number(a.total_orders || 0)
-);
-  
+  const totalOrders = sortedRegions.reduce(
+    (sum, region) => sum + Number(region.total_orders || 0),
+    0
+  );
+
   return (
     <section
       style={{
@@ -54,58 +54,60 @@ const sortedRegions = [...regionsInsights].sort(
               gap: "10px",
             }}
           >
-          {sortedRegions.map((region, index) => {
-  const percent =
-    totalOrders > 0
-      ? Math.round((Number(region.total_orders || 0) / totalOrders) * 100)
-      : 0;
+            {sortedRegions.map((region, index) => {
+              const percent =
+                totalOrders > 0
+                  ? Math.round((Number(region.total_orders || 0) / totalOrders) * 100)
+                  : 0;
 
-  return (
-    <button
-      key={index}
-      onClick={() => setSelectedRegion(region)}
-      style={{
-        border: "1px solid #cbd5e1",
-        background:
-          selectedRegion?.region === region.region ? "#dcfce7" : "white",
-        color: "#0f172a",
-        borderRadius: "14px",
-        padding: "14px",
-        cursor: "pointer",
-        fontWeight: "800",
-        textAlign: "center",
-      }}
-    >
-      {region.region}
+              return (
+                <button
+                  key={index}
+                  onClick={() => setSelectedRegion(region)}
+                  style={{
+                    border: "1px solid #cbd5e1",
+                    background:
+                      selectedRegion?.region === region.region ? "#dcfce7" : "white",
+                    color: "#0f172a",
+                    borderRadius: "14px",
+                    padding: "14px",
+                    cursor: "pointer",
+                    fontWeight: "800",
+                    textAlign: "center",
+                  }}
+                >
+                  {region.region}
 
-      <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
-        {region.total_orders || 0} طلب
-      </div>
+                  <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
+                    {region.total_orders || 0} طلب
+                  </div>
 
-      <div
-        style={{
-          marginTop: "10px",
-          height: "8px",
-          background: "#e5e7eb",
-          borderRadius: "999px",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            width: `${percent}%`,
-            height: "100%",
-            background: index === 0 ? "#16a34a" : "#38bdf8",
-          }}
-        />
-      </div>
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      height: "8px",
+                      background: "#e5e7eb",
+                      borderRadius: "999px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${percent}%`,
+                        height: "100%",
+                        background: index === 0 ? "#16a34a" : "#38bdf8",
+                      }}
+                    />
+                  </div>
 
-      <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
-        {percent}% من الطلبات
-      </div>
-    </button>
-  );
-})}
+                  <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
+                    {percent}% من الطلبات
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <div
           style={{
@@ -119,8 +121,15 @@ const sortedRegions = [...regionsInsights].sort(
             {selectedRegion?.region || "اختر منطقة"}
           </h3>
 
-          <p>إجمالي الطلبات: <strong>{selectedRegion?.total_orders || 0}</strong></p>
-          <p>إجمالي الإيرادات: <strong>{selectedRegion?.total_revenue || 0} ريال</strong></p>
+          <p>
+            إجمالي الطلبات: <strong>{selectedRegion?.total_orders || 0}</strong>
+          </p>
+
+          <p>
+            إجمالي الإيرادات:{" "}
+            <strong>{selectedRegion?.total_revenue || 0} ريال</strong>
+          </p>
+
           <p>
             المدن:{" "}
             <strong>{selectedRegion?.cities?.join("، ") || "غير محدد"}</strong>
