@@ -81,6 +81,31 @@ console.log("SALLA ORDER DETAIL:", JSON.stringify(detailJson.data, null, 2));
       }
     }
 
+const itemsTestRes = await fetch(
+  `https://api.salla.dev/admin/v2/orders/${order.id}/items`,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/json",
+    },
+  }
+);
+
+const itemsTestJson = await itemsTestRes.json();
+
+console.log(
+  "SALLA ORDER ITEMS TEST:",
+  JSON.stringify(
+    {
+      status: itemsTestRes.status,
+      ok: itemsTestRes.ok,
+      data: itemsTestJson,
+    },
+    null,
+    2
+  )
+);
+    
     const ordersRows = detailedOrders.map((order) => ({
       id: Number(order.id),
       merchant_id: merchantId,
