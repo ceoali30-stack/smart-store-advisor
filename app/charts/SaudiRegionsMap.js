@@ -112,8 +112,9 @@ const sortedRegions = [...regionsInsights].sort(
 <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
   {percent}% من الطلبات
 </div>
-              </button>
-            ))}
+             </button>
+  );
+})}
           </div>
         </div>
 
