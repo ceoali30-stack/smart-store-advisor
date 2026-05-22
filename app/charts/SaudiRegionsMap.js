@@ -129,4 +129,4 @@ const sortedRegions = [...regionsInsights].sort(
       </div>
     </section>
   );
-})}
+}
