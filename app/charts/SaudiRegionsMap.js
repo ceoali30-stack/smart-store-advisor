@@ -5,6 +5,15 @@ import { useState } from "react";
 export default function SaudiRegionsMap({ regionsInsights = [] }) {
   const [selectedRegion, setSelectedRegion] = useState(regionsInsights[0] || null);
 
+const totalOrders = regionsInsights.reduce(
+  (sum, region) => sum + Number(region.total_orders || 0),
+  0
+);
+
+const sortedRegions = [...regionsInsights].sort(
+  (a, b) => Number(b.total_orders || 0) - Number(a.total_orders || 0)
+);
+  
   return (
     <section
       style={{
@@ -45,7 +54,36 @@ export default function SaudiRegionsMap({ regionsInsights = [] }) {
               gap: "10px",
             }}
           >
-            {regionsInsights.map((region, index) => (
+           {sortedRegions.map((region, index) => {
+  const percent =
+    totalOrders > 0
+      ? Math.round((Number(region.total_orders || 0) / totalOrders) * 100)
+      : 0;
+
+  return (
+
+<div
+  style={{
+    marginTop: "10px",
+    height: "8px",
+    background: "#e5e7eb",
+    borderRadius: "999px",
+    overflow: "hidden",
+  }}
+>
+  <div
+    style={{
+      width: `${percent}%`,
+      height: "100%",
+      background: index === 0 ? "#16a34a" : "#38bdf8",
+    }}
+  />
+</div>
+
+<div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
+  {percent}% من الطلبات
+</div>
+    
               <button
                 key={index}
                 onClick={() => setSelectedRegion(region)}
@@ -92,4 +130,4 @@ export default function SaudiRegionsMap({ regionsInsights = [] }) {
       </div>
     </section>
   );
-}
+})}
