@@ -48,6 +48,33 @@ const salesChannelsData = (salesChannels || []).map((item) => ({
   name: item.name || "غير محدد",
   value: Number(item.orders_count || 0),
 }));
+  const totalOrders = Number(summary?.total_orders || 0);
+const totalRevenue = Number(summary?.total_revenue || 0);
+const averageOrderValue = Number(summary?.average_order_value || 0);
+
+const performanceInsights = [
+  {
+    title: "نشاط الطلبات",
+    value: `${totalOrders} طلب`,
+    note: totalOrders > 0 ? "النشاط موجود ويحتاج متابعة نمو الطلبات." : "لا توجد طلبات كافية للتحليل.",
+    color: "#2563eb",
+    background: "#eff6ff",
+  },
+  {
+    title: "قوة الإيرادات",
+    value: `${totalRevenue.toLocaleString("ar-SA")} ريال`,
+    note: totalRevenue > 0 ? "الإيرادات موجودة ويمكن تحسينها برفع السلة أو الطلبات." : "لا توجد إيرادات كافية.",
+    color: "#f97316",
+    background: "#fff7ed",
+  },
+  {
+    title: "متوسط قيمة الطلب",
+    value: `${averageOrderValue.toLocaleString("ar-SA")} ريال`,
+    note: averageOrderValue > 0 ? "راقب هذا الرقم لأنه يوضح جودة الطلب الواحد." : "لا توجد بيانات كافية.",
+    color: "#22c55e",
+    background: "#f0fdf4",
+  },
+];
 return (
   <section
     style={{
@@ -92,6 +119,37 @@ return (
       </div>
     </div>
 
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+        gap: "14px",
+        marginBottom: "22px",
+      }}
+    >
+      {performanceInsights.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            background: item.background,
+            borderRadius: "18px",
+            padding: "16px",
+            color: "#0f172a",
+          }}
+        >
+          <div style={{ color: item.color, fontWeight: "900", marginBottom: "8px" }}>
+            {item.title}
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: "900", marginBottom: "8px" }}>
+            {item.value}
+          </div>
+          <div style={{ color: "#475569", fontSize: "13px", lineHeight: "1.7" }}>
+            {item.note}
+          </div>
+        </div>
+      ))}
+    </div>
+          
     <div
       style={{
         display: "grid",
