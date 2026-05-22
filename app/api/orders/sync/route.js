@@ -72,7 +72,8 @@ export async function GET(request) {
       );
 
       const detailJson = await detailRes.json();
-
+console.log("SALLA ORDER DETAIL:", JSON.stringify(detailJson.data, null, 2));
+      
       if (detailRes.ok && detailJson.data) {
         detailedOrders.push(detailJson.data);
       } else {
