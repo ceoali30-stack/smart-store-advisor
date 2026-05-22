@@ -106,6 +106,7 @@ export default async function ChartsPage({ searchParams }) {
   const topProducts = salesInsights?.top_products || [];
   const topCategories = salesInsights?.top_categories || [];
   const topCities = salesInsights?.top_cities || [];
+  const regionsInsights = salesInsights?.regions_insights || [];
   const topCustomers = salesInsights?.top_customers || [];
   const abandonedCartsSummary = salesInsights?.abandoned_carts_summary || {};
 const recommendations = salesInsights?.recommendations || [];
@@ -601,7 +602,63 @@ const maxCustomerValue = Math.max(
     كلما اكتملت بيانات المنتجات، الأقسام، العملاء، المدن، طرق الدفع، والسلات المتروكة؛ أصبحت التوصيات أدق وأكثر فائدة للتاجر.
   </div>
 </ChartBox>
-    
+
+<ChartBox title="تحليل المناطق الإدارية" accent="#14b8a6">
+  {regionsInsights.length > 0 ? (
+    <div style={{ display: "grid", gap: "12px" }}>
+      {regionsInsights.map((region, index) => (
+        <div
+          key={index}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.4fr 0.8fr 1fr 1.2fr",
+            gap: "12px",
+            alignItems: "center",
+            background: index === 0 ? "#ecfeff" : "#f8fafc",
+            border: index === 0 ? "1px solid #67e8f9" : "1px solid #e2e8f0",
+            borderRadius: "14px",
+            padding: "14px",
+          }}
+        >
+          <div>
+            <strong style={{ color: "#0f172a" }}>
+              {index === 0 ? "🏆 " : ""}
+              {region.region || "غير محدد"}
+            </strong>
+            <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
+              المدن: {(region.cities || []).join("، ") || "غير محدد"}
+            </p>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <div style={{ color: "#64748b", fontSize: "12px" }}>الطلبات</div>
+            <strong>{region.total_orders || 0}</strong>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <div style={{ color: "#64748b", fontSize: "12px" }}>الإيرادات</div>
+            <strong>{region.total_revenue || 0} ريال</strong>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <div style={{ color: "#64748b", fontSize: "12px" }}>متوسط الطلب</div>
+            <strong>
+              {region.total_orders > 0
+                ? Math.round((region.total_revenue || 0) / region.total_orders)
+                : 0}{" "}
+              ريال
+            </strong>
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div style={{ color: "#64748b", lineHeight: "1.8" }}>
+      لا توجد بيانات مناطق كافية حتى الآن.
+    </div>
+  )}
+</ChartBox>
+      
 <ChartsClient
   summary={summary}
   topCities={topCities}
