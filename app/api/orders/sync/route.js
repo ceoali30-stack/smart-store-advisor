@@ -92,10 +92,10 @@ export async function GET(request) {
       );
 
 const testUrls = [
-  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/items`,
-  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/products`,
-  `https://api.salla.dev/admin/v2/orders/${sallaOrderId}/shipments`,
-  `https://api.salla.dev/admin/v2/orders/items?order_id=${sallaOrderId}`,
+`https://api.salla.dev/admin/v2/orders/${order.id}/items`
+  `https://api.salla.dev/admin/v2/orders/${order.id}/products`,
+  `https://api.salla.dev/admin/v2/orders/${order.id}/shipments`,
+  `https://api.salla.dev/admin/v2/orders/items?order_id=${order.id}`,
 ];
 
 for (const testUrl of testUrls) {
@@ -111,7 +111,7 @@ for (const testUrl of testUrls) {
   const testData = await testRes.json().catch(() => null);
 
   console.log("SALLA ORDER ITEMS ENDPOINT TEST:", {
-    order_id: sallaOrderId,
+    order_id: order.id,
     url: testUrl,
     status: testRes.status,
     ok: testRes.ok,
