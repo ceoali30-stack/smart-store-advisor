@@ -71,18 +71,6 @@ const sortedRegions = [...regionsInsights].sort(
     overflow: "hidden",
   }}
 >
-  <div
-    style={{
-      width: `${percent}%`,
-      height: "100%",
-      background: index === 0 ? "#16a34a" : "#38bdf8",
-    }}
-  />
-</div>
-
-<div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
-  {percent}% من الطلبات
-</div>
     
               <button
                 key={index}
@@ -102,7 +90,28 @@ const sortedRegions = [...regionsInsights].sort(
                 {region.region}
                 <div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
                   {region.total_orders || 0} طلب
-                </div>
+                 </div>
+                    <div
+  style={{
+    marginTop: "10px",
+    height: "8px",
+    background: "#e5e7eb",
+    borderRadius: "999px",
+    overflow: "hidden",
+  }}
+>
+  <div
+    style={{
+      width: `${percent}%`,
+      height: "100%",
+      background: index === 0 ? "#16a34a" : "#38bdf8",
+    }}
+  />
+</div>
+
+<div style={{ marginTop: "6px", color: "#64748b", fontSize: "12px" }}>
+  {percent}% من الطلبات
+</div>
               </button>
             ))}
           </div>
