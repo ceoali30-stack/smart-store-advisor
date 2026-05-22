@@ -1,3 +1,4 @@
+import SaudiRegionsMap from "./SaudiRegionsMap";
 import ChartsClient from "./ChartsClient";
 import PrintButton from "../dashboard/PrintButton";
 
@@ -658,7 +659,9 @@ const maxCustomerValue = Math.max(
     </div>
   )}
 </ChartBox>
-      
+
+<SaudiRegionsMap regionsInsights={regionsInsights} />
+  
 <ChartsClient
   summary={summary}
   topCities={topCities}
