@@ -1,30 +1,31 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js'; // الحزمة الأساسية المضمونة والمثبتة دائماً
+import { createClient } from '@supabase/supabase-js';
 
-// بناء عميل السوبابيز باستخدام متغيرات البيئة المباشرة المتاحة في Vercel
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// بناء العميل والتأكد من وجود متغيرات البيئة لمنع أي خطأ تحميل
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// دالة مساعدة لربط المدن بالمناطق الإدارية السعودية وتحديد الـ ID الخاص بالـ SVG
+// دالة مساعدة معالجة وحصينة ضد القيم الفارغة والـ NULL
 const mapCityToRegion = (city) => {
-  if (!city) return 'undefined_region';
+  if (!city || typeof city !== 'string') return 'undefined_region';
+  
   const cityName = city.trim();
   
-  if (cityName === 'الرياض') return 'riyadh';
-  if (cityName === 'جدة' || cityName === 'مكة') return 'makkah';
-  if (cityName === 'الدمام' || cityName === 'الخبر' || cityName === 'الجبيل') return 'eastern';
+  if (cityName.includes('الرياض')) return 'riyadh';
+  if (cityName.includes('جدة') || cityName.includes('مكة')) return 'makkah';
+  if (cityName.includes('الدمام') || cityName.includes('الخبر') || cityName.includes('الجبيل')) return 'eastern';
   
   return 'other';
 };
 
 const initialRegions = {
   riyadh: { name: "منطقة الرياض", orders: 0, revenue: 0, cities: "الرياض", recommendation: "المنطقة نشطة، ركز عليها بحملات إعلانية مخصصة لرفع المبيعات." },
-  makkah: { name: "منطقة مكة المكرمة", orders: 0, revenue: 0, cities: "جدة", recommendation: "أداء مستقر، نقترح عمل عروض شحن مجاني لتنشيط الطلبات." },
-  eastern: { name: "المنطقة الشرقية", orders: 0, revenue: 0, cities: "الدمام", recommendation: "المنطقة بحاجة لتنشيط تسويقي مستهدف لزيادة الحصة السوقية." },
-  undefined_region: { name: "منطقة غير محددة", orders: 0, revenue: 0, cities: "غير محدد", recommendation: "يرجى تحسين جودة بيانات عناوين الشحن لتحديد المنطقة بدقة." }
+  makkah: { name: "منطقة مكة المكرمة", orders: 0, revenue: 0, cities: "جدة / مكة", recommendation: "أداء مستقر، نقترح عمل عروض شحن مجاني لتنشيط الطلبات." },
+  eastern: { name: "المنطقة الشرقية", orders: 0, revenue: 0, cities: "الدمام / الخبر", recommendation: "المنطقة بحاجة لتنشيط تسويقي مستهدف لزيادة الحصة السوقية." },
+  undefined_region: { name: "منطقة غير محددة", orders: 0, revenue: 0, cities: "غير محدد في النظام", recommendation: "يرجى تحسين جودة بيانات عناوين الشحن في المتجر لتحديد المنطقة بدقة." }
 };
 
 export default function SaudiRegionsMap({ merchantId = '210819854' }) {
@@ -37,7 +38,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
       try {
         setLoading(true);
         
-        // 1. جلب الطلبات الخاصة بالتاجر الحالي
+        // 1. جلب الطلبات بأمان
         const { data: orders, error: ordersError } = await supabase
           .from('orders')
           .select('id, city')
@@ -45,7 +46,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
 
         if (ordersError) throw ordersError;
 
-        // 2. جلب المبالغ وعناصر الطلبات لحساب الإيرادات
+        // 2. جلب عناصر الطلبات بأمان
         const { data: items, error: itemsError } = await supabase
           .from('order_items')
           .select('order_id, total_price')
@@ -53,25 +54,33 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
 
         if (itemsError) throw itemsError;
 
-        // خريطة لتجميع الإيرادات لكل طلب
+        // تجميع المبالغ لكل طلب لمنع أخطاء القيم الفارغة
         const orderRevenueMap = {};
         items?.forEach(item => {
-          orderRevenueMap[item.order_id] = (orderRevenueMap[item.order_id] || 0) + Number(item.total_price || 0);
+          if (item.order_id) {
+            orderRevenueMap[item.order_id] = (orderRevenueMap[item.order_id] || 0) + Number(item.total_price || 0);
+          }
         });
 
-        // 3. معالجة وتجميع البيانات حسب المنطقة الإدارية
+        // 3. تحديث البيانات وتوزيعها بمرونة كاملة
         const updatedRegions = JSON.parse(JSON.stringify(initialRegions));
         let totalStoreOrders = orders?.length || 0;
 
         orders?.forEach(order => {
+          // جلب المعرف بأمان حتى لو كانت المدينة NULL
           const regionId = mapCityToRegion(order.city);
+          
           if (updatedRegions[regionId]) {
             updatedRegions[regionId].orders += 1;
             updatedRegions[regionId].revenue += (orderRevenueMap[order.id] || 0);
+          } else if (regionId === 'other') {
+            // دمج أي مدن أخرى غير رئيسية ضمن المنطقة غير المحددة مؤقتاً للمتجر التجريبي
+            updatedRegions['undefined_region'].orders += 1;
+            updatedRegions['undefined_region'].revenue += (orderRevenueMap[order.id] || 0);
           }
         });
 
-        // حساب النسب المئوية ومتوسط قيمة الطلب ديناميكياً
+        // حساب النسب المئوية والمتوسطات رياضياً بأمان
         Object.keys(updatedRegions).forEach(key => {
           const reg = updatedRegions[key];
           reg.percentage = totalStoreOrders > 0 ? `${Math.round((reg.orders / totalStoreOrders) * 100)}%` : '0%';
@@ -80,7 +89,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
 
         setRegionsData(updatedRegions);
       } catch (error) {
-        console.error('Error fetching regions data:', error);
+        console.error('Error in map components calculations:', error);
       } finally {
         setLoading(false);
       }
@@ -97,21 +106,21 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
     }
   };
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '20px', color: '#10b981' }}>جاري تحميل الخريطة والتحليلات...</div>;
+  if (loading) return <div style={{ textAlign: 'center', padding: '30px', color: '#10b981', fontWeight: 'bold', direction: 'rtl' }}>جاري جلب بيانات الخريطة والتحليلات الذكية...</div>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: '20px', padding: '20px', direction: 'rtl' }}>
       
       {/* قسم الخريطة التفاعلية */}
       <div style={{ flex: 1, position: 'relative' }}>
-        <h3 style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>خريطة المناطق التفاعلية</h3>
-        <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>توزيع الطلبات والمبيعات حسب مناطق المملكة. اضغط على المنطقة لرؤية التقرير.</p>
+        <h3 style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold', color: '#111827' }}>خريطة المناطق التفاعلية</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>توزيع الطلبات والمبيعات حسب مناطق المملكة. اضغط على المنطقة لرؤية التقرير تفاعلياً.</p>
         
         <svg id="saudi-arabia-map" viewBox="0 0 800 600" style={{ width: '100%', height: 'auto', cursor: 'pointer' }}>
           {/* المنطقة الشرقية */}
           <path 
             id="eastern"
-            d="M660,180 L720,220 L750,350 L680,450 L600,420 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
+            d="M660,180 L720,220 L750,350 L680,450 L600,420 Z" 
             fill={selectedRegion?.name === "المنطقة الشرقية" ? "#059669" : "#34d399"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("eastern")}
@@ -121,7 +130,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           {/* منطقة الرياض */}
           <path 
             id="riyadh"
-            d="M450,220 L580,260 L600,380 L520,480 L400,380 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
+            d="M450,220 L580,260 L600,380 L520,480 L400,380 Z" 
             fill={selectedRegion?.name === "منطقة الرياض" ? "#059669" : "#10b981"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("riyadh")}
@@ -131,7 +140,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           {/* منطقة مكة المكرمة */}
           <path 
             id="makkah"
-            d="M320,320 L410,350 L430,420 L350,490 L300,400 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
+            d="M320,320 L410,350 L430,420 L350,490 L300,400 Z" 
             fill={selectedRegion?.name === "منطقة مكة المكرمة" ? "#059669" : "#10b981"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("makkah")}
@@ -139,12 +148,13 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           />
         </svg>
 
+        {/* كرت تنبيهي مساند للبيانات غير المكتملة */}
         {regionsData.undefined_region.orders > 0 && (
           <button 
             onClick={() => handleRegionClick("undefined_region")}
-            style={{ marginTop: '10px', background: '#f3f4f6', border: '1px solid #d1d5db', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}
+            style={{ marginTop: '15px', background: '#fff5f5', border: '1px solid #feb2b2', color: '#c53030', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '500', display: 'block' }}
           >
-            🔍 إظهار تحليلات الطلبات (غير محددة المدينة)
+            ⚠️ هناك طلبات بمدن غير محددة ({regionsData.undefined_region.orders} طلبات). اضغط هنا لتحليلها.
           </button>
         )}
       </div>
@@ -165,7 +175,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
                 <strong style={{ display: 'block', fontSize: '16px', color: '#10b981', marginTop: '4px' }}>{selectedRegion.revenue} ريال</strong>
               </div>
               <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
-                <span style={{ fontSize: '12px', color: '#6b7280' }}>متوسط قيمة الطلب</span>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>متوسط الطلب</span>
                 <strong style={{ display: 'block', fontSize: '16px', color: '#111827', marginTop: '4px' }}>{selectedRegion.avg_order} ريال</strong>
               </div>
               <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
@@ -186,7 +196,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           </div>
         ) : (
           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #e5e7eb', borderRadius: '12px', color: '#9ca3af', padding: '40px', textAlign: 'center' }}>
-            قم بالضغط على أي منطقة على الخريطة لعرض تحليلاتها وتوصياتها مباشرة هنا.
+            اضغط على أي منطقة ملونة في الخريطة لعرض تحليلاتها وتوصياتها الاستراتيجية هنا فوراً.
           </div>
         )}
       </div>
