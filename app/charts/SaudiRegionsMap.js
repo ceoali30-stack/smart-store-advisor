@@ -107,21 +107,9 @@ export default function SaudiRegionsMap() {
         path.style.fill = selectedRegion?.id === id ? "#2563eb" : "#e5e7eb";
       };
 
-      const handleClick = () => {
-        setSelectedRegion({
-          id,
-          ...region,
-        });
-      };
-
-      path.addEventListener("mouseenter", handleMouseEnter);
-      path.addEventListener("mouseleave", handleMouseLeave);
-      path.addEventListener("click", handleClick);
-
       path._cleanup = () => {
         path.removeEventListener("mouseenter", handleMouseEnter);
         path.removeEventListener("mouseleave", handleMouseLeave);
-        path.removeEventListener("click", handleClick);
       };
     });
 
@@ -140,11 +128,26 @@ export default function SaudiRegionsMap() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2">
-          <div
-            ref={containerRef}
-            className="w-full min-h-[420px] flex items-center justify-center"
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-          />
+         <div
+ <div
+  ref={containerRef}
+  className="w-full min-h-[420px] flex items-center justify-center"
+  onClick={(e) => {
+    const path = e.target.closest("path");
+    if (!path) return;
+
+    const id = path.getAttribute("id");
+    const region = regionsConstant[id];
+
+    if (!region) return;
+
+    setSelectedRegion({
+      id,
+      ...region,
+    });
+  }}
+  dangerouslySetInnerHTML={{ __html: svgContent }}
+/>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
