@@ -3,173 +3,144 @@
 import { useEffect, useRef, useState } from "react";
 
 const regionsConstant = {
-  SA01: { nameAr: "منطقة الرياض", shortName: "الرياض", cities: "الرياض، الخرج، المجمعة" },
-  SA02: { nameAr: "منطقة مكة المكرمة", shortName: "مكة", cities: "مكة، جدة، الطائف" },
-  SA03: { nameAr: "منطقة المدينة المنورة", shortName: "المدينة", cities: "المدينة، ينبع، العلا" },
-  SA04: { nameAr: "المنطقة الشرقية", shortName: "الشرقية", cities: "الدمام، الخبر، الأحساء" },
-  SA05: { nameAr: "منطقة القصيم", shortName: "القصيم", cities: "بريدة، عنيزة، الرس" },
-  SA06: { nameAr: "منطقة حائل", shortName: "حائل", cities: "حائل" },
-  SA07: { nameAr: "منطقة تبوك", shortName: "تبوك", cities: "تبوك" },
-  SA08: { nameAr: "منطقة الحدود الشمالية", shortName: "الحدود الشمالية", cities: "عرعر، رفحاء" },
-  SA09: { nameAr: "منطقة جازان", shortName: "جازان", cities: "جازان" },
-  SA10: { nameAr: "منطقة نجران", shortName: "نجران", cities: "نجران" },
-  SA11: { nameAr: "منطقة الباحة", shortName: "الباحة", cities: "الباحة" },
-  SA12: { nameAr: "منطقة الجوف", shortName: "الجوف", cities: "سكاكا، القريات" },
-  SA14: { nameAr: "منطقة عسير", shortName: "عسير", cities: "أبها، خميس مشيط" },
+  SA01: { nameAr: "منطقة الرياض", cities: "الرياض، الخرج، المجمعة" },
+  SA02: { nameAr: "منطقة مكة المكرمة", cities: "مكة، جدة، الطائف" },
+  SA03: { nameAr: "منطقة المدينة المنورة", cities: "المدينة، ينبع، العلا" },
+  SA04: { nameAr: "المنطقة الشرقية", cities: "الدمام، الخبر، الأحساء" },
+  SA05: { nameAr: "منطقة القصيم", cities: "بريدة، عنيزة، الرس" },
+  SA06: { nameAr: "منطقة حائل", cities: "حائل" },
+  SA07: { nameAr: "منطقة تبوك", cities: "تبوك، الوجه، ضباء" },
+  SA08: { nameAr: "منطقة الحدود الشمالية", cities: "عرعر، رفحاء، طريف" },
+  SA09: { nameAr: "منطقة جازان", cities: "جازان، صبيا، أبو عريش" },
+  SA10: { nameAr: "منطقة نجران", cities: "نجران" },
+  SA11: { nameAr: "منطقة الباحة", cities: "الباحة، بلجرشي" },
+  SA12: { nameAr: "منطقة الجوف", cities: "سكاكا، القريات" },
+  SA14: { nameAr: "منطقة عسير", cities: "أبها، خميس مشيط" },
 };
 
-export default function SaudiRegionsMap({
-  regionsInsights = [],
-  selectedRegion,
-  onSelectRegion,
-}) {
-  const mapRef = useRef(null);
+export default function SaudiRegionsMap() {
+  const containerRef = useRef(null);
   const [svgContent, setSvgContent] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState(null);
 
   useEffect(() => {
-    fetch("/sa.svg")
-      .then((res) => res.text())
-      .then((data) => {
-        setSvgContent(data);
-      });
+    let isMounted = true;
+
+    async function loadSvg() {
+      try {
+        const res = await fetch("/sa.svg");
+        if (!res.ok) throw new Error("SVG file not found");
+
+        const text = await res.text();
+
+        if (isMounted) {
+          setSvgContent(text);
+        }
+      } catch (error) {
+        console.error("Error loading sa.svg:", error);
+      }
+    }
+
+    loadSvg();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
-    if (!svgContent || !mapRef.current) return;
+    if (!svgContent || !containerRef.current) return;
 
-    const svg = mapRef.current.querySelector("svg");
+    const svg = containerRef.current.querySelector("svg");
     if (!svg) return;
 
-    svg.style.width = "100%";
-    svg.style.height = "100%";
-    svg.style.maxHeight = "560px";
-    svg.style.transform = "scale(1.08)";
-    svg.style.transformOrigin = "center";
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    svg.style.maxWidth = "100%";
+    svg.style.height = "auto";
 
-    Object.entries(REGION_ID_TO_NAME).forEach(([id, regionName]) => {
-      const regionElement = svg.querySelector(`#${id}`);
-      if (!regionElement) return;
+    const paths = svg.querySelectorAll("path");
 
-      const regionData = regionsInsights.find(
-        (r) => r.region === regionName
-      );
+    paths.forEach((path) => {
+      const id = path.getAttribute("id");
+      const region = regionsConstant[id];
 
-      const orders = regionData?.total_orders || 0;
+      path.style.cursor = region ? "pointer" : "default";
+      path.style.fill = region ? "#e5e7eb" : "#f3f4f6";
+      path.style.stroke = "#ffffff";
+      path.style.strokeWidth = "1";
 
-      let fillColor = "#d1d5db";
+      if (!region) return;
 
-      if (orders >= 5) {
-        fillColor = "#15803d";
-      } else if (orders >= 3) {
-        fillColor = "#22c55e";
-      } else if (orders >= 1) {
-        fillColor = "#86efac";
-      }
-
-      regionElement.style.fill = fillColor;
-      regionElement.style.stroke = "#ffffff";
-      regionElement.style.strokeWidth = "1.5";
-      regionElement.style.cursor = "pointer";
-      regionElement.style.transition = "all 0.25s ease";
-
-      if (selectedRegion === regionName) {
-        regionElement.style.stroke = "#0f172a";
-        regionElement.style.strokeWidth = "3";
-      }
-
-      regionElement.onmouseenter = () => {
-        regionElement.style.opacity = "0.85";
+      const handleMouseEnter = () => {
+        path.style.fill = "#60a5fa";
       };
 
-      regionElement.onmouseleave = () => {
-        regionElement.style.opacity = "1";
+      const handleMouseLeave = () => {
+        path.style.fill = selectedRegion?.id === id ? "#2563eb" : "#e5e7eb";
       };
 
-      regionElement.onclick = () => {
-        onSelectRegion(regionName);
+      const handleClick = () => {
+        setSelectedRegion({
+          id,
+          ...region,
+        });
       };
 
-      const oldTitle = regionElement.querySelector("title");
-      if (oldTitle) oldTitle.remove();
+      path.addEventListener("mouseenter", handleMouseEnter);
+      path.addEventListener("mouseleave", handleMouseLeave);
+      path.addEventListener("click", handleClick);
 
-      const title = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "title"
-      );
-
-      title.textContent = `
-${regionName}
-الطلبات: ${orders}
-الإيرادات: ${regionData?.total_revenue || 0} ريال
-      `;
-
-      regionElement.appendChild(title);
+      path._cleanup = () => {
+        path.removeEventListener("mouseenter", handleMouseEnter);
+        path.removeEventListener("mouseleave", handleMouseLeave);
+        path.removeEventListener("click", handleClick);
+      };
     });
-  }, [svgContent, regionsInsights, selectedRegion, onSelectRegion]);
+
+    return () => {
+      paths.forEach((path) => {
+        if (path._cleanup) path._cleanup();
+      });
+    };
+  }, [svgContent, selectedRegion]);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        minHeight: "620px",
-        background: "#f8fafc",
-        borderRadius: "24px",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        ref={mapRef}
-        dangerouslySetInnerHTML={{ __html: svgContent }}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-      />
+    <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">
+        خريطة مناطق المملكة
+      </h2>
 
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          fontSize: "12px",
-          fontWeight: "900",
-          color: "#0f172a",
-        }}
-      >
-        {[
-          ["الرياض", "56%", "53%"],
-          ["الشرقية", "72%", "46%"],
-          ["مكة", "35%", "55%"],
-          ["المدينة", "30%", "41%"],
-          ["القصيم", "45%", "38%"],
-          ["حائل", "43%", "31%"],
-          ["تبوك", "30%", "25%"],
-          ["الجوف", "39%", "18%"],
-          ["الحدود الشمالية", "53%", "22%"],
-          ["عسير", "41%", "67%"],
-          ["جازان", "38%", "82%"],
-          ["نجران", "57%", "78%"],
-          ["الباحة", "35%", "65%"],
-        ].map(([name, left, top]) => (
-          <span
-            key={name}
-            style={{
-              position: "absolute",
-              left,
-              top,
-              transform: "translate(-50%, -50%)",
-              background: "rgba(255,255,255,0.82)",
-              border: "1px solid rgba(15,23,42,0.08)",
-              borderRadius: "999px",
-              padding: "4px 8px",
-              boxShadow: "0 4px 10px rgba(15,23,42,0.08)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {name}
-          </span>
-        ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <div className="lg:col-span-2">
+          <div
+            ref={containerRef}
+            className="w-full min-h-[420px] flex items-center justify-center"
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
+        </div>
+
+        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+          {selectedRegion ? (
+            <>
+              <p className="text-sm text-gray-500 mb-1">المنطقة المحددة</p>
+              <h3 className="text-2xl font-bold text-blue-700 mb-3">
+                {selectedRegion.nameAr}
+              </h3>
+              <p className="text-gray-700 leading-7">
+                <span className="font-semibold">أبرز المدن: </span>
+                {selectedRegion.cities}
+              </p>
+              <p className="text-xs text-gray-400 mt-4">
+                كود المنطقة: {selectedRegion.id}
+              </p>
+            </>
+          ) : (
+            <p className="text-gray-500 leading-7">
+              اضغط على أي منطقة في الخريطة لعرض تفاصيلها.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
