@@ -373,7 +373,6 @@ const regionsInsights = Object.values(ordersByRegion)
         }
 
         return b.total_revenue - a.total_revenue;
-      })
       .slice(0, 5);
 
     const recommendations = [];
