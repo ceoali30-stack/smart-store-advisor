@@ -1,411 +1,193 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'; // أو طريقة استدعاء supabase لديك
 
-const REGION_ID_TO_NAME = {
-  SA01: "منطقة الرياض",
-  SA02: "منطقة مكة المكرمة",
-  SA03: "منطقة المدينة المنورة",
-  SA04: "المنطقة الشرقية",
-  SA05: "منطقة القصيم",
-  SA06: "منطقة حائل",
-  SA07: "منطقة تبوك",
-  SA08: "منطقة الحدود الشمالية",
-  SA09: "منطقة جازان",
-  SA10: "منطقة نجران",
-  SA11: "منطقة الباحة",
-  SA12: "منطقة الجوف",
-  SA14: "منطقة عسير",
+// دالة مساعدة لربط المدن بالمناطق الإدارية السعودية وتحديد الـ ID الخاص بالـ SVG
+const mapCityToRegion = (city) => {
+  if (!city) return 'undefined_region';
+  const cityName = city.trim();
+  
+  if (cityName === 'الرياض') return 'riyadh';
+  if (cityName === 'جدة' || cityName === 'مكة') return 'makkah';
+  if (cityName === 'الدمام' || cityName === 'الخبر' || cityName === 'الجبيل') return 'eastern';
+  
+  return 'other';
 };
 
-export default function SaudiRegionsMap({ regionsInsights = [] }) {
-  const mapRef = useRef(null);
+// هيكل أولي للمناطق لضمان عدم حدوث أخطاء برمجية أثناء التحميل
+const initialRegions = {
+  riyadh: { name: "منطقة الرياض", orders: 0, revenue: 0, cities: "الرياض", recommendation: "المنطقة نشطة، ركز عليها بحملات إعلانية مخصصة لرفع المبيعات." },
+  makkah: { name: "منطقة مكة المكرمة", orders: 0, revenue: 0, cities: "جدة", recommendation: "أداء مستقر، نقترح عمل عروض شحن مجاني لتنشيط الطلبات." },
+  eastern: { name: "المنطقة الشرقية", orders: 0, revenue: 0, cities: "الدمام", recommendation: "المنطقة بحاجة لتنشيط تسويقي مستهدف لزيادة الحصة السوقية." },
+  undefined_region: { name: "منطقة غير محددة", orders: 0, revenue: 0, cities: "غير محدد", recommendation: "يرجى تحسين جودة بيانات عناوين الشحن لتحديد المنطقة بدقة." }
+};
 
-  const [svgContent, setSvgContent] = useState("");
-  const [selectedRegionId, setSelectedRegionId] = useState("SA01");
-  const [hoveredRegion, setHoveredRegion] = useState(null);
-
-  const dataByRegionName = useMemo(() => {
-    const map = {};
-    regionsInsights.forEach((item) => {
-      map[item.region] = item;
-    });
-    return map;
-  }, [regionsInsights]);
-
-  const totalOrders = regionsInsights.reduce(
-    (sum, item) => sum + Number(item.total_orders || 0),
-    0
-  );
-
-  const getRegionData = (regionName) => {
-    return (
-      dataByRegionName[regionName] || {
-        region: regionName,
-        total_orders: 0,
-        total_revenue: 0,
-        cities: [],
-      }
-    );
-  };
-
-  const getFillColor = (orders) => {
-    if (!orders) return "#e5e7eb";
-
-    const percent = totalOrders > 0 ? (orders / totalOrders) * 100 : 0;
-
-    if (percent >= 30) return "#16a34a";
-    if (percent >= 15) return "#22c55e";
-    if (percent >= 5) return "#86efac";
-    return "#bbf7d0";
-  };
-
-  const getRecommendation = (region) => {
-    if (!region || Number(region.total_orders || 0) === 0) {
-      return "لا توجد بيانات كافية لهذه المنطقة حتى الآن.";
-    }
-
-    const percent =
-      totalOrders > 0
-        ? Math.round((Number(region.total_orders || 0) / totalOrders) * 100)
-        : 0;
-
-    if (percent >= 30) {
-      return "هذه من أقوى المناطق حاليًا. ركّز عليها بحملة إعلانية أو عرض خاص لأنها تمثل نسبة عالية من الطلبات.";
-    }
-
-    if (percent >= 15) {
-      return "هذه المنطقة لديها طلب جيد. جرّب تحسين الشحن أو تقديم عرض محلي لزيادة المبيعات منها.";
-    }
-
-    return "هذه المنطقة ما زالت ضعيفة نسبيًا. اختبر حملة صغيرة قبل زيادة الميزانية الإعلانية.";
-  };
+export default function SaudiRegionsMap({ merchantId = '210819854' }) {
+  const supabase = createClientComponentClient();
+  const [regionsData, setRegionsData] = useState(initialRegions);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/sa.svg")
-      .then((res) => res.text())
-      .then((text) => setSvgContent(text))
-      .catch(() => setSvgContent(""));
-  }, []);
+    async function fetchRegionStats() {
+      try {
+        setLoading(true);
+        
+        // 1. جلب الطلبات الخاصة بالتاجر الحالي
+        const { data: orders, error: ordersError } = await supabase
+          .from('orders')
+          .select('id, city')
+          .eq('merchant_id', merchantId);
 
-  useEffect(() => {
-    if (!svgContent || !mapRef.current) return;
+        if (ordersError) throw ordersError;
 
-    const svg = mapRef.current.querySelector("svg");
-    if (!svg) return;
+        // 2. جلب المبالغ وعناصر الطلبات لحساب الإيرادات
+        const { data: items, error: itemsError } = await supabase
+          .from('order_items')
+          .select('order_id, total_price')
+          .eq('merchant_id', merchantId);
 
-    svg.setAttribute("viewBox", "0 0 1000 824");
-    svg.style.width = "100%";
-    svg.style.height = "100%";
-    svg.style.maxHeight = "560px";
+        if (itemsError) throw itemsError;
 
-    Object.entries(REGION_ID_TO_NAME).forEach(([regionId, regionName]) => {
-      const path = svg.querySelector(`#${regionId}`);
-      if (!path) return;
-
-      const regionData = getRegionData(regionName);
-      const orders = Number(regionData.total_orders || 0);
-      const isSelected = selectedRegionId === regionId;
-
-      path.style.fill = getFillColor(orders);
-      path.style.stroke = isSelected ? "#0f172a" : "#ffffff";
-      path.style.strokeWidth = isSelected ? "2.5" : "0.8";
-      path.style.cursor = "pointer";
-      path.style.transition = "all 0.2s ease";
-
-      path.onmouseenter = () => {
-        path.style.opacity = "0.85";
-        setHoveredRegion({
-          id: regionId,
-          ...regionData,
+        // خريطة لتجميع الإيرادات لكل طلب
+        const orderRevenueMap = {};
+        items?.forEach(item => {
+          orderRevenueMap[item.order_id] = (orderRevenueMap[item.order_id] || 0) + Number(item.total_price || 0);
         });
-      };
 
-      path.onmouseleave = () => {
-        path.style.opacity = "1";
-        setHoveredRegion(null);
-      };
+        // 3. معالجة وتجميع البيانات حسب المنطقة الإدارية
+        const updatedRegions = JSON.parse(JSON.stringify(initialRegions));
+        let totalStoreOrders = orders?.length || 0;
 
-      path.onclick = () => {
-        setSelectedRegionId(regionId);
-      };
-    });
-  }, [svgContent, selectedRegionId, regionsInsights]);
+        orders?.forEach(order => {
+          const regionId = mapCityToRegion(order.city);
+          if (updatedRegions[regionId]) {
+            updatedRegions[regionId].orders += 1;
+            updatedRegions[regionId].revenue += (orderRevenueMap[order.id] || 0);
+          }
+        });
 
-  const selectedRegionName =
-    REGION_ID_TO_NAME[selectedRegionId] || "منطقة الرياض";
+        // حساب النسب المئوية ومتوسط قيمة الطلب ديناميكياً
+        Object.keys(updatedRegions).forEach(key => {
+          const reg = updatedRegions[key];
+          reg.percentage = totalStoreOrders > 0 ? `${Math.round((reg.orders / totalStoreOrders) * 100)}%` : '0%';
+          reg.avg_order = reg.orders > 0 ? Math.round(reg.revenue / reg.orders) : 0;
+        });
 
-  const selectedRegion = getRegionData(selectedRegionName);
+        setRegionsData(updatedRegions);
+      } catch (error) {
+        console.error('Error fetching regions data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const selectedRegionPercent =
-    totalOrders > 0
-      ? Math.round(
-          (Number(selectedRegion.total_orders || 0) / totalOrders) * 100
-        )
-      : 0;
+    if (merchantId) {
+      fetchRegionStats();
+    }
+  }, [merchantId]);
 
-  const selectedRegionAverageOrder =
-    Number(selectedRegion.total_orders || 0) > 0
-      ? Math.round(
-          Number(selectedRegion.total_revenue || 0) /
-            Number(selectedRegion.total_orders || 1)
-        )
-      : 0;
+  const handleRegionClick = (regionId) => {
+    if (regionsData[regionId]) {
+      setSelectedRegion(regionsData[regionId]);
+    }
+  };
+
+  if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>جاري تحميل الخريطة والتحليلات...</div>;
 
   return (
-    <section
-      style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "24px",
-        border: "1px solid #e5e7eb",
-        boxShadow: "0 12px 30px rgba(15,23,42,0.08)",
-        marginBottom: "28px",
-        direction: "rtl",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "20px",
-          gap: "14px",
-        }}
-      >
-        <div>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: "22px",
-              fontWeight: "900",
-              color: "#0f172a",
-            }}
-          >
-            خريطة المناطق التفاعلية
-          </h2>
-
-          <p
-            style={{
-              margin: "8px 0 0",
-              color: "#64748b",
-              fontSize: "14px",
-            }}
-          >
-            توزيع الطلبات والمبيعات حسب مناطق المملكة
-          </p>
-        </div>
-
-        <div
-          style={{
-            background: "#f0fdf4",
-            border: "1px solid #bbf7d0",
-            color: "#166534",
-            borderRadius: "14px",
-            padding: "10px 14px",
-            fontWeight: "900",
-          }}
-        >
-          إجمالي الطلبات: {totalOrders}
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.25fr 0.9fr",
-          gap: "22px",
-          alignItems: "stretch",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            borderRadius: "22px",
-            padding: "18px",
-            minHeight: "580px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            ref={mapRef}
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+    <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: '20px', padding: '20px', direction: 'rtl' }}>
+      
+      {/* قسم الخريطة التفاعلية باستخدام الـ SVG المرفوع لديك */}
+      <div style={{ flex: 1, position: 'relative' }}>
+        <h3 style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>خريطة المناطق التفاعلية</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>توزيع الطلبات والمبيعات حسب مناطق المملكة. اضغط على المنطقة لرؤية التقرير.</p>
+        
+        <svg id="saudi-arabia-map" viewBox="0 0 800 600" style={{ width: '100%', height: 'auto', cursor: 'pointer' }}>
+          {/* المنطقة الشرقية */}
+          <path 
+            id="eastern"
+            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            fill={selectedRegion?.name === "المنطقة الشرقية" ? "#059669" : "#34d399"} 
+            stroke="#fff" strokeWidth="2"
+            onClick={() => handleRegionClick("eastern")}
+            style={{ transition: 'fill 0.3s' }}
           />
 
-          {!svgContent && (
-            <div style={{ color: "#64748b", fontWeight: "800" }}>
-              لم يتم تحميل ملف الخريطة sa.svg
-            </div>
-          )}
+          {/* منطقة الرياض */}
+          <path 
+            id="riyadh"
+            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            fill={selectedRegion?.name === "منطقة الرياض" ? "#059669" : "#10b981"} 
+            stroke="#fff" strokeWidth="2"
+            onClick={() => handleRegionClick("riyadh")}
+            style={{ transition: 'fill 0.3s' }}
+          />
 
-          {hoveredRegion && (
-            <div
-              style={{
-                position: "absolute",
-                top: "18px",
-                left: "18px",
-                background: "#0f172a",
-                color: "white",
-                borderRadius: "16px",
-                padding: "14px 16px",
-                minWidth: "220px",
-                boxShadow: "0 12px 30px rgba(15,23,42,0.25)",
-                zIndex: 10,
-                direction: "rtl",
-              }}
-            >
-              <strong style={{ display: "block", marginBottom: "8px" }}>
-                {hoveredRegion.region}
-              </strong>
+          {/* منطقة مكة المكرمة */}
+          <path 
+            id="makkah"
+            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            fill={selectedRegion?.name === "منطقة مكة المكرمة" ? "#059669" : "#10b981"} 
+            stroke="#fff" strokeWidth="2"
+            onClick={() => handleRegionClick("makkah")}
+            style={{ transition: 'fill 0.3s' }}
+          />
+        </svg>
 
-              <div style={{ fontSize: "13px", lineHeight: "1.9" }}>
-                <div>الطلبات: {hoveredRegion.total_orders || 0}</div>
-                <div>
-                  الإيرادات:{" "}
-                  {Number(hoveredRegion.total_revenue || 0).toLocaleString(
-                    "ar-SA"
-                  )}{" "}
-                  ريال
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            borderRadius: "22px",
-            padding: "22px",
-          }}
-        >
-          <h3
-            style={{
-              marginTop: 0,
-              fontSize: "22px",
-              fontWeight: "900",
-              color: "#0f172a",
-            }}
+        {/* زر لإظهار بيانات المنطقة غير المحددة إذا وجد التاجر صعوبة في الضغط عليها */}
+        {regionsData.undefined_region.orders > 0 && (
+          <button 
+            onClick={() => handleRegionClick("undefined_region")}
+            style={{ marginTop: '10px', background: '#f3f4f6', border: '1px solid #d1d5db', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}
           >
-            {selectedRegion.region}
-          </h3>
+            🔍 إظهار تحليلات الطلبات (غير محددة المدينة)
+          </button>
+        )}
+      </div>
 
-          <div style={{ display: "grid", gap: "14px", marginTop: "18px" }}>
-            <InfoCard
-              title="إجمالي الطلبات"
-              value={selectedRegion.total_orders || 0}
-            />
-
-            <InfoCard
-              title="إجمالي الإيرادات"
-              value={`${Number(selectedRegion.total_revenue || 0).toLocaleString(
-                "ar-SA"
-              )} ريال`}
-              green
-            />
-
-            <InfoCard
-              title="متوسط قيمة الطلب"
-              value={`${selectedRegionAverageOrder.toLocaleString(
-                "ar-SA"
-              )} ريال`}
-            />
-
-            <InfoCard
-              title="نسبة المنطقة من الطلبات"
-              value={`${selectedRegionPercent}%`}
-              green
-            />
-
-            <div
-              style={{
-                background: "white",
-                border: "1px solid #e2e8f0",
-                borderRadius: "18px",
-                padding: "16px",
-              }}
-            >
-              <div style={{ color: "#64748b", marginBottom: "10px" }}>
-                المدن المرتبطة
+      {/* قسم البطاقة المنبثقة الذكية بجانب الخريطة */}
+      <div style={{ flex: '0 0 350px' }}>
+        {selectedRegion ? (
+          <div style={{ background: '#ffffff', borderRight: '5px solid #10b981', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', padding: '20px' }}>
+            <h4 style={{ color: '#111827', margin: '0 0 15px 0', fontSize: '18px', fontWeight: 'bold' }}>{selectedRegion.name}</h4>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '15px' }}>
+              <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>إجمالي الطلبات</span>
+                <strong style={{ display: 'block', fontSize: '16px', color: '#111827', marginTop: '4px' }}>{selectedRegion.orders} طلب</strong>
               </div>
-
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {(selectedRegion.cities || []).length > 0 ? (
-                  selectedRegion.cities.map((city) => (
-                    <span
-                      key={city}
-                      style={{
-                        background: "#dcfce7",
-                        color: "#166534",
-                        borderRadius: "999px",
-                        padding: "7px 11px",
-                        fontSize: "13px",
-                        fontWeight: "800",
-                      }}
-                    >
-                      {city}
-                    </span>
-                  ))
-                ) : (
-                  <span style={{ color: "#94a3b8" }}>لا توجد مدن محددة</span>
-                )}
+              <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>إجمالي الإيرادات</span>
+                <strong style={{ display: 'block', fontSize: '16px', color: '#10b981', marginTop: '4px' }}>{selectedRegion.revenue} ريال</strong>
+              </div>
+              <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>متوسط قيمة الطلب</span>
+                <strong style={{ display: 'block', fontSize: '16px', color: '#111827', marginTop: '4px' }}>{selectedRegion.avg_order} ريال</strong>
+              </div>
+              <div style={{ background: '#f9fafb', padding: '10px', borderRadius: '8px' }}>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>نسبة من الطلبات</span>
+                <strong style={{ display: 'block', fontSize: '16px', color: '#2563eb', marginTop: '4px' }}>{selectedRegion.percentage}</strong>
               </div>
             </div>
 
-            <div
-              style={{
-                background: "#f0fdf4",
-                border: "1px solid #bbf7d0",
-                borderRadius: "18px",
-                padding: "16px",
-                color: "#166534",
-                lineHeight: "1.9",
-              }}
-            >
-              <strong style={{ display: "block", marginBottom: "8px" }}>
-                توصية ذكية
-              </strong>
-              {getRecommendation(selectedRegion)}
+            <div style={{ marginBottom: '15px', borderTop: '1px solid #f3f4f6', paddingTop: '10px' }}>
+              <span style={{ fontSize: '12px', color: '#6b7280' }}>المدن المرتبطة:</span>
+              <span style={{ marginRight: '8px', fontWeight: '500', color: '#374151' }}>{selectedRegion.cities}</span>
+            </div>
+
+            <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '8px', borderRight: '4px solid #2563eb' }}>
+              <strong style={{ fontSize: '13px', color: '#1e40af', display: 'block', marginBottom: '4px' }}>💡 توصية ذكية:</strong>
+              <p style={{ fontSize: '13px', color: '#1e3a8a', margin: 0, lineHeight: '1.5' }}>{selectedRegion.recommendation}</p>
             </div>
           </div>
-        </div>
+        ) : (
+          <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed #e5e7eb', borderRadius: '12px', color: '#9ca3af', padding: '40px', textAlign: 'center' }}>
+            قم بالضغط على أي منطقة على الخريطة لعرض تحليلاتها وتوصياتها مباشرة هنا.
+          </div>
+        )}
       </div>
-    </section>
-  );
-}
-
-function InfoCard({ title, value, green = false }) {
-  return (
-    <div
-      style={{
-        background: "white",
-        border: "1px solid #e2e8f0",
-        borderRadius: "18px",
-        padding: "16px",
-      }}
-    >
-      <div style={{ color: "#64748b", marginBottom: "8px" }}>{title}</div>
-      <strong
-        style={{
-          display: "block",
-          fontSize: "28px",
-          color: green ? "#16a34a" : "#0f172a",
-        }}
-      >
-        {value}
-      </strong>
     </div>
   );
 }
