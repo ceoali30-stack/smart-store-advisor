@@ -34,30 +34,37 @@ export default function SaudiRegionsMap({
       });
   }, []);
 
+  // التحكم بعناصر الـ SVG وتحديث البيانات وتأكيد إرسال الأحداث للبطاقات الجانبية
   useEffect(() => {
     if (!svgContent || !mapRef.current) return;
 
     const svg = mapRef.current.querySelector("svg");
     if (!svg) return;
 
+    // ضبط استجابة أبعاد الـ SVG
     svg.style.width = "100%";
     svg.style.height = "100%";
-    svg.style.maxHeight = "560px";
-    svg.style.transform = "scale(1.08)";
+    svg.style.maxHeight = "580px";
+    svg.style.transform = "scale(1.02)";
     svg.style.transformOrigin = "center";
+
+    const elementsToClean = [];
 
     Object.entries(REGION_ID_TO_NAME).forEach(([id, regionName]) => {
       const regionElement = svg.querySelector(`#${id}`);
       if (!regionElement) return;
 
+      elementsToClean.push(regionElement);
+
+      // البحث عن بيانات المنطقة القادمة من قاعدة البيانات
       const regionData = regionsInsights.find(
         (r) => r.region === regionName
       );
 
       const orders = regionData?.total_orders || 0;
 
-      let fillColor = "#d1d5db";
-
+      // تحديد ألوان الكثافة البيعية
+      let fillColor = "#f3f4f6"; 
       if (orders >= 5) {
         fillColor = "#15803d";
       } else if (orders >= 3) {
@@ -66,45 +73,64 @@ export default function SaudiRegionsMap({
         fillColor = "#86efac";
       }
 
+      // تطبيق الستايل الأساسي
       regionElement.style.fill = fillColor;
       regionElement.style.stroke = "#ffffff";
       regionElement.style.strokeWidth = "1.5";
       regionElement.style.cursor = "pointer";
-      regionElement.style.transition = "all 0.25s ease";
+      regionElement.style.transition = "all 0.2s ease";
 
+      // تمييز المنطقة المحددة حالياً في الكارد الجانبي
       if (selectedRegion === regionName) {
         regionElement.style.stroke = "#0f172a";
         regionElement.style.strokeWidth = "3";
+        // رفع حدود العنصر النشط للأعلى
+        regionElement.parentNode.appendChild(regionElement); 
       }
 
-      regionElement.onmouseenter = () => {
-        regionElement.style.opacity = "0.85";
+      // وظائف الأحداث المحدثة للتأكد من تمرير الاسم الإداري الكامل
+      const handleMouseEnter = () => {
+        regionElement.style.opacity = "0.8";
       };
-
-      regionElement.onmouseleave = () => {
+      const handleMouseLeave = () => {
         regionElement.style.opacity = "1";
       };
-
-      regionElement.onclick = () => {
-        onSelectRegion(regionName);
+      
+      const handleElementClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // منع تداخل الأحداث مع الحاويات الخارجية
+        
+        if (onSelectRegion) {
+          // نمرر هنا اسم المنطقة المعياري بالكامل (مثال: "منطقة الرياض") لتطابق الكارد الجانبي
+          onSelectRegion(regionName); 
+        }
       };
 
+      // استخدام المقبض المباشر للـ DOM لضمان تخطي أي حواجز برمجية
+      regionElement.addEventListener("mouseenter", handleMouseEnter);
+      regionElement.addEventListener("mouseleave", handleMouseLeave);
+      regionElement.addEventListener("click", handleElementClick);
+
+      // إضافة الـ Tooltip الافتراضي
       const oldTitle = regionElement.querySelector("title");
       if (oldTitle) oldTitle.remove();
 
-      const title = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "title"
-      );
-
-      title.textContent = `
-${regionName}
-الطلبات: ${orders}
-الإيرادات: ${regionData?.total_revenue || 0} ريال
-      `;
-
+      const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      title.textContent = `${regionName}\nالطلبات: ${orders}\nالإيرادات: ${regionData?.total_revenue || 0} ريال`;
       regionElement.appendChild(title);
+
+      regionElement._cleanUp = () => {
+        regionElement.removeEventListener("mouseenter", handleMouseEnter);
+        regionElement.removeEventListener("mouseleave", handleMouseLeave);
+        regionElement.removeEventListener("click", handleElementClick);
+      };
     });
+
+    return () => {
+      elementsToClean.forEach((el) => {
+        if (el._cleanUp) el._cleanUp();
+      });
+    };
   }, [svgContent, regionsInsights, selectedRegion, onSelectRegion]);
 
   return (
