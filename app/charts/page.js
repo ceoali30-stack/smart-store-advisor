@@ -425,6 +425,15 @@ const maxCustomerValue = Math.max(
   </div>
 </section>
 
+<div
+  style={{
+    width: "100%",
+    marginBottom: "24px",
+  }}
+>
+  <SaudiRegionsMap regionsInsights={regionsInsights} />
+</div>
+          
 <section
   style={{
     background: "white",
@@ -659,8 +668,6 @@ const maxCustomerValue = Math.max(
     </div>
   )}
 </ChartBox>
-
-<SaudiRegionsMap regionsInsights={regionsInsights} />
   
 <ChartsClient
   summary={summary}
