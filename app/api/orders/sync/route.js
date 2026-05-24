@@ -193,6 +193,16 @@ export async function GET(request) {
           order.total?.currency ||
           order.currency ||
           "SAR",
+        payment_method: order.payment_method || null,
+payment_method_label:
+  order.payment_actions?.remaining_action?.payment_method_label ||
+  order.payment_actions?.refund_action?.payment_method_label ||
+  order.payment_method ||
+  null,
+sales_channel:
+  order.source_details?.type ||
+  order.source ||
+  null,
         total_amount: Number(
           order.amounts?.total?.amount ||
             order.total?.amount ||
