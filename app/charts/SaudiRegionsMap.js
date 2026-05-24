@@ -2,20 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// إذا كانت قاعدة البيانات ترسل الأسماء بدون كلمة "منطقة"، فهذا الجدول سيحل المشكلة فوراً
 const REGION_ID_TO_NAME = {
-  SA01: "منطقة الرياض",
-  SA02: "منطقة مكة المكرمة",
-  SA03: "المنطقة الشرقية",
-  SA04: "منطقة عسير",
-  SA05: "منطقة القصيم",
-  SA06: "منطقة حائل",
-  SA07: "منطقة تبوك",
-  SA08: "منطقة الحدود الشمالية",
-  SA09: "منطقة جازان",
-  SA10: "منطقة نجران",
-  SA11: "منطقة الباحة",
-  SA12: "منطقة الجوف",
-  SA14: "منطقة المدينة المنورة",
+  SA01: "الرياض",
+  SA02: "مكة المكرمة",
+  SA03: "المدينة المنورة",
+  SA04: "الشرقية",
+  SA05: "القصيم",
+  SA06: "حائل",
+  SA07: "تبوك",
+  SA08: "الحدود الشمالية",
+  SA09: "جازان",
+  SA10: "نجران",
+  SA11: "الباحة",
+  SA12: "الجوف",
+  SA13: "عسير",
 };
 
 export default function SaudiRegionsMap({
@@ -29,19 +30,16 @@ export default function SaudiRegionsMap({
   useEffect(() => {
     fetch("/sa.svg")
       .then((res) => res.text())
-      .then((data) => {
-        setSvgContent(data);
-      });
+      .then((data) => setSvgContent(data))
+      .catch((err) => console.error("Error loading SVG:", err));
   }, []);
 
-  // التحكم بعناصر الـ SVG وتحديث البيانات وتأكيد إرسال الأحداث للبطاقات الجانبية
   useEffect(() => {
     if (!svgContent || !mapRef.current) return;
 
     const svg = mapRef.current.querySelector("svg");
     if (!svg) return;
 
-    // ضبط استجابة أبعاد الـ SVG
     svg.style.width = "100%";
     svg.style.height = "100%";
     svg.style.maxHeight = "580px";
@@ -56,62 +54,45 @@ export default function SaudiRegionsMap({
 
       elementsToClean.push(regionElement);
 
-      // البحث عن بيانات المنطقة القادمة من قاعدة البيانات
+      // البحث عن التطابق في البيانات
       const regionData = regionsInsights.find(
-        (r) => r.region === regionName
+        (r) => r.region === regionName || r.region?.replace("منطقة ", "") === regionName
       );
 
       const orders = regionData?.total_orders || 0;
 
-      // تحديد ألوان الكثافة البيعية
-      let fillColor = "#f3f4f6"; 
-      if (orders >= 5) {
-        fillColor = "#15803d";
-      } else if (orders >= 3) {
-        fillColor = "#22c55e";
-      } else if (orders >= 1) {
-        fillColor = "#86efac";
-      }
+      let fillColor = "#f3f4f6";
+      if (orders >= 5) fillColor = "#15803d";
+      else if (orders >= 3) fillColor = "#22c55e";
+      else if (orders >= 1) fillColor = "#86efac";
 
-      // تطبيق الستايل الأساسي
       regionElement.style.fill = fillColor;
       regionElement.style.stroke = "#ffffff";
       regionElement.style.strokeWidth = "1.5";
       regionElement.style.cursor = "pointer";
       regionElement.style.transition = "all 0.2s ease";
 
-      // تمييز المنطقة المحددة حالياً في الكارد الجانبي
       if (selectedRegion === regionName) {
         regionElement.style.stroke = "#0f172a";
         regionElement.style.strokeWidth = "3";
-        // رفع حدود العنصر النشط للأعلى
         regionElement.parentNode.appendChild(regionElement); 
       }
 
-      // وظائف الأحداث المحدثة للتأكد من تمرير الاسم الإداري الكامل
-      const handleMouseEnter = () => {
-        regionElement.style.opacity = "0.8";
-      };
-      const handleMouseLeave = () => {
-        regionElement.style.opacity = "1";
-      };
+      const handleMouseEnter = () => { regionElement.style.opacity = "0.8"; };
+      const handleMouseLeave = () => { regionElement.style.opacity = "1"; };
       
       const handleElementClick = (e) => {
         e.preventDefault();
-        e.stopPropagation(); // منع تداخل الأحداث مع الحاويات الخارجية
-        
+        e.stopPropagation();
         if (onSelectRegion) {
-          // نمرر هنا اسم المنطقة المعياري بالكامل (مثال: "منطقة الرياض") لتطابق الكارد الجانبي
-          onSelectRegion(regionName); 
+          onSelectRegion(regionName); // تفعيل التغيير فوراً عند النقر
         }
       };
 
-      // استخدام المقبض المباشر للـ DOM لضمان تخطي أي حواجز برمجية
       regionElement.addEventListener("mouseenter", handleMouseEnter);
       regionElement.addEventListener("mouseleave", handleMouseLeave);
       regionElement.addEventListener("click", handleElementClick);
 
-      // إضافة الـ Tooltip الافتراضي
       const oldTitle = regionElement.querySelector("title");
       if (oldTitle) oldTitle.remove();
 
@@ -138,61 +119,39 @@ export default function SaudiRegionsMap({
       style={{
         position: "relative",
         width: "100%",
-        minHeight: "620px",
-        background: "#f8fafc",
-        borderRadius: "24px",
+        minHeight: "600px",
+        background: "#ffffff",
+        borderRadius: "20px",
         overflow: "hidden",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
       }}
     >
       <div
         ref={mapRef}
         dangerouslySetInnerHTML={{ __html: svgContent }}
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
+        style={{ width: "100%", height: "100%", maxWidth: "700px" }}
       />
 
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          fontSize: "12px",
-          fontWeight: "900",
-          color: "#0f172a",
-        }}
-      >
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", fontSize: "11px", fontWeight: "700", color: "#1e293b" }}>
         {[
-          ["الرياض", "56%", "53%"],
-          ["الشرقية", "72%", "46%"],
-          ["مكة", "35%", "55%"],
-          ["المدينة", "30%", "41%"],
-          ["القصيم", "45%", "38%"],
-          ["حائل", "43%", "31%"],
-          ["تبوك", "30%", "25%"],
-          ["الجوف", "39%", "18%"],
-          ["الحدود الشمالية", "53%", "22%"],
-          ["عسير", "41%", "67%"],
-          ["جازان", "38%", "82%"],
-          ["نجران", "57%", "78%"],
-          ["الباحة", "35%", "65%"],
+          ["الرياض", "54%", "50%"],
+          ["الشرقية", "74%", "44%"],
+          ["مكة المكرمة", "34%", "56%"],
+          ["المدينة المنورة", "29%", "42%"],
+          ["القصيم", "46%", "37%"],
+          ["حائل", "41%", "31%"],
+          ["تبوك", "24%", "24%"],
+          ["الجوف", "36%", "16%"],
+          ["الحدود الشمالية", "51%", "19%"],
+          ["عسير", "39%", "69%"],
+          ["جازان", "37%", "78%"],
+          ["نجران", "52%", "73%"],
+          ["الباحة", "34%", "64%"],
         ].map(([name, left, top]) => (
-          <span
-            key={name}
-            style={{
-              position: "absolute",
-              left,
-              top,
-              transform: "translate(-50%, -50%)",
-              background: "rgba(255,255,255,0.82)",
-              border: "1px solid rgba(15,23,42,0.08)",
-              borderRadius: "999px",
-              padding: "4px 8px",
-              boxShadow: "0 4px 10px rgba(15,23,42,0.08)",
-              whiteSpace: "nowrap",
-            }}
-          >
+          <span key={name} style={{ position: "absolute", left, top, transform: "translate(-50%, -50%)", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", border: "1px solid rgba(226, 232, 240, 0.8)", borderRadius: "30px", padding: "3px 8px", boxShadow: "0 2px 5px rgba(0,0,0,0.04)", whiteSpace: "nowrap" }}>
             {name}
           </span>
         ))}
