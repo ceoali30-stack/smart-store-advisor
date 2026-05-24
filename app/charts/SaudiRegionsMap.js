@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const regionsConstant = {
   SA01: { nameAr: "منطقة الرياض", cities: "الرياض، الخرج، المجمعة" },
@@ -20,33 +20,60 @@ const regionsConstant = {
 
 export default function SaudiRegionsMap() {
   const containerRef = useRef(null);
+
   const [svgContent, setSvgContent] = useState("");
   const [selectedRegion, setSelectedRegion] = useState(null);
+  const [insights, setInsights] = useState(null);
+  const [loadingInsights, setLoadingInsights] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-
     async function loadSvg() {
       try {
         const res = await fetch("/sa.svg");
-        if (!res.ok) throw new Error("SVG file not found");
-
         const text = await res.text();
-
-        if (isMounted) {
-          setSvgContent(text);
-        }
+        setSvgContent(text);
       } catch (error) {
         console.error("Error loading sa.svg:", error);
       }
     }
 
     loadSvg();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    async function loadInsights() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const merchantId = params.get("merchant_id");
+
+        if (!merchantId) {
+          setLoadingInsights(false);
+          return;
+        }
+
+        const res = await fetch(`/api/sales/insights?merchant_id=${merchantId}`);
+        const data = await res.json();
+
+        if (data?.success) {
+          setInsights(data);
+        }
+      } catch (error) {
+        console.error("Error loading insights:", error);
+      } finally {
+        setLoadingInsights(false);
+      }
+    }
+
+    loadInsights();
+  }, []);
+
+  const regionStats = useMemo(() => {
+    if (!selectedRegion || !insights?.regions_insights) return null;
+
+    return insights.regions_insights.find(
+      (item) => item.region === selectedRegion.nameAr
+    );
+  }, [selectedRegion, insights]);
 
   useEffect(() => {
     if (!svgContent || !containerRef.current) return;
@@ -66,7 +93,7 @@ export default function SaudiRegionsMap() {
       const region = regionsConstant[id];
 
       path.style.cursor = region ? "pointer" : "default";
-      path.style.fill = region ? "#e5e7eb" : "#f3f4f6";
+      path.style.fill = selectedRegion?.id === id ? "#2563eb" : "#e5e7eb";
       path.style.stroke = "#ffffff";
       path.style.strokeWidth = "1";
 
@@ -120,25 +147,84 @@ export default function SaudiRegionsMap() {
           />
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
-          {selectedRegion ? (
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+          {!selectedRegion ? (
+            <p className="text-gray-500 leading-7">
+              اضغط على أي منطقة في الخريطة لعرض التحليل الذكي.
+            </p>
+          ) : (
             <>
-              <p className="text-sm text-gray-500 mb-1">المنطقة المحددة</p>
-              <h3 className="text-2xl font-bold text-blue-700 mb-3">
+              <p className="text-sm text-gray-500 mb-1">تحليل المنطقة</p>
+
+              <h3 className="text-2xl font-bold text-blue-700 mb-4">
                 {selectedRegion.nameAr}
               </h3>
-              <p className="text-gray-700 leading-7">
-                <span className="font-semibold">أبرز المدن: </span>
-                {selectedRegion.cities}
-              </p>
-              <p className="text-xs text-gray-400 mt-4">
-                كود المنطقة: {selectedRegion.id}
-              </p>
+
+              {loadingInsights ? (
+                <p className="text-gray-500">جاري تحميل بيانات المنطقة...</p>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3 mb-5">
+                    <div className="bg-blue-50 rounded-xl p-3">
+                      <p className="text-xs text-gray-500">إجمالي المبيعات</p>
+                      <p className="font-bold text-lg">
+                        {regionStats?.total_revenue || 0} ر.س
+                      </p>
+                    </div>
+
+                    <div className="bg-green-50 rounded-xl p-3">
+                      <p className="text-xs text-gray-500">عدد الطلبات</p>
+                      <p className="font-bold text-lg">
+                        {regionStats?.total_orders || 0}
+                      </p>
+                    </div>
+
+                    <div className="bg-purple-50 rounded-xl p-3">
+                      <p className="text-xs text-gray-500">متوسط الفاتورة</p>
+                      <p className="font-bold text-lg">
+                        {regionStats?.average_order_value || 0} ر.س
+                      </p>
+                    </div>
+
+                    <div className="bg-orange-50 rounded-xl p-3">
+                      <p className="text-xs text-gray-500">متوسط القطع</p>
+                      <p className="font-bold text-lg">
+                        {regionStats?.average_items_per_order || 0}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 text-sm leading-7">
+                    <p>
+                      <span className="text-gray-500">أكثر منتج مبيعًا: </span>
+                      <b>{regionStats?.top_product || "لا توجد بيانات"}</b>
+                    </p>
+
+                    <p>
+                      <span className="text-gray-500">أكثر طريقة دفع: </span>
+                      <b>{regionStats?.top_payment_method || "لا توجد بيانات"}</b>
+                    </p>
+
+                    <p>
+                      <span className="text-gray-500">أقوى قناة بيع: </span>
+                      <b>{regionStats?.top_sales_channel || "لا توجد بيانات"}</b>
+                    </p>
+
+                    <p>
+                      <span className="text-gray-500">المدن: </span>
+                      <b>
+                        {regionStats?.cities?.join("، ") ||
+                          selectedRegion.cities}
+                      </b>
+                    </p>
+
+                    <p className="text-xs text-gray-400 pt-2">
+                      كود المنطقة: {selectedRegion.id}
+                    </p>
+                  </div>
+                </>
+              )}
             </>
-          ) : (
-            <p className="text-gray-500 leading-7">
-              اضغط على أي منطقة في الخريطة لعرض تفاصيلها.
-            </p>
           )}
         </div>
       </div>
