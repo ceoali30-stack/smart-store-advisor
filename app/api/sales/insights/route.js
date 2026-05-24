@@ -367,13 +367,7 @@ const regionsInsights = Object.values(ordersByRegion)
     top_payment_method: getTopKey(region.payment_methods),
     top_sales_channel: getTopKey(region.sales_channels),
   }))
-  .sort((a, b) => b.total_orders - a.total_orders);
-        if (b.total_orders !== a.total_orders) {
-          return b.total_orders - a.total_orders;
-        }
-
   .sort((a, b) => b.total_revenue - a.total_revenue);
-
     const recommendations = [];
 
     if (topProducts.length > 0) {
