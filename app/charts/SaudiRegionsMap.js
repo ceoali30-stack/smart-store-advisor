@@ -1,263 +1,448 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function SaudiRegionsMap({ regionsInsights = [] }) {
-  const sortedRegions = [...regionsInsights].sort(
-    (a, b) => Number(b.total_orders || 0) - Number(a.total_orders || 0)
-  );
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [hoveredRegion, setHoveredRegion] = useState(null);
 
-  const [selectedRegion, setSelectedRegion] = useState(sortedRegions[0] || null);
+  const regionDataMap = useMemo(() => {
+    const map = {};
 
-  const totalOrders = sortedRegions.reduce(
+    regionsInsights.forEach((region) => {
+      map[region.region] = region;
+    });
+
+    return map;
+  }, [regionsInsights]);
+
+  const totalOrders = regionsInsights.reduce(
     (sum, region) => sum + Number(region.total_orders || 0),
     0
   );
 
-  const getRegionByName = (name) =>
-    sortedRegions.find((region) => region.region === name) || {
-      region: name,
-      total_orders: 0,
-      total_revenue: 0,
-      cities: [],
-    };
-
-  const selectedRegionPercent =
-    totalOrders > 0 && selectedRegion
-      ? Math.round((Number(selectedRegion.total_orders || 0) / totalOrders) * 100)
-      : 0;
-
-  const selectedRegionAverageOrder =
-    selectedRegion?.total_orders > 0
-      ? Math.round(
-          Number(selectedRegion.total_revenue || 0) /
-            Number(selectedRegion.total_orders || 1)
-        )
-      : 0;
-
-  const getFillColor = (regionName) => {
-    const region = getRegionByName(regionName);
-    const orders = Number(region.total_orders || 0);
-
-    if (orders === 0) return "#e5e7eb";
-
-    const percent = totalOrders > 0 ? (orders / totalOrders) * 100 : 0;
-
-    if (percent >= 30) return "#16a34a";
-    if (percent >= 15) return "#22c55e";
-    if (percent >= 5) return "#86efac";
-    return "#bbf7d0";
-  };
-
-  const handleRegionClick = (regionName) => {
-    setSelectedRegion(getRegionByName(regionName));
-  };
-
-  const regionsOnMap = [
-    { name: "منطقة تبوك", x: 155, y: 85, w: 115, h: 80 },
-    { name: "منطقة الجوف", x: 270, y: 65, w: 105, h: 70 },
-    { name: "منطقة الحدود الشمالية", x: 375, y: 55, w: 150, h: 65 },
-    { name: "منطقة حائل", x: 300, y: 145, w: 115, h: 75 },
-    { name: "منطقة المدينة المنورة", x: 190, y: 185, w: 130, h: 90 },
-    { name: "منطقة القصيم", x: 420, y: 155, w: 100, h: 70 },
-    { name: "منطقة الرياض", x: 455, y: 230, w: 170, h: 145 },
-    { name: "منطقة مكة المكرمة", x: 210, y: 300, w: 135, h: 95 },
-    { name: "المنطقة الشرقية", x: 610, y: 170, w: 170, h: 180 },
-    { name: "منطقة الباحة", x: 270, y: 410, w: 80, h: 45 },
-    { name: "منطقة عسير", x: 330, y: 430, w: 115, h: 70 },
-    { name: "منطقة جازان", x: 315, y: 515, w: 90, h: 45 },
-    { name: "منطقة نجران", x: 465, y: 465, w: 135, h: 75 },
+  const regionShapes = [
+    {
+      id: "riyadh",
+      name: "منطقة الرياض",
+      path: "M420 220 L580 220 L620 340 L520 430 L400 380 Z",
+    },
+    {
+      id: "makkah",
+      name: "منطقة مكة المكرمة",
+      path: "M230 300 L390 300 L390 430 L250 450 L180 380 Z",
+    },
+    {
+      id: "eastern",
+      name: "المنطقة الشرقية",
+      path: "M620 180 L780 220 L760 430 L620 420 L580 280 Z",
+    },
+    {
+      id: "madinah",
+      name: "منطقة المدينة المنورة",
+      path: "M210 170 L360 170 L360 290 L220 300 L170 240 Z",
+    },
+    {
+      id: "qassim",
+      name: "منطقة القصيم",
+      path: "M390 150 L500 150 L520 230 L420 220 L360 180 Z",
+    },
+    {
+      id: "asir",
+      name: "منطقة عسير",
+      path: "M300 450 L430 450 L420 560 L310 560 L260 500 Z",
+    },
+    {
+      id: "tabuk",
+      name: "منطقة تبوك",
+      path: "M120 70 L260 70 L280 160 L190 180 L110 130 Z",
+    },
+    {
+      id: "hail",
+      name: "منطقة حائل",
+      path: "M300 110 L390 110 L410 180 L360 210 L280 160 Z",
+    },
+    {
+      id: "jazan",
+      name: "منطقة جازان",
+      path: "M240 560 L320 560 L330 620 L260 630 L220 590 Z",
+    },
+    {
+      id: "najran",
+      name: "منطقة نجران",
+      path: "M470 500 L610 500 L650 590 L520 620 L430 580 Z",
+    },
   ];
 
-  const getRecommendation = () => {
-    if (!selectedRegion) return "اختر منطقة لعرض التوصية.";
-
-    if (selectedRegion?.region === "غير محدد") {
-      return "يوجد طلبات بدون منطقة واضحة. حسّن جمع بيانات العنوان حتى تصبح قراراتك الجغرافية أدق.";
-    }
-
-    if (selectedRegionPercent >= 30) {
-      return "هذه من أقوى المناطق حاليًا. ركّز عليها بحملة إعلانية أو عرض خاص لأنها تمثل نسبة عالية من الطلبات.";
-    }
-
-    if (selectedRegionPercent >= 15) {
-      return "هذه المنطقة لديها طلب جيد. جرّب تحسين الشحن أو تقديم عرض محلي لزيادة المبيعات منها.";
-    }
-
-    if (Number(selectedRegion?.total_orders || 0) > 0) {
-      return "هذه المنطقة ما زالت ضعيفة نسبيًا. اختبر حملة صغيرة قبل زيادة الميزانية الإعلانية.";
-    }
-
-    return "لا توجد طلبات كافية لهذه المنطقة حتى الآن.";
+  const getRegionData = (name) => {
+    return (
+      regionDataMap[name] || {
+        region: name,
+        total_orders: 0,
+        total_revenue: 0,
+        cities: [],
+      }
+    );
   };
+
+  const getFillColor = (orders) => {
+    if (orders === 0) return "#e5e7eb";
+    if (orders >= 10) return "#14532d";
+    if (orders >= 5) return "#15803d";
+    if (orders >= 3) return "#22c55e";
+    if (orders >= 1) return "#86efac";
+    return "#dcfce7";
+  };
+
+  const getRecommendation = (region) => {
+    if (!region || region.total_orders === 0) {
+      return "لا توجد بيانات كافية لهذه المنطقة حتى الآن.";
+    }
+
+    const percent =
+      totalOrders > 0
+        ? Math.round((region.total_orders / totalOrders) * 100)
+        : 0;
+
+    if (percent >= 30) {
+      return "هذه المنطقة تعتبر من أقوى المناطق أداءً. يُنصح بزيادة الاستثمار الإعلاني فيها.";
+    }
+
+    if (percent >= 15) {
+      return "المنطقة تحقق أداءً جيدًا. يمكن تحسين التحويلات عبر عروض محلية.";
+    }
+
+    return "المنطقة ما زالت بحاجة إلى تعزيز الحملات التسويقية وتحسين الوصول.";
+  };
+
+  const currentRegion =
+    selectedRegion || (regionsInsights.length > 0 ? regionsInsights[0] : null);
 
   return (
     <section
       style={{
-        background: "white",
-        padding: "22px",
-        borderRadius: "22px",
-        boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
-        border: "1px solid #e5e7eb",
-        borderRight: "6px solid #16a34a",
-        marginBottom: "24px",
+        background: "#fff",
+        borderRadius: "24px",
+        padding: "24px",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
+        marginBottom: "28px",
       }}
     >
-      <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
-        خريطة المناطق الإدارية
-      </h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "18px",
+        }}
+      >
+        <div>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "22px",
+              fontWeight: "800",
+              color: "#0f172a",
+            }}
+          >
+            خريطة المناطق التفاعلية
+          </h2>
+
+          <p
+            style={{
+              margin: "6px 0 0",
+              color: "#64748b",
+              fontSize: "14px",
+            }}
+          >
+            توزيع الطلبات والمبيعات حسب مناطق المملكة
+          </p>
+        </div>
+
+        <div
+          style={{
+            background: "#f0fdf4",
+            border: "1px solid #bbf7d0",
+            color: "#166534",
+            padding: "10px 14px",
+            borderRadius: "14px",
+            fontWeight: "700",
+          }}
+        >
+          إجمالي الطلبات: {totalOrders}
+        </div>
+      </div>
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.2fr 1fr",
-          gap: "18px",
-          alignItems: "stretch",
+          gridTemplateColumns: "1.3fr 0.9fr",
+          gap: "22px",
         }}
       >
         <div
           style={{
+            position: "relative",
             background: "#f8fafc",
+            borderRadius: "22px",
             border: "1px solid #e2e8f0",
-            borderRadius: "18px",
-            padding: "18px",
-            minHeight: "420px",
+            padding: "12px",
+            overflow: "hidden",
           }}
         >
           <svg
-            viewBox="0 0 850 620"
+            viewBox="0 0 850 680"
             style={{
               width: "100%",
               height: "100%",
-              minHeight: "390px",
+              minHeight: "620px",
             }}
           >
             <path
-              d="M150 80 L300 45 L520 55 L700 145 L780 260 L735 390 L620 540 L430 570 L270 520 L185 410 L130 260 Z"
-              fill="#f1f5f9"
+              d="M120 70 L300 40 L560 60 L760 180 L800 350 L760 530 L620 650 L420 660 L230 620 L140 470 L100 260 Z"
+              fill="#f8fafc"
               stroke="#cbd5e1"
-              strokeWidth="4"
+              strokeWidth="6"
             />
 
-            {regionsOnMap.map((region) => {
-              const regionData = getRegionByName(region.name);
-              const isSelected = selectedRegion?.region === region.name;
+            {regionShapes.map((regionShape) => {
+              const region = getRegionData(regionShape.name);
+
+              const isSelected =
+                currentRegion?.region === regionShape.name;
 
               return (
-                <g key={region.name} onClick={() => handleRegionClick(region.name)}>
-                  <rect
-                    x={region.x}
-                    y={region.y}
-                    width={region.w}
-                    height={region.h}
-                    rx="18"
-                    fill={getFillColor(region.name)}
+                <g
+                  key={regionShape.id}
+                  onMouseEnter={() => setHoveredRegion(region)}
+                  onMouseLeave={() => setHoveredRegion(null)}
+                  onClick={() => setSelectedRegion(region)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <path
+                    d={regionShape.path}
+                    fill={getFillColor(region.total_orders)}
                     stroke={isSelected ? "#0f172a" : "#ffffff"}
-                    strokeWidth={isSelected ? "4" : "2"}
-                    style={{ cursor: "pointer" }}
+                    strokeWidth={isSelected ? 5 : 3}
+                    style={{
+                      transition: "all 0.25s ease",
+                    }}
                   />
+
                   <text
-                    x={region.x + region.w / 2}
-                    y={region.y + region.h / 2 - 6}
+                    x={
+                      regionShape.id === "riyadh"
+                        ? 500
+                        : regionShape.id === "makkah"
+                        ? 300
+                        : regionShape.id === "eastern"
+                        ? 690
+                        : regionShape.id === "madinah"
+                        ? 270
+                        : regionShape.id === "qassim"
+                        ? 450
+                        : regionShape.id === "asir"
+                        ? 360
+                        : regionShape.id === "tabuk"
+                        ? 190
+                        : regionShape.id === "hail"
+                        ? 340
+                        : regionShape.id === "jazan"
+                        ? 275
+                        : 540
+                    }
+                    y={
+                      regionShape.id === "riyadh"
+                        ? 320
+                        : regionShape.id === "makkah"
+                        ? 380
+                        : regionShape.id === "eastern"
+                        ? 330
+                        : regionShape.id === "madinah"
+                        ? 240
+                        : regionShape.id === "qassim"
+                        ? 190
+                        : regionShape.id === "asir"
+                        ? 520
+                        : regionShape.id === "tabuk"
+                        ? 120
+                        : regionShape.id === "hail"
+                        ? 160
+                        : regionShape.id === "jazan"
+                        ? 600
+                        : 560
+                    }
                     textAnchor="middle"
+                    fill="#0f172a"
                     fontSize="15"
                     fontWeight="800"
-                    fill="#0f172a"
                     style={{ pointerEvents: "none" }}
                   >
-                    {region.name.replace("منطقة ", "").replace("المنطقة ", "")}
-                  </text>
-                  <text
-                    x={region.x + region.w / 2}
-                    y={region.y + region.h / 2 + 18}
-                    textAnchor="middle"
-                    fontSize="13"
-                    fill="#334155"
-                    style={{ pointerEvents: "none" }}
-                  >
-                    {regionData.total_orders || 0} طلب
+                    {regionShape.name.replace("منطقة ", "").replace("المنطقة ", "")}
                   </text>
                 </g>
               );
             })}
           </svg>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              flexWrap: "wrap",
-              marginTop: "12px",
-              fontSize: "12px",
-              color: "#475569",
-            }}
-          >
-            <span>⬤ رمادي: لا توجد طلبات</span>
-            <span>⬤ أخضر فاتح: طلب منخفض</span>
-            <span>⬤ أخضر متوسط: طلب جيد</span>
-            <span>⬤ أخضر داكن: طلب قوي</span>
-          </div>
+          {hoveredRegion && (
+            <div
+              style={{
+                position: "absolute",
+                top: "18px",
+                left: "18px",
+                background: "#0f172a",
+                color: "#fff",
+                padding: "14px",
+                borderRadius: "14px",
+                minWidth: "200px",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "8px" }}>
+                {hoveredRegion.region}
+              </strong>
+
+              <div style={{ fontSize: "14px", lineHeight: "1.8" }}>
+                <div>الطلبات: {hoveredRegion.total_orders}</div>
+
+                <div>
+                  الإيرادات:{" "}
+                  {Number(
+                    hoveredRegion.total_revenue || 0
+                  ).toLocaleString("ar-SA")}{" "}
+                  ريال
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div
           style={{
-            background: "#ecfdf5",
-            border: "1px solid #bbf7d0",
-            borderRadius: "18px",
-            padding: "18px",
+            background: "#f8fafc",
+            borderRadius: "22px",
+            border: "1px solid #e2e8f0",
+            padding: "22px",
           }}
         >
-          <h3 style={{ marginTop: 0, color: "#0f172a" }}>
-            {selectedRegion?.region || "اختر منطقة"}
+          <h3
+            style={{
+              marginTop: 0,
+              fontSize: "22px",
+              color: "#0f172a",
+            }}
+          >
+            {currentRegion?.region || "اختر منطقة"}
           </h3>
 
-          <div style={{ display: "grid", gap: "12px", marginTop: "16px" }}>
-            <div>
-              <span style={{ color: "#64748b" }}>إجمالي الطلبات</span>
-              <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
-                {selectedRegion?.total_orders || 0}
-              </strong>
-            </div>
+          <div
+            style={{
+              display: "grid",
+              gap: "18px",
+              marginTop: "22px",
+            }}
+          >
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: "18px",
+                padding: "18px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div style={{ color: "#64748b", marginBottom: "8px" }}>
+                إجمالي الطلبات
+              </div>
 
-            <div>
-              <span style={{ color: "#64748b" }}>إجمالي الإيرادات</span>
-              <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
-                {Number(selectedRegion?.total_revenue || 0).toLocaleString("ar-SA")} ريال
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ color: "#64748b" }}>متوسط قيمة الطلب</span>
-              <strong style={{ display: "block", fontSize: "24px", color: "#0f172a" }}>
-                {selectedRegionAverageOrder.toLocaleString("ar-SA")} ريال
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ color: "#64748b" }}>نسبة المنطقة من الطلبات</span>
-              <strong style={{ display: "block", fontSize: "24px", color: "#16a34a" }}>
-                {selectedRegionPercent}%
-              </strong>
-            </div>
-
-            <div>
-              <span style={{ color: "#64748b" }}>المدن</span>
-              <strong style={{ display: "block", color: "#0f172a" }}>
-                {selectedRegion?.cities?.join("، ") || "غير محدد"}
+              <strong
+                style={{
+                  fontSize: "34px",
+                  color: "#0f172a",
+                }}
+              >
+                {currentRegion?.total_orders || 0}
               </strong>
             </div>
 
             <div
               style={{
-                background: "white",
-                border: "1px solid #bbf7d0",
-                borderRadius: "14px",
-                padding: "12px",
-                color: "#166534",
-                lineHeight: "1.8",
+                background: "#fff",
+                borderRadius: "18px",
+                padding: "18px",
+                border: "1px solid #e2e8f0",
               }}
             >
-              <strong>توصية:</strong> {getRecommendation()}
+              <div style={{ color: "#64748b", marginBottom: "8px" }}>
+                إجمالي الإيرادات
+              </div>
+
+              <strong
+                style={{
+                  fontSize: "28px",
+                  color: "#16a34a",
+                }}
+              >
+                {Number(
+                  currentRegion?.total_revenue || 0
+                ).toLocaleString("ar-SA")}{" "}
+                ريال
+              </strong>
+            </div>
+
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: "18px",
+                padding: "18px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div style={{ color: "#64748b", marginBottom: "8px" }}>
+                المدن المرتبطة
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                }}
+              >
+                {(currentRegion?.cities || []).map((city) => (
+                  <span
+                    key={city}
+                    style={{
+                      background: "#dcfce7",
+                      color: "#166534",
+                      padding: "8px 12px",
+                      borderRadius: "999px",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {city}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#f0fdf4",
+                border: "1px solid #bbf7d0",
+                borderRadius: "18px",
+                padding: "18px",
+                lineHeight: "1.9",
+                color: "#166534",
+              }}
+            >
+              <strong style={{ display: "block", marginBottom: "8px" }}>
+                توصية ذكية
+              </strong>
+
+              {getRecommendation(currentRegion)}
             </div>
           </div>
         </div>
