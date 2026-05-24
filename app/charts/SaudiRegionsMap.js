@@ -120,116 +120,118 @@ export default function SaudiRegionsMap() {
     };
   }, [svgContent, selectedRegion]);
 
-  return (
-    <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">
-        خريطة مناطق المملكة
-      </h2>
+ return (
+  <section className="w-full max-w-7xl mx-auto px-4 py-8" dir="rtl">
+    <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">
+            خريطة تحليل المناطق
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
+            اضغط على أي منطقة لعرض المبيعات والطلبات وأداء المنتجات.
+          </p>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div className="lg:col-span-2">
-         <div
-  ref={containerRef}
-  className="w-full min-h-[420px] flex items-center justify-center"
-  onClick={(e) => {
-    const path = e.target.closest("path");
-    if (!path) return;
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
+        <div className="xl:col-span-2 bg-slate-50 rounded-3xl p-6 min-h-[560px] flex items-center justify-center">
+          <div
+            ref={containerRef}
+            className="w-full max-w-[760px] [&_svg]:w-full [&_svg]:h-auto"
+            onClick={(e) => {
+              const path = e.target.closest("path");
+              if (!path) return;
 
-    const id = path.getAttribute("id");
-    const region = regionsConstant[id];
+              const id = path.getAttribute("id");
+              const region = regionsConstant[id];
+              if (!region) return;
 
-    if (!region) return;
-
-    setSelectedRegion({
-      id,
-      ...region,
-    });
-  }}
-  dangerouslySetInnerHTML={{ __html: svgContent }}
-/>
+              setSelectedRegion({ id, ...region });
+            }}
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+        <aside className="bg-slate-900 text-white rounded-3xl p-6 shadow-lg min-h-[560px]">
           {!selectedRegion ? (
-            <p className="text-gray-500 leading-7">
-              اضغط على أي منطقة في الخريطة لعرض التحليل الذكي.
-            </p>
+            <div className="h-full flex flex-col items-center justify-center text-center">
+              <p className="text-lg font-bold mb-2">اختر منطقة</p>
+              <p className="text-sm text-slate-300">
+                ستظهر هنا بطاقة تحليل ذكية حسب المنطقة المختارة.
+              </p>
+            </div>
           ) : (
             <>
-              <p className="text-sm text-gray-500 mb-1">تحليل المنطقة</p>
-
-              <h3 className="text-2xl font-bold text-blue-700 mb-4">
+              <p className="text-sm text-blue-300 mb-1">تحليل المنطقة</p>
+              <h3 className="text-3xl font-bold mb-6">
                 {selectedRegion.nameAr}
               </h3>
 
-              {loadingInsights ? (
-                <p className="text-gray-500">جاري تحميل بيانات المنطقة...</p>
-              ) : (
-                <>
-                  <div className="grid grid-cols-2 gap-3 mb-5">
-                    <div className="bg-blue-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-500">إجمالي المبيعات</p>
-                      <p className="font-bold text-lg">
-                        {regionStats?.total_revenue || 0} ر.س
-                      </p>
-                    </div>
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-slate-300">إجمالي المبيعات</p>
+                  <p className="text-xl font-bold">
+                    {regionStats?.total_revenue || 0} ر.س
+                  </p>
+                </div>
 
-                    <div className="bg-green-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-500">عدد الطلبات</p>
-                      <p className="font-bold text-lg">
-                        {regionStats?.total_orders || 0}
-                      </p>
-                    </div>
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-slate-300">عدد الطلبات</p>
+                  <p className="text-xl font-bold">
+                    {regionStats?.total_orders || 0}
+                  </p>
+                </div>
 
-                    <div className="bg-purple-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-500">متوسط الفاتورة</p>
-                      <p className="font-bold text-lg">
-                        {regionStats?.average_order_value || 0} ر.س
-                      </p>
-                    </div>
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-slate-300">متوسط الفاتورة</p>
+                  <p className="text-xl font-bold">
+                    {regionStats?.average_order_value || 0} ر.س
+                  </p>
+                </div>
 
-                    <div className="bg-orange-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-500">متوسط القطع</p>
-                      <p className="font-bold text-lg">
-                        {regionStats?.average_items_per_order || 0}
-                      </p>
-                    </div>
-                  </div>
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-xs text-slate-300">متوسط القطع</p>
+                  <p className="text-xl font-bold">
+                    {regionStats?.average_items_per_order || 0}
+                  </p>
+                </div>
+              </div>
 
-                  <div className="space-y-3 text-sm leading-7">
-                    <p>
-                      <span className="text-gray-500">أكثر منتج مبيعًا: </span>
-                      <b>{regionStats?.top_product || "لا توجد بيانات"}</b>
-                    </p>
+              <div className="space-y-4 text-sm">
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-slate-300">أكثر منتج مبيعًا</p>
+                  <p className="font-bold mt-1">
+                    {regionStats?.top_product || "لا توجد بيانات"}
+                  </p>
+                </div>
 
-                    <p>
-                      <span className="text-gray-500">أكثر طريقة دفع: </span>
-                      <b>{regionStats?.top_payment_method || "لا توجد بيانات"}</b>
-                    </p>
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-slate-300">أكثر طريقة دفع</p>
+                  <p className="font-bold mt-1">
+                    {regionStats?.top_payment_method || "لا توجد بيانات"}
+                  </p>
+                </div>
 
-                    <p>
-                      <span className="text-gray-500">أقوى قناة بيع: </span>
-                      <b>{regionStats?.top_sales_channel || "لا توجد بيانات"}</b>
-                    </p>
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-slate-300">أقوى قناة بيع</p>
+                  <p className="font-bold mt-1">
+                    {regionStats?.top_sales_channel || "لا توجد بيانات"}
+                  </p>
+                </div>
 
-                    <p>
-                      <span className="text-gray-500">المدن: </span>
-                      <b>
-                        {regionStats?.cities?.join("، ") ||
-                          selectedRegion.cities}
-                      </b>
-                    </p>
-
-                    <p className="text-xs text-gray-400 pt-2">
-                      كود المنطقة: {selectedRegion.id}
-                    </p>
-                  </div>
-                </>
-              )}
+                <div className="bg-white/10 rounded-2xl p-4">
+                  <p className="text-slate-300">المدن</p>
+                  <p className="font-bold mt-1">
+                    {regionStats?.cities?.join("، ") || selectedRegion.cities}
+                  </p>
+                </div>
+              </div>
             </>
           )}
-        </div>
+        </aside>
       </div>
     </div>
-  );
+  </section>
+);
 }
