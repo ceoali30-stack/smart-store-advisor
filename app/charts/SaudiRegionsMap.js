@@ -129,7 +129,6 @@ export default function SaudiRegionsMap() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className="lg:col-span-2">
          <div
- <div
   ref={containerRef}
   className="w-full min-h-[420px] flex items-center justify-center"
   onClick={(e) => {
