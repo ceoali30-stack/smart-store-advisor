@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'; // أو طريقة استدعاء supabase لديك
+import { createClient } from '@supabase/supabase-js'; // الحزمة الأساسية المضمونة والمثبتة دائماً
+
+// بناء عميل السوبابيز باستخدام متغيرات البيئة المباشرة المتاحة في Vercel
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // دالة مساعدة لربط المدن بالمناطق الإدارية السعودية وتحديد الـ ID الخاص بالـ SVG
 const mapCityToRegion = (city) => {
@@ -15,7 +20,6 @@ const mapCityToRegion = (city) => {
   return 'other';
 };
 
-// هيكل أولي للمناطق لضمان عدم حدوث أخطاء برمجية أثناء التحميل
 const initialRegions = {
   riyadh: { name: "منطقة الرياض", orders: 0, revenue: 0, cities: "الرياض", recommendation: "المنطقة نشطة، ركز عليها بحملات إعلانية مخصصة لرفع المبيعات." },
   makkah: { name: "منطقة مكة المكرمة", orders: 0, revenue: 0, cities: "جدة", recommendation: "أداء مستقر، نقترح عمل عروض شحن مجاني لتنشيط الطلبات." },
@@ -24,7 +28,6 @@ const initialRegions = {
 };
 
 export default function SaudiRegionsMap({ merchantId = '210819854' }) {
-  const supabase = createClientComponentClient();
   const [regionsData, setRegionsData] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,12 +97,12 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
     }
   };
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>جاري تحميل الخريطة والتحليلات...</div>;
+  if (loading) return <div style={{ textAlign: 'center', padding: '20px', color: '#10b981' }}>جاري تحميل الخريطة والتحليلات...</div>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: '20px', padding: '20px', direction: 'rtl' }}>
       
-      {/* قسم الخريطة التفاعلية باستخدام الـ SVG المرفوع لديك */}
+      {/* قسم الخريطة التفاعلية */}
       <div style={{ flex: 1, position: 'relative' }}>
         <h3 style={{ marginBottom: '5px', fontSize: '18px', fontWeight: 'bold' }}>خريطة المناطق التفاعلية</h3>
         <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>توزيع الطلبات والمبيعات حسب مناطق المملكة. اضغط على المنطقة لرؤية التقرير.</p>
@@ -108,7 +111,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           {/* المنطقة الشرقية */}
           <path 
             id="eastern"
-            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            d="M660,180 L720,220 L750,350 L680,450 L600,420 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
             fill={selectedRegion?.name === "المنطقة الشرقية" ? "#059669" : "#34d399"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("eastern")}
@@ -118,7 +121,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           {/* منطقة الرياض */}
           <path 
             id="riyadh"
-            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            d="M450,220 L580,260 L600,380 L520,480 L400,380 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
             fill={selectedRegion?.name === "منطقة الرياض" ? "#059669" : "#10b981"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("riyadh")}
@@ -128,7 +131,7 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           {/* منطقة مكة المكرمة */}
           <path 
             id="makkah"
-            d="M..." // ضع مسار الـ SVG الموجود في ملف sa.svg الخاص بك هنا
+            d="M320,320 L410,350 L430,420 L350,490 L300,400 Z" // مسار تقريبي مؤقت - استبدله بمسار الـ SVG من ملفك sa.svg
             fill={selectedRegion?.name === "منطقة مكة المكرمة" ? "#059669" : "#10b981"} 
             stroke="#fff" strokeWidth="2"
             onClick={() => handleRegionClick("makkah")}
@@ -136,7 +139,6 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           />
         </svg>
 
-        {/* زر لإظهار بيانات المنطقة غير المحددة إذا وجد التاجر صعوبة في الضغط عليها */}
         {regionsData.undefined_region.orders > 0 && (
           <button 
             onClick={() => handleRegionClick("undefined_region")}
