@@ -278,73 +278,96 @@ export async function GET(request) {
 
     const ordersByRegion = {};
 
-    Object.values(ordersByCity).forEach((cityItem) => {
-      const region = cityToRegion[cityItem.city] || "غير محدد";
+safeOrders.forEach((order) => {
+  const city =
+    order.city ||
+    order.customer_city ||
+    order.shipping_city ||
+    order.billing_city ||
+    "غير محدد";
 
-      if (!ordersByRegion[region]) {
-        ordersByRegion[region] = {
-          region,
-          total_orders: 0,
-          total_revenue: 0,
-          cities: [],
-        };
-      }
+  const region = cityToRegion[city] || "غير محدد";
+  const orderTotal = getOrderTotal(order);
 
-      ordersByRegion[region].total_orders += Number(cityItem.total_orders || 0);
-      ordersByRegion[region].total_revenue += Number(cityItem.total_revenue || 0);
+  if (!ordersByRegion[region]) {
+    ordersByRegion[region] = {
+      region,
+      total_orders: 0,
+      total_revenue: 0,
+      total_items: 0,
+      cities: [],
+      products: {},
+      payment_methods: {},
+      sales_channels: {},
+    };
+  }
 
-      if (
-        cityItem.city &&
-        !ordersByRegion[region].cities.includes(cityItem.city)
-      ) {
-        ordersByRegion[region].cities.push(cityItem.city);
-      }
-    });
+  ordersByRegion[region].total_orders += 1;
+  ordersByRegion[region].total_revenue += orderTotal;
 
-    const regionsInsights = Object.values(ordersByRegion).sort(
-      (a, b) => b.total_orders - a.total_orders
-    );
+  if (city && !ordersByRegion[region].cities.includes(city)) {
+    ordersByRegion[region].cities.push(city);
+  }
 
-    const customersByKey = {};
+  const paymentMethod =
+    order.payment_method_label ||
+    order.payment_method ||
+    "غير محدد";
 
-    safeOrders.forEach((order) => {
-      const customerName =
-        order.customer_name ||
-        order.client_name ||
-        "عميل غير محدد";
+  ordersByRegion[region].payment_methods[paymentMethod] =
+    (ordersByRegion[region].payment_methods[paymentMethod] || 0) + 1;
 
-      const customerPhone =
-        order.customer_mobile ||
-        order.customer_phone ||
-        order.mobile ||
-        order.phone ||
-        "";
+  const source =
+    order.sales_channel ||
+    order.source ||
+    order.source_details ||
+    "غير محدد";
 
-      const customerKey = customerPhone || customerName;
+  ordersByRegion[region].sales_channels[source] =
+    (ordersByRegion[region].sales_channels[source] || 0) + 1;
 
-      if (!customersByKey[customerKey]) {
-        customersByKey[customerKey] = {
-          name: customerName,
-          phone: customerPhone,
-          total_orders: 0,
-          total_revenue: 0,
-          average_order_value: 0,
-        };
-      }
+  const orderItems = safeItems.filter(
+    (item) => Number(item.order_id) === Number(order.id)
+  );
 
-      customersByKey[customerKey].total_orders += 1;
-      customersByKey[customerKey].total_revenue += getOrderTotal(order);
-    });
+  orderItems.forEach((item) => {
+    const productName = item.product_name || "منتج غير معروف";
+    const quantity = Number(item.quantity || 0);
 
-    const topCustomers = Object.values(customersByKey)
-      .map((customer) => ({
-        ...customer,
-        average_order_value:
-          customer.total_orders > 0
-            ? Number((customer.total_revenue / customer.total_orders).toFixed(2))
-            : 0,
-      }))
-      .sort((a, b) => {
+    ordersByRegion[region].total_items += quantity;
+
+    ordersByRegion[region].products[productName] =
+      (ordersByRegion[region].products[productName] || 0) + quantity;
+  });
+});
+
+const getTopKey = (obj) => {
+  const entries = Object.entries(obj || {});
+  if (entries.length === 0) return "لا توجد بيانات";
+
+  return entries.sort((a, b) => b[1] - a[1])[0][0];
+};
+
+const regionsInsights = Object.values(ordersByRegion)
+  .map((region) => ({
+    region: region.region,
+    total_orders: region.total_orders,
+    total_revenue: region.total_revenue,
+    total_items: region.total_items,
+    average_order_value:
+      region.total_orders > 0
+        ? Number((region.total_revenue / region.total_orders).toFixed(2))
+        : 0,
+    average_items_per_order:
+      region.total_orders > 0
+        ? Number((region.total_items / region.total_orders).toFixed(2))
+        : 0,
+    cities: region.cities,
+    top_product: getTopKey(region.products),
+    top_payment_method: getTopKey(region.payment_methods),
+    top_sales_channel: getTopKey(region.sales_channels),
+  }))
+  .sort((a, b) => b.total_orders - a.total_orders);
         if (b.total_orders !== a.total_orders) {
           return b.total_orders - a.total_orders;
         }
@@ -408,6 +431,11 @@ export async function GET(request) {
       top_products_by_city: topProductsByCity,
       top_cities: topCities,
       regions_insights: regionsInsights,
+      average_order_value
+average_items_per_order
+top_product
+top_payment_method
+top_sales_channel
       top_customers: topCustomers,
       payment_methods_insights: paymentMethodsInsights,
       sales_channels_insights: salesChannelsInsights,
