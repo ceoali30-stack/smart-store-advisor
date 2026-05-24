@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// بناء العميل والتأكد من وجود متغيرات البيئة لمنع أي خطأ تحميل
+// تهيئة العميل بأمان
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -38,45 +38,47 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
       try {
         setLoading(true);
         
-        // 1. جلب الطلبات بأمان
-        const { data: orders, error: ordersError } = await supabase
+        // 1. جلب الطلبات بأمان مع وضع مصفوفة فارغة كبديل في حال فشل الجلب
+        const { data: rawOrders, error: ordersError } = await supabase
           .from('orders')
           .select('id, city')
           .eq('merchant_id', merchantId);
 
-        if (ordersError) throw ordersError;
+        if (ordersError) console.error('Orders fetch warning:', ordersError);
+        const orders = rawOrders || [];
 
-        // 2. جلب عناصر الطلبات بأمان
-        const { data: items, error: itemsError } = await supabase
+        // 2. جلب عناصر الطلبات بأمان مع وضع مصفوفة فارغة كبديل
+        const { data: rawItems, error: itemsError } = await supabase
           .from('order_items')
           .select('order_id, total_price')
           .eq('merchant_id', merchantId);
 
-        if (itemsError) throw itemsError;
+        if (itemsError) console.error('Order items fetch warning:', itemsError);
+        const items = rawItems || [];
 
-        // تجميع المبالغ لكل طلب لمنع أخطاء القيم الفارغة
+        // تجميع المبالغ لكل طلب بشكل آمن
         const orderRevenueMap = {};
-        items?.forEach(item => {
-          if (item.order_id) {
+        items.forEach(item => {
+          if (item && item.order_id) {
             orderRevenueMap[item.order_id] = (orderRevenueMap[item.order_id] || 0) + Number(item.total_price || 0);
           }
         });
 
         // 3. تحديث البيانات وتوزيعها بمرونة كاملة
         const updatedRegions = JSON.parse(JSON.stringify(initialRegions));
-        let totalStoreOrders = orders?.length || 0;
+        let totalStoreOrders = orders.length;
 
-        orders?.forEach(order => {
-          // جلب المعرف بأمان حتى لو كانت المدينة NULL
-          const regionId = mapCityToRegion(order.city);
-          
-          if (updatedRegions[regionId]) {
-            updatedRegions[regionId].orders += 1;
-            updatedRegions[regionId].revenue += (orderRevenueMap[order.id] || 0);
-          } else if (regionId === 'other') {
-            // دمج أي مدن أخرى غير رئيسية ضمن المنطقة غير المحددة مؤقتاً للمتجر التجريبي
-            updatedRegions['undefined_region'].orders += 1;
-            updatedRegions['undefined_region'].revenue += (orderRevenueMap[order.id] || 0);
+        orders.forEach(order => {
+          if (order) {
+            const regionId = mapCityToRegion(order.city);
+            
+            if (updatedRegions[regionId]) {
+              updatedRegions[regionId].orders += 1;
+              updatedRegions[regionId].revenue += (orderRevenueMap[order.id] || 0);
+            } else if (regionId === 'other') {
+              updatedRegions['undefined_region'].orders += 1;
+              updatedRegions['undefined_region'].revenue += (orderRevenueMap[order.id] || 0);
+            }
           }
         });
 
@@ -148,7 +150,6 @@ export default function SaudiRegionsMap({ merchantId = '210819854' }) {
           />
         </svg>
 
-        {/* كرت تنبيهي مساند للبيانات غير المكتملة */}
         {regionsData.undefined_region.orders > 0 && (
           <button 
             onClick={() => handleRegionClick("undefined_region")}
