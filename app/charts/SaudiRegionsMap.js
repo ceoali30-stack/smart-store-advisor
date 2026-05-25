@@ -185,83 +185,199 @@ svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
           />
         </div>
 
-        <aside className="bg-slate-900 text-white rounded-3xl p-6 shadow-lg min-h-[560px]">
-          {!selectedRegion ? (
-            <div className="h-full flex flex-col items-center justify-center text-center">
-              <p className="text-lg font-bold mb-2">اختر منطقة</p>
-              <p className="text-sm text-slate-300">
-                ستظهر هنا بطاقة تحليل ذكية حسب المنطقة المختارة.
-              </p>
-            </div>
-          ) : (
-            <>
-              <p className="text-sm text-blue-300 mb-1">تحليل المنطقة</p>
-              <h3 className="text-3xl font-bold mb-6">
-                {selectedRegion.nameAr}
-              </h3>
+        <aside
+  style={{
+    background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
+    color: "white",
+    borderRadius: "28px",
+    padding: "28px",
+    minHeight: "760px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
+  {!selectedRegion ? (
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
+    >
+      <p
+        style={{
+          fontSize: "28px",
+          fontWeight: "700",
+          marginBottom: "12px",
+        }}
+      >
+        اختر منطقة
+      </p>
 
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-xs text-slate-300">إجمالي المبيعات</p>
-                  <p className="text-xl font-bold">
-                    {regionStats?.total_revenue || 0} ر.س
-                  </p>
-                </div>
+      <p
+        style={{
+          color: "#cbd5e1",
+          lineHeight: "30px",
+          fontSize: "15px",
+        }}
+      >
+        اضغط على أي منطقة في الخريطة
+        <br />
+        لعرض التحليل الذكي للمبيعات والطلبات.
+      </p>
+    </div>
+  ) : (
+    <>
+      <div style={{ marginBottom: "24px" }}>
+        <p
+          style={{
+            color: "#93c5fd",
+            fontSize: "14px",
+            marginBottom: "6px",
+          }}
+        >
+          تحليل المنطقة
+        </p>
 
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-xs text-slate-300">عدد الطلبات</p>
-                  <p className="text-xl font-bold">
-                    {regionStats?.total_orders || 0}
-                  </p>
-                </div>
+        <h3
+          style={{
+            fontSize: "34px",
+            fontWeight: "800",
+            margin: 0,
+          }}
+        >
+          {selectedRegion.nameAr}
+        </h3>
+      </div>
 
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-xs text-slate-300">متوسط الفاتورة</p>
-                  <p className="text-xl font-bold">
-                    {regionStats?.average_order_value || 0} ر.س
-                  </p>
-                </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "14px",
+          marginBottom: "24px",
+        }}
+      >
+        {[
+          {
+            title: "إجمالي المبيعات",
+            value: `${regionStats?.total_revenue || 0} ر.س`,
+            bg: "#1e3a8a",
+          },
+          {
+            title: "عدد الطلبات",
+            value: regionStats?.total_orders || 0,
+            bg: "#065f46",
+          },
+          {
+            title: "متوسط الفاتورة",
+            value: `${regionStats?.average_order_value || 0} ر.س`,
+            bg: "#5b21b6",
+          },
+          {
+            title: "متوسط القطع",
+            value: regionStats?.average_items_per_order || 0,
+            bg: "#9a3412",
+          },
+        ].map((item, index) => (
+          <div
+            key={index}
+            style={{
+              background: item.bg,
+              borderRadius: "20px",
+              padding: "18px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "12px",
+                opacity: 0.8,
+                marginBottom: "10px",
+              }}
+            >
+              {item.title}
+            </p>
 
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-xs text-slate-300">متوسط القطع</p>
-                  <p className="text-xl font-bold">
-                    {regionStats?.average_items_per_order || 0}
-                  </p>
-                </div>
-              </div>
+            <p
+              style={{
+                fontSize: "24px",
+                fontWeight: "800",
+                margin: 0,
+              }}
+            >
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
 
-              <div className="space-y-4 text-sm">
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-slate-300">أكثر منتج مبيعًا</p>
-                  <p className="font-bold mt-1">
-                    {regionStats?.top_product || "لا توجد بيانات"}
-                  </p>
-                </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "14px",
+        }}
+      >
+        {[
+          {
+            title: "أكثر منتج مبيعًا",
+            value: regionStats?.top_product || "لا توجد بيانات",
+          },
+          {
+            title: "أكثر طريقة دفع",
+            value:
+              regionStats?.top_payment_method || "لا توجد بيانات",
+          },
+          {
+            title: "أقوى قناة بيع",
+            value:
+              regionStats?.top_sales_channel || "لا توجد بيانات",
+          },
+          {
+            title: "المدن",
+            value:
+              regionStats?.cities?.join("، ") ||
+              selectedRegion.cities,
+          },
+        ].map((item, index) => (
+          <div
+            key={index}
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "18px",
+              padding: "18px",
+            }}
+          >
+            <p
+              style={{
+                color: "#94a3b8",
+                fontSize: "13px",
+                marginBottom: "8px",
+              }}
+            >
+              {item.title}
+            </p>
 
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-slate-300">أكثر طريقة دفع</p>
-                  <p className="font-bold mt-1">
-                    {regionStats?.top_payment_method || "لا توجد بيانات"}
-                  </p>
-                </div>
-
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-slate-300">أقوى قناة بيع</p>
-                  <p className="font-bold mt-1">
-                    {regionStats?.top_sales_channel || "لا توجد بيانات"}
-                  </p>
-                </div>
-
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-slate-300">المدن</p>
-                  <p className="font-bold mt-1">
-                    {regionStats?.cities?.join("، ") || selectedRegion.cities}
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-        </aside>
+            <p
+              style={{
+                fontSize: "18px",
+                fontWeight: "700",
+                margin: 0,
+              }}
+            >
+              {item.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
+</aside>
       </div>
     </div>
   </section>
