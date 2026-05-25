@@ -113,6 +113,11 @@ function getRegionColor(regionName, regionId) {
 
   if (!regionData) return "#e5e7eb";
 
+const value =
+  colorMetric === "orders"
+    ? regionData.total_orders || 0
+    : regionData.total_revenue || 0;
+  
   const mappedRegionsNames = Object.values(regionsConstant).map(
   (r) => r.nameAr
 );
@@ -137,34 +142,40 @@ const maxValue = Math.max(
   return "#e5e7eb";
 }
     
-    paths.forEach((path) => {
-      const id = path.getAttribute("id");
-      const region = regionsConstant[id];
+paths.forEach((path) => {
+  const id = path.getAttribute("id");
+  const region = regionsConstant[id];
 
-      path.style.cursor = region ? "pointer" : "default";
-      path.style.fill = getRegionColor(region.nameAr, id);
-      path.style.stroke = "#ffffff";
-      path.style.strokeWidth = "1";
+  if (!region) {
+    path.style.cursor = "default";
+    path.style.fill = "#e5e7eb";
+    path.style.stroke = "#ffffff";
+    path.style.strokeWidth = "1";
+    return;
+  }
 
-      if (!region) return;
-
-const handleMouseEnter = () => {
-  path.style.opacity = "0.8";
-};
-
-const handleMouseLeave = () => {
-  path.style.opacity = "1";
+  path.style.cursor = "pointer";
   path.style.fill = getRegionColor(region.nameAr, id);
-};
+  path.style.stroke = "#ffffff";
+  path.style.strokeWidth = "1";
 
-path.addEventListener("mouseenter", handleMouseEnter);
-path.addEventListener("mouseleave", handleMouseLeave);
+  const handleMouseEnter = () => {
+    path.style.opacity = "0.8";
+  };
 
-path._cleanup = () => {
-  path.removeEventListener("mouseenter", handleMouseEnter);
-  path.removeEventListener("mouseleave", handleMouseLeave);
-};
-    });
+  const handleMouseLeave = () => {
+    path.style.opacity = "1";
+    path.style.fill = getRegionColor(region.nameAr, id);
+  };
+
+  path.addEventListener("mouseenter", handleMouseEnter);
+  path.addEventListener("mouseleave", handleMouseLeave);
+
+  path._cleanup = () => {
+    path.removeEventListener("mouseenter", handleMouseEnter);
+    path.removeEventListener("mouseleave", handleMouseLeave);
+  };
+});
 
     return () => {
       paths.forEach((path) => {
