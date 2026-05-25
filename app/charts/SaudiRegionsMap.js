@@ -113,24 +113,27 @@ function getRegionColor(regionName, regionId) {
 
   if (!regionData) return "#e5e7eb";
 
-  const value =
-    colorMetric === "orders"
-      ? regionData.total_orders || 0
-      : regionData.total_revenue || 0;
+  const mappedRegionsNames = Object.values(regionsConstant).map(
+  (r) => r.nameAr
+);
 
-  const maxValue = Math.max(
-    ...(insights?.regions_insights || []).map((r) =>
-      colorMetric === "orders" ? r.total_orders || 0 : r.total_revenue || 0
+const maxValue = Math.max(
+  ...(insights?.regions_insights || [])
+    .filter((r) => mappedRegionsNames.includes(r.region))
+    .map((r) =>
+      colorMetric === "orders"
+        ? r.total_orders || 0
+        : r.total_revenue || 0
     ),
-    1
-  );
+  1
+);
 
   const ratio = value / maxValue;
 
   if (ratio > 0.7) return "#166534";
   if (ratio > 0.4) return "#16a34a";
-  if (ratio > 0.15) return "#4ade80";
-
+ if (ratio > 0) return "#4ade80";
+  
   return "#e5e7eb";
 }
     
