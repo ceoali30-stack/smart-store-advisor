@@ -1,3 +1,10 @@
+import { createClient } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 import SaudiRegionsMap from "./SaudiRegionsMap";
 import ChartsClient from "./ChartsClient";
 import PrintButton from "../dashboard/PrintButton";
@@ -88,9 +95,29 @@ function ChartBox({ title, children, accent = "#2563eb" }) {
 }
 
 export default async function ChartsPage({ searchParams }) {
-  const merchantId = searchParams?.merchant_id || "210819854";
-  const baseUrl = "https://smart-store-advisor.vercel.app";
+  const params = await searchParams;
+  const merchantId = params?.merchant_id;
 
+  if (!merchantId) {
+    redirect("/");
+  }
+
+  const { data: merchant, error: merchantError } = await supabase
+    .from("merchants")
+    .select("merchant_id")
+    .eq("merchant_id", String(merchantId))
+    .maybeSingle();
+
+  if (merchantError || !merchant) {
+    return (
+      <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+        <h1>غير مصرح</h1>
+        <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
+      </main>
+    );
+  }
+
+  const baseUrl = "https://smart-store-advisor.vercel.app";
   let salesInsights = null;
 
   try {
