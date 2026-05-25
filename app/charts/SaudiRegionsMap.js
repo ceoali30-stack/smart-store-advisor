@@ -25,15 +25,6 @@ export default function SaudiRegionsMap() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [insights, setInsights] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
-
-const [tooltip, setTooltip] = useState({
-  visible: false,
-  x: 0,
-  y: 0,
-  regionName: "",
-  totalRevenue: 0,
-  totalOrders: 0,
-});
   
   useEffect(() => {
     async function loadSvg() {
@@ -148,10 +139,9 @@ return "#e5e7eb"; // بدون بيانات
 
       if (!region) return;
 
-const handleMouseEnter = (event) => {
-  const regionData = insights?.regions_insights?.find(
-    (r) => r.region === region.nameAr
-  );
+const handleMouseEnter = () => {
+  path.style.opacity = "0.8";
+};
 
   setTooltip({
     visible: true,
@@ -166,13 +156,7 @@ const handleMouseEnter = (event) => {
 };
 
 const handleMouseLeave = () => {
-  setTooltip((prev) => ({
-    ...prev,
-    visible: false,
-  }));
-
   path.style.opacity = "1";
-
   path.style.fill = getRegionColor(region.nameAr, id);
 };
 
@@ -442,58 +426,6 @@ path._cleanup = () => {
 </aside>
       </div>
     </div>
-    {tooltip.visible && (
-  <div
-    style={{
-      position: "fixed",
-      top: tooltip.y + 14,
-      left: tooltip.x + 14,
-      background: "rgba(15, 23, 42, 0.96)",
-      color: "white",
-      padding: "14px 16px",
-      borderRadius: "16px",
-      zIndex: 9999,
-      pointerEvents: "none",
-      minWidth: "180px",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
-      border: "1px solid rgba(255,255,255,0.08)",
-      backdropFilter: "blur(10px)",
-    }}
-  >
-    <div
-      style={{
-        fontSize: "16px",
-        fontWeight: "800",
-        marginBottom: "10px",
-      }}
-    >
-      {tooltip.regionName}
-    </div>
-
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginBottom: "6px",
-        fontSize: "14px",
-      }}
-    >
-      <span style={{ color: "#94a3b8" }}>المبيعات</span>
-      <span>{tooltip.totalRevenue} ر.س</span>
-    </div>
-
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        fontSize: "14px",
-      }}
-    >
-      <span style={{ color: "#94a3b8" }}>الطلبات</span>
-      <span>{tooltip.totalOrders}</span>
-    </div>
-  </div>
-)}
   </section>
 );
 }
