@@ -121,7 +121,7 @@ export default function SaudiRegionsMap() {
   }, [svgContent, selectedRegion]);
 
  return (
-  <section className="w-full max-w-7xl mx-auto px-4 py-8" dir="rtl">
+  <section className="w-full py-2" dir="rtl">
     <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
       <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
         <div>
@@ -135,10 +135,10 @@ export default function SaudiRegionsMap() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
-        <div className="xl:col-span-2 bg-slate-50 rounded-3xl p-6 min-h-[560px] flex items-center justify-center">
+        <div className="xl:col-span-2 bg-slate-50 rounded-3xl p-10 min-h-[700px] flex items-center justify-center">
           <div
             ref={containerRef}
-            className="w-full max-w-[760px] [&_svg]:w-full [&_svg]:h-auto"
+            className="w-full max-w-[1000px] [&_svg]:w-full [&_svg]:h-auto"
             onClick={(e) => {
               const path = e.target.closest("path");
               if (!path) return;
