@@ -1,3 +1,4 @@
+import "./globals.css";
 export const metadata = {
   title: "Smart Store Advisor",
   description: "AI-powered analytics app for Salla merchants"
