@@ -26,7 +26,9 @@ export default async function DashboardPage({ searchParams }) {
     return (
       <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
         <h1>غير مصرح</h1>
-        <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
+        <p>merchantId: {merchantId}</p>
+<p>merchantError: {merchantError?.message}</p>
+<p>merchant found: {merchant ? "yes" : "no"}</p>
       </main>
     );
   }
