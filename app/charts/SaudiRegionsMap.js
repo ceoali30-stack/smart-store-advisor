@@ -211,6 +211,46 @@ path._cleanup = () => {
     overflow: "hidden",
   }}
 >
+
+<div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    gap: "10px",
+    marginBottom: "18px",
+  }}
+>
+  <button
+    onClick={() => setColorMetric("revenue")}
+    style={{
+      padding: "10px 16px",
+      borderRadius: "999px",
+      border: "1px solid #bbf7d0",
+      background: colorMetric === "revenue" ? "#166534" : "white",
+      color: colorMetric === "revenue" ? "white" : "#166534",
+      fontWeight: "800",
+      cursor: "pointer",
+    }}
+  >
+    حسب المبيعات
+  </button>
+
+  <button
+    onClick={() => setColorMetric("orders")}
+    style={{
+      padding: "10px 16px",
+      borderRadius: "999px",
+      border: "1px solid #bbf7d0",
+      background: colorMetric === "orders" ? "#166534" : "white",
+      color: colorMetric === "orders" ? "white" : "#166534",
+      fontWeight: "800",
+      cursor: "pointer",
+    }}
+  >
+    حسب الطلبات
+  </button>
+</div>
+  
           <div
             ref={containerRef}
            style={{
