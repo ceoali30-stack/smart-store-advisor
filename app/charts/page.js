@@ -42,6 +42,7 @@ const percent = max > 0 ? Math.min(100, Math.round((numericValue / max) * 100)) 
 function ChartBox({ title, children, accent = "#2563eb" }) {
   return (
     <section
+      className="print-card"
       style={{
         position: "relative",
         background: "white",
@@ -329,6 +330,7 @@ const maxCustomerValue = Math.max(
   </div>
 </div>
 <section
+ className="print-section"
   style={{
     background: "white",
     padding: "22px",
@@ -381,6 +383,7 @@ const maxCustomerValue = Math.max(
 </section>
 
  <section
+ className="print-section"
   style={{
     background: "white",
     padding: "22px",
@@ -426,6 +429,7 @@ const maxCustomerValue = Math.max(
 </section>
 
 <div
+  className="print-section"
   style={{
     width: "100%",
     marginBottom: "24px",
@@ -435,6 +439,7 @@ const maxCustomerValue = Math.max(
 </div>
           
 <section
+ className="print-section"
   style={{
     background: "white",
     padding: "22px",
