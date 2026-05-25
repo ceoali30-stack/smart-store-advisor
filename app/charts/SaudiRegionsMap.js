@@ -439,6 +439,58 @@ const handleMouseLeave = () => {
 </aside>
       </div>
     </div>
+    {tooltip.visible && (
+  <div
+    style={{
+      position: "fixed",
+      top: tooltip.y + 14,
+      left: tooltip.x + 14,
+      background: "rgba(15, 23, 42, 0.96)",
+      color: "white",
+      padding: "14px 16px",
+      borderRadius: "16px",
+      zIndex: 9999,
+      pointerEvents: "none",
+      minWidth: "180px",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+      border: "1px solid rgba(255,255,255,0.08)",
+      backdropFilter: "blur(10px)",
+    }}
+  >
+    <div
+      style={{
+        fontSize: "16px",
+        fontWeight: "800",
+        marginBottom: "10px",
+      }}
+    >
+      {tooltip.regionName}
+    </div>
+
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: "6px",
+        fontSize: "14px",
+      }}
+    >
+      <span style={{ color: "#94a3b8" }}>المبيعات</span>
+      <span>{tooltip.totalRevenue} ر.س</span>
+    </div>
+
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        fontSize: "14px",
+      }}
+    >
+      <span style={{ color: "#94a3b8" }}>الطلبات</span>
+      <span>{tooltip.totalOrders}</span>
+    </div>
+  </div>
+)}
   </section>
 );
 }
