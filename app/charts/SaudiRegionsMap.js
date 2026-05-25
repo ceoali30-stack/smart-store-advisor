@@ -107,37 +107,31 @@ const maxRevenue = Math.max(
 );
 
 function getRegionColor(regionName, regionId) {
-  if (selectedRegion?.id === regionId) {
-    return "#15803d";
-  }
-
   const regionData = insights?.regions_insights?.find(
     (r) => r.region === regionName
   );
 
-  if (!regionData) {
-    return "#e5e7eb";
-  }
+  if (!regionData) return "#e5e7eb";
 
-const value =
-  colorMetric === "orders"
-    ? regionData.total_orders || 0
-    : regionData.total_revenue || 0;
+  const value =
+    colorMetric === "orders"
+      ? regionData.total_orders || 0
+      : regionData.total_revenue || 0;
 
-const maxValue = Math.max(
-  ...(insights?.regions_insights || []).map((r) =>
-    colorMetric === "orders" ? r.total_orders || 0 : r.total_revenue || 0
-  ),
-  1
-);
+  const maxValue = Math.max(
+    ...(insights?.regions_insights || []).map((r) =>
+      colorMetric === "orders" ? r.total_orders || 0 : r.total_revenue || 0
+    ),
+    1
+  );
 
-const ratio = value / maxValue;
+  const ratio = value / maxValue;
 
- if (ratio > 0.7) return "#166534"; // أخضر غامق جدًا
-if (ratio > 0.4) return "#16a34a"; // أخضر متوسط
-if (ratio > 0.15) return "#4ade80"; // أخضر فاتح
+  if (ratio > 0.7) return "#166534";
+  if (ratio > 0.4) return "#16a34a";
+  if (ratio > 0.15) return "#4ade80";
 
-return "#e5e7eb"; // بدون بيانات
+  return "#e5e7eb";
 }
     
     paths.forEach((path) => {
@@ -174,7 +168,7 @@ path._cleanup = () => {
         if (path._cleanup) path._cleanup();
       });
     };
-  }, [svgContent, selectedRegion]);
+ }, [svgContent, selectedRegion, insights, colorMetric]);
 
  return (
   <section className="w-full py-2" dir="rtl">
