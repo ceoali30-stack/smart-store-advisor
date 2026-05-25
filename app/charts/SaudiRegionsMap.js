@@ -143,18 +143,6 @@ const handleMouseEnter = () => {
   path.style.opacity = "0.8";
 };
 
-  setTooltip({
-    visible: true,
-    x: event.clientX,
-    y: event.clientY,
-    regionName: region.nameAr,
-    totalRevenue: regionData?.total_revenue || 0,
-    totalOrders: regionData?.total_orders || 0,
-  });
-
-  path.style.opacity = "0.85";
-};
-
 const handleMouseLeave = () => {
   path.style.opacity = "1";
   path.style.fill = getRegionColor(region.nameAr, id);
