@@ -81,10 +81,20 @@ export default function SaudiRegionsMap() {
     const svg = containerRef.current.querySelector("svg");
     if (!svg) return;
 
-    svg.setAttribute("width", "100%");
-    svg.setAttribute("height", "100%");
-    svg.style.maxWidth = "100%";
-    svg.style.height = "auto";
+   svg.removeAttribute("width");
+svg.removeAttribute("height");
+
+svg.style.width = "100%";
+svg.style.height = "700px";
+svg.style.display = "block";
+svg.style.margin = "0 auto";
+
+svg.setAttribute(
+  "viewBox",
+  "0 0 1000 1000"
+);
+
+svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
     const paths = svg.querySelectorAll("path");
 
@@ -134,11 +144,33 @@ export default function SaudiRegionsMap() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
-        <div className="xl:col-span-2 bg-slate-50 rounded-3xl p-10 min-h-[700px] flex items-center justify-center">
+      <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "2fr 1fr",
+    gap: "24px",
+    padding: "24px",
+    alignItems: "stretch",
+  }}
+>
+        <div
+  style={{
+    background: "#f8fafc",
+    borderRadius: "28px",
+    padding: "40px",
+    minHeight: "760px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  }}
+>
           <div
             ref={containerRef}
-            className="w-full max-w-[1000px] [&_svg]:w-full [&_svg]:h-auto"
+           style={{
+  width: "100%",
+  maxWidth: "1200px",
+}}
             onClick={(e) => {
               const path = e.target.closest("path");
               if (!path) return;
