@@ -3,17 +3,6 @@
 import { useSearchParams } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
-  const searchParams = useSearchParams();
-  const merchantId = searchParams.get("merchant_id");
-
-  const dashboardUrl = merchantId
-    ? `/dashboard?merchant_id=${merchantId}`
-    : "/dashboard";
-
-  const chartsUrl = merchantId
-    ? `/charts?merchant_id=${merchantId}`
-    : "/charts";
-
   return (
     <div style={{ direction: "rtl", fontFamily: "Arial, sans-serif" }}>
       <header
@@ -34,15 +23,6 @@ export default function DashboardLayout({ children }) {
             لوحة تحليلات ذكية لمتاجر سلة
           </p>
         </div>
-
-        <nav style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          <a href={dashboardUrl} style={navStyle}>
-            لوحة التحكم
-          </a>
-          <a href={chartsUrl} style={navStyle}>
-            الرسوم والتقارير
-          </a>
-        </nav>
       </header>
 
       {children}
