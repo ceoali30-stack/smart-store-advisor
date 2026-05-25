@@ -18,7 +18,7 @@ export default async function DashboardPage({ searchParams }) {
 
   const { data: merchant, error: merchantError } = await supabase
     .from("merchants")
-    .select("merchant_id, store_name")
+    .select("merchant_id")
     .eq("merchant_id", String(merchantId))
     .maybeSingle();
 
