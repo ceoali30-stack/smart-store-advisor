@@ -176,10 +176,13 @@ const handleMouseLeave = () => {
   path.style.fill = getRegionColor(region.nameAr, id);
 };
 
-      path._cleanup = () => {
-        path.removeEventListener("mouseenter", handleMouseEnter);
-        path.removeEventListener("mouseleave", handleMouseLeave);
-      };
+path.addEventListener("mouseenter", handleMouseEnter);
+path.addEventListener("mouseleave", handleMouseLeave);
+
+path._cleanup = () => {
+  path.removeEventListener("mouseenter", handleMouseEnter);
+  path.removeEventListener("mouseleave", handleMouseLeave);
+};
     });
 
     return () => {
