@@ -1,9 +1,35 @@
+import { createClient } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 import PrintButton from "./PrintButton";
 import SyncOrdersButton from "./SyncOrdersButton";
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
   const stockFilter = params?.stock || "all";
-  const merchantId = params?.merchant_id || "210819854";
+  const merchantId = params?.merchant_id;
+
+if (!merchantId) {
+  redirect("/");
+}
+
+const { data: merchant, error: merchantError } = await supabase
+  .from("merchants")
+  .select("merchant_id, store_name")
+  .eq("merchant_id", String(merchantId))
+  .single();
+
+if (merchantError || !merchant) {
+  return (
+    <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+      <h1>غير مصرح</h1>
+      <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
+    </main>
+  );
+}
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://smart-store-advisor.vercel.app";
@@ -39,7 +65,6 @@ try {
       <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
         <h1>Smart Store Advisor</h1>
 
-        <MerchantLinks />
 
         <p style={{ color: "red", marginTop: "30px" }}>Error: {error}</p>
       </main>
