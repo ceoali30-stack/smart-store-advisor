@@ -10,26 +10,26 @@ import SyncOrdersButton from "./SyncOrdersButton";
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
   const stockFilter = params?.stock || "all";
-  const merchantId = searchParams?.merchant_id;
+  const merchantId = params?.merchant_id;
 
-if (!merchantId) {
-  redirect("/");
-}
+  if (!merchantId) {
+    redirect("/");
+  }
 
-const { data: merchant, error: merchantError } = await supabase
-  .from("merchants")
-  .select("merchant_id, store_name")
-  .eq("merchant_id", String(merchantId))
-  .single();
+  const { data: merchant, error: merchantError } = await supabase
+    .from("merchants")
+    .select("merchant_id, store_name")
+    .eq("merchant_id", String(merchantId))
+    .maybeSingle();
 
-if (merchantError || !merchant) {
-  return (
-    <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
-      <h1>غير مصرح</h1>
-      <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
-    </main>
-  );
-}
+  if (merchantError || !merchant) {
+    return (
+      <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+        <h1>غير مصرح</h1>
+        <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
+      </main>
+    );
+  }
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://smart-store-advisor.vercel.app";
