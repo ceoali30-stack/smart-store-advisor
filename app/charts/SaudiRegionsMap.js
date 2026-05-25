@@ -98,12 +98,42 @@ svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
     const paths = svg.querySelectorAll("path");
 
+const maxRevenue = Math.max(
+  ...(insights?.regions_insights || []).map(
+    (r) => r.total_revenue || 0
+  ),
+  1
+);
+
+function getRegionColor(regionName, regionId) {
+  if (selectedRegion?.id === regionId) {
+    return "#15803d";
+  }
+
+  const regionData = insights?.regions_insights?.find(
+    (r) => r.region === regionName
+  );
+
+  if (!regionData) {
+    return "#e5e7eb";
+  }
+
+  const revenue = regionData.total_revenue || 0;
+  const ratio = revenue / maxRevenue;
+
+ if (ratio > 0.7) return "#166534"; // أخضر غامق جدًا
+if (ratio > 0.4) return "#16a34a"; // أخضر متوسط
+if (ratio > 0.15) return "#4ade80"; // أخضر فاتح
+
+return "#e5e7eb"; // بدون بيانات
+}
+    
     paths.forEach((path) => {
       const id = path.getAttribute("id");
       const region = regionsConstant[id];
 
       path.style.cursor = region ? "pointer" : "default";
-      path.style.fill = selectedRegion?.id === id ? "#2563eb" : "#e5e7eb";
+      path.style.fill = getRegionColor(region.nameAr, id);
       path.style.stroke = "#ffffff";
       path.style.strokeWidth = "1";
 
@@ -111,10 +141,13 @@ svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
 
       const handleMouseEnter = () => {
         path.style.fill = "#60a5fa";
+        path.style.opacity = "0.85";
       };
 
       const handleMouseLeave = () => {
-        path.style.fill = selectedRegion?.id === id ? "#2563eb" : "#e5e7eb";
+       path.style.fill = getRegionColor(region.nameAr, id);
+        path.style.opacity = "1";
+path.style.fill = getRegionColor(region.nameAr, id);
       };
 
       path._cleanup = () => {
