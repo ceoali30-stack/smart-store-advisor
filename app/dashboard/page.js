@@ -10,7 +10,7 @@ import SyncOrdersButton from "./SyncOrdersButton";
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
   const stockFilter = params?.stock || "all";
-  const merchantId = params?.merchant_id;
+  const merchantId = searchParams?.merchant_id;
 
 if (!merchantId) {
   redirect("/");
