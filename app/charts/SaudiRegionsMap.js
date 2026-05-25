@@ -25,6 +25,7 @@ export default function SaudiRegionsMap() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [insights, setInsights] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
+  const [colorMetric, setColorMetric] = useState("revenue");
   
   useEffect(() => {
     async function loadSvg() {
