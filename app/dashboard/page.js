@@ -23,15 +23,13 @@ export default async function DashboardPage({ searchParams }) {
     .maybeSingle();
 
   if (merchantError || !merchant) {
-    return (
-      <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
-        <h1>غير مصرح</h1>
-        <p>merchantId: {merchantId}</p>
-<p>merchantError: {merchantError?.message}</p>
-<p>merchant found: {merchant ? "yes" : "no"}</p>
-      </main>
-    );
-  }
+  return (
+    <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
+      <h1>غير مصرح</h1>
+      <p>هذا المتجر غير مربوط بتطبيق مستشار المتجر الذكي.</p>
+    </main>
+  );
+}
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://smart-store-advisor.vercel.app";
