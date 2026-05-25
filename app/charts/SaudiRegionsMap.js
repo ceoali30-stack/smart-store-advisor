@@ -26,6 +26,15 @@ export default function SaudiRegionsMap() {
   const [insights, setInsights] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
 
+const [tooltip, setTooltip] = useState({
+  visible: false,
+  x: 0,
+  y: 0,
+  regionName: "",
+  totalRevenue: 0,
+  totalOrders: 0,
+});
+  
   useEffect(() => {
     async function loadSvg() {
       try {
@@ -139,16 +148,33 @@ return "#e5e7eb"; // بدون بيانات
 
       if (!region) return;
 
-      const handleMouseEnter = () => {
-        path.style.fill = "#60a5fa";
-        path.style.opacity = "0.85";
-      };
+const handleMouseEnter = (event) => {
+  const regionData = insights?.regions_insights?.find(
+    (r) => r.region === region.nameAr
+  );
 
-      const handleMouseLeave = () => {
-       path.style.fill = getRegionColor(region.nameAr, id);
-        path.style.opacity = "1";
-path.style.fill = getRegionColor(region.nameAr, id);
-      };
+  setTooltip({
+    visible: true,
+    x: event.clientX,
+    y: event.clientY,
+    regionName: region.nameAr,
+    totalRevenue: regionData?.total_revenue || 0,
+    totalOrders: regionData?.total_orders || 0,
+  });
+
+  path.style.opacity = "0.85";
+};
+
+const handleMouseLeave = () => {
+  setTooltip((prev) => ({
+    ...prev,
+    visible: false,
+  }));
+
+  path.style.opacity = "1";
+
+  path.style.fill = getRegionColor(region.nameAr, id);
+};
 
       path._cleanup = () => {
         path.removeEventListener("mouseenter", handleMouseEnter);
