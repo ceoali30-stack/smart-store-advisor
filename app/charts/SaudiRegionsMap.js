@@ -119,8 +119,19 @@ function getRegionColor(regionName, regionId) {
     return "#e5e7eb";
   }
 
-  const revenue = regionData.total_revenue || 0;
-  const ratio = revenue / maxRevenue;
+const value =
+  colorMetric === "orders"
+    ? regionData.total_orders || 0
+    : regionData.total_revenue || 0;
+
+const maxValue = Math.max(
+  ...(insights?.regions_insights || []).map((r) =>
+    colorMetric === "orders" ? r.total_orders || 0 : r.total_revenue || 0
+  ),
+  1
+);
+
+const ratio = value / maxValue;
 
  if (ratio > 0.7) return "#166534"; // أخضر غامق جدًا
 if (ratio > 0.4) return "#16a34a"; // أخضر متوسط
