@@ -1,3 +1,4 @@
+import NavBar from "./NavBar";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
@@ -252,13 +253,44 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
         minHeight: "100vh",
       }}
     >
+          <div
+  style={{
+    background: "#0f172a",
+    color: "white",
+    padding: "16px 32px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "16px",
+    flexWrap: "wrap",
+    marginBottom: "24px",
+    borderRadius: "16px",
+  }}
+>
+  <div>
+    <strong style={{ fontSize: "18px" }}>
+      مستشار المتجر الذكي
+    </strong>
+
+    <p
+      style={{
+        margin: "6px 0 0",
+        color: "#cbd5e1",
+        fontSize: "13px",
+      }}
+    >
+      لوحة تحليلات ذكية لمتاجر سلة
+    </p>
+  </div>
+
+  <NavBar merchantId={merchantId} />
+</div>
       <h1 style={{ marginBottom: "10px" }}>لوحة مستشار المتجر الذكي</h1>
 
       <p style={{ marginBottom: "20px", color: "#555" }}>
         تحليلات ذكية لمتاجر سلة.
       </p>
 
-      <MerchantLinks />
           <section
   style={{
     marginBottom: "28px",
