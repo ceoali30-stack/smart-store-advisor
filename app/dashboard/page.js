@@ -304,11 +304,13 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
           <section
   style={{
     display: "grid",
-gridTemplateColumns: "340px 1fr",
+gridTemplateColumns: "320px 1fr",
+    minHeight: "320px",
+padding: "32px",
     justifyContent: "space-between",
-gap: "40px",
+gap: "28px",
 alignItems: "center",
-    marginBottom: "28px",
+    marginBottom: "20px",
     background:
       storeHealthPercentage >= 85
         ? "#ecfdf5"
@@ -410,7 +412,7 @@ alignItems: "center",
       </p>
 <div
   style={{
-    marginTop: "22px",
+    marginTop: "10px",
     display: "grid",
     gridTemplateColumns: "repeat(5, minmax(140px, 1fr))",
     gap: "12px",
