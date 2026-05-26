@@ -305,8 +305,8 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
   style={{
     display: "grid",
 gridTemplateColumns: "320px 1fr",
-    minHeight: "320px",
-padding: "32px",
+    minHeight: "200px",
+padding: "24px",
     justifyContent: "space-between",
 gap: "28px",
 alignItems: "center",
