@@ -107,7 +107,7 @@ export default async function DashboardPage({ searchParams }) {
     return (
       <main
         style={{
-          padding: "40px",
+         padding: "24px",
           fontFamily: "Arial, sans-serif",
         }}
       >
@@ -157,7 +157,7 @@ export default async function DashboardPage({ searchParams }) {
         direction: "rtl",
         textAlign: "right",
         padding: "24px",
-        maxWidth: "1600px",
+        maxWidth: "1400px",
         margin: "0 auto",
         fontFamily: "Arial, sans-serif",
         background: "#f6f7f9",
@@ -239,7 +239,7 @@ export default async function DashboardPage({ searchParams }) {
       <section
         style={{
           background: "white",
-          borderRadius: "28px",
+         borderRadius: "22px",
           padding: "32px",
           boxShadow: "0 10px 40px rgba(0,0,0,0.06)",
           marginBottom: "30px",
@@ -249,7 +249,7 @@ export default async function DashboardPage({ searchParams }) {
           style={{
             display: "grid",
             gridTemplateColumns: "340px 1fr",
-            gap: "40px",
+            gap: "24px",
             alignItems: "center",
           }}
         >
