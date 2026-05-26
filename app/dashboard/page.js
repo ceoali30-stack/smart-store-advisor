@@ -352,8 +352,9 @@ alignItems: "center",
         {storeHealthMessage}
       </p>
     </div>
-
+<div>
     <div style={{ textAlign: "center" }}>
+        </div>
       <div
         style={{
           width: "120px",
