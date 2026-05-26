@@ -390,6 +390,61 @@ export default async function DashboardPage({ searchParams }) {
           الرسوم البيانية
         </a>
       </div>
+
+<section
+  className="print-section"
+  style={{
+    marginTop: "24px",
+    background: "white",
+    borderRadius: "22px",
+    padding: "24px",
+    boxShadow: "0 8px 28px rgba(0,0,0,0.05)",
+    border: "1px solid #e5e7eb",
+  }}
+>
+  <p style={{ margin: 0, color: "#64748b", fontSize: "14px" }}>
+    خطة تنفيذية
+  </p>
+
+  <h2 style={{ margin: "8px 0 18px", fontSize: "26px", color: "#0f172a" }}>
+    أولويات اليوم
+  </h2>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(2, minmax(240px, 1fr))",
+      gap: "14px",
+    }}
+  >
+    {[
+      ["#fef2f2", "#fecaca", "#991b1b", "إعادة توفير المنتجات النافدة فورًا", "ابدأ بالمنتجات التي وصلت كميتها إلى صفر لأنها قد تسبب فقدان طلبات مباشرة."],
+      ["#fffbeb", "#fde68a", "#92400e", "مراجعة المنتجات منخفضة المخزون", "راجع المنتجات ذات الكمية المنخفضة خلال 48 ساعة وحدد هل تحتاج إلى إعادة طلب."],
+      ["#ecfdf5", "#bbf7d0", "#166534", "التركيز على المنتج الأعلى مبيعًا", "اجعله ظاهرًا في واجهة المتجر أو ضمن العروض."],
+      ["#f5f3ff", "#ddd6fe", "#6d28d9", "تنشيط المنتجات الراكدة", "راجع المنتجات التي لا تتحرك وجرّب تحسين الصور أو السعر أو إضافتها في عرض."],
+    ].map(([bg, border, color, title, text], index) => (
+      <div
+        key={index}
+        className="print-card"
+        style={{
+          background: bg,
+          border: `1px solid ${border}`,
+          borderRadius: "16px",
+          padding: "16px",
+        }}
+      >
+        <strong style={{ color, fontSize: "15px" }}>
+          {index + 1}. {title}
+        </strong>
+
+        <p style={{ margin: "8px 0 0", color, lineHeight: "1.7", fontSize: "14px" }}>
+          {text}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+            
     </main>
   );
 }
