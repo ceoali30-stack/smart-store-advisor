@@ -63,8 +63,18 @@ try {
 
   if (error) {
     return (
-      <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
-        <h1>Smart Store Advisor</h1>
+      <main
+  style={{
+    direction: "rtl",
+    textAlign: "right",
+    padding: "24px",
+    maxWidth: "1600px",
+    margin: "0 auto",
+    fontFamily: "Arial, sans-serif",
+    background: "#f6f7f9",
+    minHeight: "100vh",
+  }}
+>
 
 
         <p style={{ color: "red", marginTop: "30px" }}>Error: {error}</p>
@@ -293,6 +303,10 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
 
           <section
   style={{
+    display: "grid",
+gridTemplateColumns: "1.2fr 1fr",
+gap: "24px",
+alignItems: "center",
     marginBottom: "28px",
     background:
       storeHealthPercentage >= 85
