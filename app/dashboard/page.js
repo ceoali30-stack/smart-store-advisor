@@ -304,7 +304,8 @@ if (data?.sales_insights?.summary?.average_order_value > 0) {
           <section
   style={{
     display: "grid",
-gridTemplateColumns: "1.2fr 1fr",
+gridTemplateColumns: "minmax(320px, 420px) 1fr",
+    justifyContent: "space-between",
 gap: "24px",
 alignItems: "center",
     marginBottom: "28px",
