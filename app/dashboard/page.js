@@ -127,12 +127,12 @@ export default async function DashboardPage({ searchParams }) {
 
   const salesData = await salesRes.json();
 
-  const insights = salesData?.insights || {};
-
-  const totalOrders = insights?.total_orders || 0;
-  const totalRevenue = insights?.total_revenue || 0;
-  const totalProducts = insights?.total_products || 0;
-  const slowProducts = insights?.slow_products_count || 0;
+const totalOrders = salesData?.summary?.total_orders || 0;
+const totalRevenue = salesData?.summary?.total_revenue || 0;
+const totalProducts = data?.total_products || 0;
+const slowProducts = data?.low_stock_products_count || 0;
+const averageOrderValue = salesData?.summary?.average_order_value || 0;
+const topProduct = salesData?.top_products?.[0]?.product_name || "غير متوفر";
 
   let score = 100;
 
@@ -445,75 +445,43 @@ export default async function DashboardPage({ searchParams }) {
   </div>
 </section>
 
-      <section
-  className="print-section"
-  style={{
-    marginTop: "24px",
-    background: "white",
-    borderRadius: "22px",
-    padding: "24px",
-    boxShadow: "0 8px 28px rgba(0,0,0,0.05)",
-    border: "1px solid #e5e7eb",
-  }}
->
-  <p style={{ margin: 0, color: "#64748b", fontSize: "14px" }}>
-    تحليل ذكي
-  </p>
-
-  <h2
-    style={{
-      margin: "8px 0 20px",
-      fontSize: "26px",
-      color: "#0f172a",
-    }}
-  >
+<section className="print-section" style={{
+  marginTop: "24px",
+  background: "white",
+  borderRadius: "22px",
+  padding: "24px",
+  boxShadow: "0 8px 28px rgba(0,0,0,0.05)",
+  border: "1px solid #e5e7eb",
+}}>
+  <p style={{ margin: 0, color: "#64748b", fontSize: "14px" }}>تحليل ذكي</p>
+  <h2 style={{ margin: "8px 0 18px", fontSize: "26px", color: "#0f172a" }}>
     الملخص التنفيذي
   </h2>
 
-  <div
-    style={{
-      background: "#f8fafc",
-      border: "1px solid #e2e8f0",
-      borderRadius: "18px",
-      padding: "22px",
-      lineHeight: "2",
-      color: "#334155",
-      fontSize: "15px",
-    }}
-  >
-    <p style={{ marginTop: 0 }}>
-      حقق المتجر حتى الآن{" "}
-      <strong>{totalOrders}</strong> طلب بإجمالي مبيعات{" "}
-      <strong>{totalRevenue} ر.س</strong>.
-    </p>
-
-    <p>
-      عدد المنتجات الحالية هو{" "}
-      <strong>{totalProducts}</strong> منتج، ويوجد{" "}
-      <strong>{slowProducts}</strong> منتج يحتاج إلى تحسين أو تنشيط.
-    </p>
-
-    <p>
-      درجة صحة المتجر الحالية هي{" "}
-      <strong>{score}%</strong>، مما يشير إلى أن أداء المتجر{" "}
-      <strong>
-        {score >= 85
-          ? "ممتاز"
-          : score >= 70
-          ? "جيد"
-          : score >= 50
-          ? "متوسط"
-          : "يحتاج تحسين"}
-      </strong>.
-    </p>
-
-    <p style={{ marginBottom: 0 }}>
-      ننصح بالتركيز على:
-      {" "}
-      {slowProducts > 0
-        ? "تنشيط المنتجات الراكدة وتحسين ظهور المنتجات الأعلى مبيعًا."
-        : "زيادة الحملات التسويقية والتوسع في المنتجات الأعلى أداءً."}
-    </p>
+  <div style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(4, minmax(220px, 1fr))",
+    gap: "14px",
+  }}>
+    {[
+      ["إجمالي الطلبات", totalOrders, "عدد الطلبات في المتجر"],
+      ["إجمالي المبيعات", `${totalRevenue} ر.س`, "قيمة المبيعات الحالية"],
+      ["متوسط الفاتورة", `${averageOrderValue} ر.س`, "متوسط قيمة الطلب"],
+      ["أفضل منتج", topProduct, "المنتج الأعلى مبيعًا"],
+    ].map(([title, value, note], index) => (
+      <div key={index} className="print-card" style={{
+        background: "#f8fafc",
+        border: "1px solid #e2e8f0",
+        borderRadius: "16px",
+        padding: "18px",
+      }}>
+        <p style={{ margin: 0, color: "#64748b", fontSize: "14px" }}>{title}</p>
+        <h3 style={{ margin: "10px 0", fontSize: "24px", color: "#0f172a" }}>
+          {value}
+        </h3>
+        <p style={{ margin: 0, color: "#94a3b8", fontSize: "13px" }}>{note}</p>
+      </div>
+    ))}
   </div>
 </section>
             
