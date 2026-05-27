@@ -342,6 +342,7 @@ const dataQualityAlerts = [
           <h1 style={styles.mainTitle}>مستشار المتجر الذكي</h1>
           <p style={styles.mutedWhite}>رقم المتجر: {merchantId}</p>
         </div>
+
     
         <div style={styles.actions}>
           <SyncOrdersButton merchantId={merchantId} />
@@ -770,7 +771,6 @@ const styles = {
   },
 
   topBar: {
-    background: "#0f172a",
     color: "white",
     padding: "24px",
     display: "flex",
@@ -780,6 +780,11 @@ const styles = {
     flexWrap: "wrap",
     marginBottom: "24px",
     borderRadius: "18px",
+    position: "sticky",
+top: "0",
+zIndex: 1000,
+backdropFilter: "blur(10px)",
+background: "rgba(15, 23, 42, 0.92)",
   },
 
   mainTitle: {
