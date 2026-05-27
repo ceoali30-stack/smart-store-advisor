@@ -446,6 +446,22 @@ const dataQualityAlerts = [
             value={averageItemsPerOrder ? averageItemsPerOrder.toFixed(2) : "غير متوفر"}
           />
           <KpiCard title="أفضل منتج" value={topProduct} />
+            <KpiCard
+  title="عدد مرات بيع أفضل منتج"
+  value={
+    salesInsights?.top_products?.[0]?.sold_count
+      ? `${salesInsights.top_products[0].sold_count} عملية`
+      : "غير متوفر"
+  }
+/>
+  <KpiCard
+  title="الكمية المباعة لأفضل منتج"
+  value={
+    salesInsights?.top_products?.[0]?.quantity_sold
+      ? `${salesInsights.top_products[0].quantity_sold} قطعة`
+      : "غير متوفر"
+  }
+/>
           <KpiCard title="أعلى مدينة / منطقة" value={topCity} />
         </div>
       </section>
