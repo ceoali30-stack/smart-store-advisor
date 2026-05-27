@@ -379,14 +379,18 @@ const dataQualityAlerts = [
   HealthItem={HealthItem}
 />
 
-      <section style={styles.cardsGrid}>
-        <KpiCard title="إجمالي المبيعات" value={formatCurrency(totalRevenueValue)} />
-        <KpiCard title="عدد الطلبات" value={formatNumber(totalOrdersCount)} />
-        <KpiCard title="متوسط قيمة الطلب" value={formatCurrency(averageOrderValue)} />
-        <KpiCard title="عدد المنتجات" value={formatNumber(totalProductsCount)} />
-        <KpiCard title="منتجات منخفضة المخزون" value={formatNumber(lowStockCount)} />
-        <KpiCard title="المنتج الأعلى مبيعًا" value={topProduct} />
-      </section>
+     <KpiSummarySection
+  totalRevenueValue={totalRevenueValue}
+  totalOrdersCount={totalOrdersCount}
+  averageOrderValue={averageOrderValue}
+  totalProductsCount={totalProductsCount}
+  lowStockCount={lowStockCount}
+  topProduct={topProduct}
+  styles={styles}
+  KpiCard={KpiCard}
+  formatCurrency={formatCurrency}
+  formatNumber={formatNumber}
+/>
 
       <TodayPrioritiesSection
   outOfStockProducts={outOfStockProducts}
