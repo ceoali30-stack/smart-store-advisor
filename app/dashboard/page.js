@@ -679,12 +679,70 @@ const dataQualityAlerts = [
 }
 
 function HealthItem({ title, value, max, note }) {
+  const percentage = Math.round((value / max) * 100);
+
+  const progressColor =
+    percentage >= 80
+      ? "#16a34a"
+      : percentage >= 50
+      ? "#d97706"
+      : "#dc2626";
+
   return (
     <div style={styles.healthItem}>
-      <p style={styles.healthItemTitle}>{title}</p>
-      <strong style={styles.healthItemValue}>
-        {value} / {max}
-      </strong>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+          alignItems: "center",
+        }}
+      >
+        <p style={styles.healthItemTitle}>{title}</p>
+
+        <strong
+          style={{
+            fontSize: "15px",
+            color: progressColor,
+            fontWeight: "800",
+          }}
+        >
+          {percentage}%
+        </strong>
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          height: "10px",
+          background: "#e5e7eb",
+          borderRadius: "999px",
+          overflow: "hidden",
+          marginBottom: "10px",
+        }}
+      >
+        <div
+          style={{
+            width: `${percentage}%`,
+            height: "100%",
+            background: progressColor,
+            borderRadius: "999px",
+            transition: "0.4s",
+          }}
+        />
+      </div>
+
+      <p
+        style={{
+          margin: "0 0 8px",
+          fontSize: "13px",
+          color: "#475569",
+          fontWeight: "700",
+        }}
+      >
+        {value} من {max}
+      </p>
+
       <p style={styles.healthItemNote}>{note}</p>
     </div>
   );
