@@ -206,6 +206,22 @@ const maxCustomerValue = Math.max(
 </div>
         </div>
 
+<div
+  style={{
+    background: "#fffbeb",
+    border: "1px solid #fde68a",
+    color: "#92400e",
+    padding: "12px 16px",
+    borderRadius: "12px",
+    marginBottom: "20px",
+    fontSize: "14px",
+    fontWeight: "700",
+    lineHeight: "1.7",
+  }}
+>
+  هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي. الهدف الحالي هو اختبار التحليلات وطريقة العرض.
+</div>
+      
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <a
             href={`/dashboard?merchant_id=${merchantId}`}
@@ -234,21 +250,7 @@ const maxCustomerValue = Math.max(
           marginBottom: "22px",
         }}
       >
-<div
-  style={{
-    background: "#fffbeb",
-    border: "1px solid #fde68a",
-    color: "#92400e",
-    padding: "12px 16px",
-    borderRadius: "12px",
-    marginBottom: "20px",
-    fontSize: "14px",
-    fontWeight: "700",
-    lineHeight: "1.7",
-  }}
->
-  هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي. الهدف الحالي هو اختبار التحليلات وطريقة العرض.
-</div>
+
         
        <ChartBox title="إجمالي الطلبات" accent="#2563eb">
  <strong style={{ fontSize: "30px", fontWeight: "900" }}>
