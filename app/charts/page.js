@@ -490,8 +490,8 @@ id="regions-map"
 </div>
           
 <section
-id="abandoned-carts"
- className="print-section"
+  id="abandoned-carts"
+  className="print-section"
   style={{
     background: "white",
     padding: "22px",
@@ -506,14 +506,10 @@ id="abandoned-carts"
     السلات المتروكة
   </h2>
 
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, minmax(160px, 1fr))",
-      gap: "14px",
-      marginBottom: "16px",
-    }}
-  >
+  <div style={{ color: "#64748b", lineHeight: "1.8" }}>
+    لا توجد بيانات سلات متروكة حاليًا، أو لم تظهر بعد من مزامنة سلة.
+  </div>
+</section>
 <div id="data-quality">
   <ChartBox title="مؤشرات جودة البيانات" accent="#6366f1">
     <div
