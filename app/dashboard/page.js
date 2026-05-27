@@ -1,3 +1,4 @@
+import KpiSummarySection from "./KpiSummarySection";
 import TodayPrioritiesSection from "./TodayPrioritiesSection";
 import DataQualitySection from "./DataQualitySection";
 import RecommendationsSection from "./RecommendationsSection";
