@@ -4,7 +4,9 @@ export default function RecommendationsSection({
   EmptyBox,
 }) {
   return (
-    <section style={styles.section}>
+    <section
+      id="recommendations"
+      style={styles.section}>
       <p style={styles.sectionEyebrow}>التوصيات</p>
 
       <h2 style={styles.sectionTitle}>
