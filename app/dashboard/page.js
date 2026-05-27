@@ -851,9 +851,9 @@ height: "180px",
 
   section: {
     background: "white",
-    padding: "24px",
+  padding: "20px",
     borderRadius: "18px",
-    marginBottom: "24px",
+    marginBottom: "18px",
     border: "1px solid #e5e7eb",
     boxShadow: "0 8px 22px rgba(0,0,0,0.05)",
   },
@@ -884,8 +884,8 @@ height: "180px",
   cardsGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px",
-    marginBottom: "24px",
+   gap: "14px",
+marginBottom: "18px",
   },
 
   kpiCard: {
