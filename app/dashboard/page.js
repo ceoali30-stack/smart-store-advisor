@@ -121,7 +121,9 @@ export default async function DashboardPage({ searchParams }) {
     .filter((product) => Number(product.quantity || 0) > 0)
     .slice(0, 10);
 
-  const totalProductsCount = Number(products.length || 0);
+  const totalProductsCount = Number(
+  products.length || lowStockProducts.length || 0
+);
   const lowStockCount = Number(lowStockProducts.length || 0);
   const stagnantCount = Number(stagnantProducts.length || 0);
 
@@ -145,13 +147,16 @@ export default async function DashboardPage({ searchParams }) {
     salesInsights?.regions_insights?.[0]?.region ||
     "غير متوفر";
 
-  const productsWithPrice = products.filter(
-    (product) => Number(product.price || 0) > 0
-  ).length;
+const productsForDataQuality =
+  products.length > 0 ? products : lowStockProducts;
 
-  const productsWithCost = products.filter(
-    (product) => Number(product.cost_price || 0) > 0
-  ).length;
+const productsWithPrice = productsForDataQuality.filter(
+  (product) => Number(product.price || 0) > 0
+).length;
+
+const productsWithCost = productsForDataQuality.filter(
+  (product) => Number(product.cost_price || product.raw_data?.cost_price || 0) > 0
+).length;
 
   const stockHealthScore =
     totalProductsCount > 0
