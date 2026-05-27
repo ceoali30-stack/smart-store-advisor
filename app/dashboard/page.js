@@ -367,6 +367,8 @@ const dataQualityAlerts = [
   هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي.
   الهدف الحالي هو اختبار التحليلات وطريقة العرض.
 </div>
+
+    <QuickNav styles={styles} />
               
       <HealthSection
   storeHealthPercentage={storeHealthPercentage}
@@ -787,6 +789,30 @@ zIndex: 1000,
 backdropFilter: "blur(10px)",
 background: "rgba(15, 23, 42, 0.92)",
   },
+
+  quickNav: {
+  display: "flex",
+  gap: "12px",
+  flexWrap: "wrap",
+  marginBottom: "20px",
+  padding: "14px 18px",
+  background: "white",
+  borderRadius: "16px",
+  border: "1px solid #e2e8f0",
+  position: "sticky",
+  top: "110px",
+  zIndex: 999,
+},
+
+quickNavLink: {
+  textDecoration: "none",
+  color: "#0f172a",
+  background: "#f1f5f9",
+  padding: "10px 14px",
+  borderRadius: "10px",
+  fontWeight: "700",
+  fontSize: "14px",
+},
 
   mainTitle: {
     margin: "6px 0",
