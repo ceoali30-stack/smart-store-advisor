@@ -925,7 +925,6 @@ id="abandoned-carts"
   )}
 </ChartBox>
       </div>
-    </div>
     </main>
   );
 }
