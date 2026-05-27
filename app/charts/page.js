@@ -676,30 +676,29 @@ id="abandoned-carts"
   {regionsInsights.length > 0 ? (
     <div style={{ display: "grid", gap: "12px" }}>
       {regionsInsights.map((region, index) => (
-        <div
-          key={index}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.4fr 0.8fr 1fr 1.2fr",
-            gap: "12px",
-            alignItems: "center",
-            background: index === 0 ? "#ecfeff" : "#f8fafc",
-            border: index === 0 ? "1px solid #67e8f9" : "1px solid #e2e8f0",
-            borderRadius: "14px",
-            padding: "14px",
-          }}
-        >
-               </div>
-<div>
-  <strong style={{ color: "#0f172a" }}>
-    {index === 0 ? "🏆 " : ""}
-    {region.region || "غير محدد"}
-  </strong>
+<div
+  key={index}
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1.4fr 0.8fr 1fr 1.2fr",
+    gap: "12px",
+    alignItems: "center",
+    background: index === 0 ? "#ecfeff" : "#f8fafc",
+    border: index === 0 ? "1px solid #67e8f9" : "1px solid #e2e8f0",
+    borderRadius: "14px",
+    padding: "14px",
+  }}
+>
+  <div>
+    <strong style={{ color: "#0f172a" }}>
+      {index === 0 ? "🏆 " : ""}
+      {region.region || "غير محدد"}
+    </strong>
 
-  <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
-    المدن: {(region.cities || []).join("، ") || "غير محدد"}
-  </p>
-</div>
+    <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
+      المدن: {(region.cities || []).join("، ") || "غير محدد"}
+    </p>
+  </div>
 
           <div style={{ textAlign: "center" }}>
             <div style={{ color: "#64748b", fontSize: "12px" }}>الطلبات</div>
