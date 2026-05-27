@@ -5,7 +5,9 @@ export default function TodayPrioritiesSection({
   PriorityCard,
 }) {
   return (
-    <section style={styles.section}>
+    <section
+      id="today-priorities"
+      style={styles.section}>
       <div style={styles.sectionHeader}>
         <div>
           <p style={styles.sectionEyebrow}>أولويات اليوم</p>
