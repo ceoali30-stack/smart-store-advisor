@@ -691,13 +691,14 @@ id="abandoned-carts"
         >
                </div>
           <div>
-            <strong style={{ color: "#0f172a" }}>
-              {index === 0 ? "🏆 " : ""}
-              {region.region || "غير محدد"}
-            </strong>
-            <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
-              المدن: {(region.cities || []).join("، ") || "غير محدد"}
-            </p>
+<strong style={{ color: "#0f172a" }}>
+  {index === 0 ? "🏆 " : ""}
+  {region.region || "غير محدد"}
+</strong>
+
+<p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
+  المدن: {(region.cities || []).join("، ") || "غير محدد"}
+</p>
           </div>
 
           <div style={{ textAlign: "center" }}>
