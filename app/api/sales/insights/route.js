@@ -111,26 +111,30 @@ export async function GET(request) {
         ? Number((abandonedCartsValue / abandonedCartsCount).toFixed(2))
         : 0;
 
-    const productMap = {};
+const productMap = {};
 
-    for (const item of safeItems) {
-      const name = item.product_name || "منتج غير معروف";
+for (const item of safeItems) {
+  const name = item.product_name || "منتج غير معروف";
 
-      if (!productMap[name]) {
-        productMap[name] = {
-          product_name: name,
-          quantity_sold: 0,
-          revenue: 0,
-        };
-      }
+  if (!productMap[name]) {
+    productMap[name] = {
+      product_name: name,
+      quantity_sold: 0,
+      sold_count: 0,
+      revenue: 0,
+    };
+  }
 
-      productMap[name].quantity_sold += Number(item.quantity || 0);
-      productMap[name].revenue += Number(item.total_price || 0);
-    }
+  productMap[name].quantity_sold += Number(item.quantity || 0);
 
-    const topProducts = Object.values(productMap).sort(
-      (a, b) => b.quantity_sold - a.quantity_sold
-    );
+  productMap[name].sold_count += 1;
+
+  productMap[name].revenue += Number(item.total_price || 0);
+}
+
+const topProducts = Object.values(productMap).sort(
+  (a, b) => b.quantity_sold - a.quantity_sold
+);
 
     const categoryMap = {};
 
