@@ -825,11 +825,11 @@ const styles = {
   },
 
   healthCircle: {
-    width: "210px",
-    height: "210px",
+    width: "180px",
+height: "180px",
     borderRadius: "50%",
     background: "#f8fafc",
-    border: "14px solid #0f172a",
+ border: "12px solid #0f172a",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -838,7 +838,7 @@ const styles = {
   },
 
   healthNumber: {
-    fontSize: "42px",
+    fontSize: "36px",
     fontWeight: "900",
     color: "#0f172a",
   },
