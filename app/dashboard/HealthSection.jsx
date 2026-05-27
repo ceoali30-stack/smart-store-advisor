@@ -11,7 +11,9 @@ export default function HealthSection({
   HealthItem,
 }) {
   return (
-    <section style={styles.healthSection}>
+    <section
+      id="store-health"
+      style={styles.healthSection}>
       <div style={styles.healthCircle}>
         <div style={styles.healthNumber}>
           {storeHealthPercentage}%
