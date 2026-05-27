@@ -514,222 +514,292 @@ id="abandoned-carts"
       marginBottom: "16px",
     }}
   >
-    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "14px", padding: "14px" }}>
-      <p style={{ margin: 0, color: "#991b1b" }}>عدد السلات</p>
-      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
-        {abandonedCartsSummary.total_carts || 0}
-      </strong>
-    </div>
-
-    <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "14px" }}>
-      <p style={{ margin: 0, color: "#9a3412" }}>قيمة السلات</p>
-      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
-        {abandonedCartsSummary.total_value || 0} ريال
-      </strong>
-    </div>
-
-    <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "14px" }}>
-      <p style={{ margin: 0, color: "#1d4ed8" }}>عدد المنتجات</p>
-      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
-        {abandonedCartsSummary.total_items || 0}
-      </strong>
-    </div>
-
-    <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "14px" }}>
-      <p style={{ margin: 0, color: "#475569" }}>متوسط السلة</p>
-      <strong style={{ fontSize: "24px", color: "#0f172a" }}>
-        {Math.round(abandonedCartsSummary.average_cart_value || 0)} ريال
-      </strong>
-    </div>
-  </div>
-
-  <div
-    style={{
-      background: "#fef2f2",
-      border: "1px solid #fecaca",
-      borderRadius: "14px",
-      padding: "14px",
-      color: "#334155",
-      lineHeight: "1.8",
-    }}
-  >
-    <strong style={{ color: "#b91c1c" }}>توصية:</strong>{" "}
-    {Number(abandonedCartsSummary.total_carts || 0) > 0
-      ? "فعّل رسائل تذكير أو كوبون استرجاع للعملاء الذين تركوا السلة قبل إتمام الشراء."
-      : "لا توجد سلات متروكة حاليًا، وهذا مؤشر جيد أو يعني أن بيانات السلات لم تظهر بعد من مزامنة سلة."}
-  </div>
-</section>         
-
 <div id="data-quality">
   <ChartBox title="مؤشرات جودة البيانات" accent="#6366f1">
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
-      gap: "14px",
-    }}
-  >
-    </div>
     <div
       style={{
-        background: topProducts.length > 0 ? "#f0fdf4" : "#fef2f2",
-        border: topProducts.length > 0 ? "1px solid #bbf7d0" : "1px solid #fecaca",
-        borderRadius: "16px",
-        padding: "16px",
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "14px",
       }}
     >
-      <div style={{ fontSize: "13px", fontWeight: "800", color: topProducts.length > 0 ? "#166534" : "#991b1b" }}>
-        بيانات المنتجات
+      <div
+        style={{
+          background: topProducts.length > 0 ? "#f0fdf4" : "#fef2f2",
+          border: topProducts.length > 0
+            ? "1px solid #bbf7d0"
+            : "1px solid #fecaca",
+          borderRadius: "16px",
+          padding: "16px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "13px",
+            fontWeight: "800",
+            color: topProducts.length > 0 ? "#166534" : "#991b1b",
+          }}
+        >
+          بيانات المنتجات
+        </div>
+
+        <div
+          style={{
+            marginTop: "8px",
+            fontSize: "22px",
+            fontWeight: "900",
+            color: "#111827",
+          }}
+        >
+          {topProducts.length > 0 ? "مكتملة" : "ناقصة"}
+        </div>
+
+        <p
+          style={{
+            margin: "8px 0 0",
+            color: "#64748b",
+            fontSize: "13px",
+            lineHeight: "1.7",
+          }}
+        >
+          {topProducts.length > 0
+            ? "يمكن تحليل المنتجات الأعلى مبيعًا."
+            : "لا يمكن تحديد المنتجات الأعلى مبيعًا حتى تظهر عناصر الطلبات."}
+        </p>
       </div>
-      <div style={{ marginTop: "8px", fontSize: "22px", fontWeight: "900", color: "#111827" }}>
-        {topProducts.length > 0 ? "مكتملة" : "ناقصة"}
+
+      <div
+        style={{
+          background: topCategories.length > 0 ? "#f0fdf4" : "#fef2f2",
+          border: topCategories.length > 0
+            ? "1px solid #bbf7d0"
+            : "1px solid #fecaca",
+          borderRadius: "16px",
+          padding: "16px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "13px",
+            fontWeight: "800",
+            color: topCategories.length > 0 ? "#166534" : "#991b1b",
+          }}
+        >
+          بيانات الأقسام
+        </div>
+
+        <div
+          style={{
+            marginTop: "8px",
+            fontSize: "22px",
+            fontWeight: "900",
+            color: "#111827",
+          }}
+        >
+          {topCategories.length > 0 ? "مكتملة" : "ناقصة"}
+        </div>
+
+        <p
+          style={{
+            margin: "8px 0 0",
+            color: "#64748b",
+            fontSize: "13px",
+            lineHeight: "1.7",
+          }}
+        >
+          {topCategories.length > 0
+            ? "يمكن تحليل الأقسام الأعلى طلبًا."
+            : "لا يمكن تحليل أداء الأقسام حتى ترتبط المنتجات بتصنيفاتها."}
+        </p>
       </div>
-      <p style={{ margin: "8px 0 0", color: "#64748b", fontSize: "13px", lineHeight: "1.7" }}>
-        {topProducts.length > 0
-          ? "يمكن تحليل المنتجات الأعلى مبيعًا."
-          : "لا يمكن تحديد المنتجات الأعلى مبيعًا حتى تظهر عناصر الطلبات."}
-      </p>
+
+      <div
+        style={{
+          background: topCities.length > 0 ? "#f0fdf4" : "#fef2f2",
+          border: topCities.length > 0
+            ? "1px solid #bbf7d0"
+            : "1px solid #fecaca",
+          borderRadius: "16px",
+          padding: "16px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "13px",
+            fontWeight: "800",
+            color: topCities.length > 0 ? "#166534" : "#991b1b",
+          }}
+        >
+          بيانات المدن
+        </div>
+
+        <div
+          style={{
+            marginTop: "8px",
+            fontSize: "22px",
+            fontWeight: "900",
+            color: "#111827",
+          }}
+        >
+          {topCities.length > 0 ? "مكتملة" : "ناقصة"}
+        </div>
+
+        <p
+          style={{
+            margin: "8px 0 0",
+            color: "#64748b",
+            fontSize: "13px",
+            lineHeight: "1.7",
+          }}
+        >
+          {topCities.length > 0
+            ? "يمكن معرفة المدن الأعلى طلبًا."
+            : "لا توجد بيانات مدن كافية لتحليل التوزيع الجغرافي."}
+        </p>
+      </div>
+
+      <div
+        style={{
+          background: topCustomers.length > 0 ? "#f0fdf4" : "#fef2f2",
+          border: topCustomers.length > 0
+            ? "1px solid #bbf7d0"
+            : "1px solid #fecaca",
+          borderRadius: "16px",
+          padding: "16px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "13px",
+            fontWeight: "800",
+            color: topCustomers.length > 0 ? "#166534" : "#991b1b",
+          }}
+        >
+          بيانات العملاء
+        </div>
+
+        <div
+          style={{
+            marginTop: "8px",
+            fontSize: "22px",
+            fontWeight: "900",
+            color: "#111827",
+          }}
+        >
+          {topCustomers.length > 0 ? "مكتملة" : "ناقصة"}
+        </div>
+
+        <p
+          style={{
+            margin: "8px 0 0",
+            color: "#64748b",
+            fontSize: "13px",
+            lineHeight: "1.7",
+          }}
+        >
+          {topCustomers.length > 0
+            ? "يمكن معرفة العملاء الأعلى قيمة."
+            : "لا توجد بيانات عملاء كافية للتحليل."}
+        </p>
+      </div>
     </div>
 
     <div
       style={{
-        background: topCategories.length > 0 ? "#f0fdf4" : "#fef2f2",
-        border: topCategories.length > 0 ? "1px solid #bbf7d0" : "1px solid #fecaca",
+        marginTop: "16px",
+        background: "#eef2ff",
+        border: "1px solid #c7d2fe",
         borderRadius: "16px",
         padding: "16px",
+        color: "#312e81",
+        lineHeight: "1.9",
+        fontSize: "14px",
       }}
     >
-      <div style={{ fontSize: "13px", fontWeight: "800", color: topCategories.length > 0 ? "#166534" : "#991b1b" }}>
-        بيانات الأقسام
-      </div>
-      <div style={{ marginTop: "8px", fontSize: "22px", fontWeight: "900", color: "#111827" }}>
-        {topCategories.length > 0 ? "مكتملة" : "ناقصة"}
-      </div>
-      <p style={{ margin: "8px 0 0", color: "#64748b", fontSize: "13px", lineHeight: "1.7" }}>
-        {topCategories.length > 0
-          ? "يمكن تحليل الأقسام الأعلى طلبًا."
-          : "لا يمكن تحليل أداء الأقسام حتى ترتبط المنتجات بتصنيفاتها."}
-      </p>
+      <strong>قراءة جودة البيانات:</strong>{" "}
+      كلما اكتملت بيانات المنتجات، الأقسام، العملاء، المدن، طرق الدفع،
+      والسلات المتروكة؛ أصبحت التوصيات أدق وأكثر فائدة للتاجر.
     </div>
-
-    <div
-      style={{
-        background: topCities.length > 0 ? "#f0fdf4" : "#fef2f2",
-        border: topCities.length > 0 ? "1px solid #bbf7d0" : "1px solid #fecaca",
-        borderRadius: "16px",
-        padding: "16px",
-      }}
-    >
-      <div style={{ fontSize: "13px", fontWeight: "800", color: topCities.length > 0 ? "#166534" : "#991b1b" }}>
-        بيانات المدن
-      </div>
-      <div style={{ marginTop: "8px", fontSize: "22px", fontWeight: "900", color: "#111827" }}>
-        {topCities.length > 0 ? "مكتملة" : "ناقصة"}
-      </div>
-      <p style={{ margin: "8px 0 0", color: "#64748b", fontSize: "13px", lineHeight: "1.7" }}>
-        {topCities.length > 0
-          ? "يمكن معرفة المدن الأعلى طلبًا."
-          : "لا توجد بيانات مدن كافية لتحليل التوزيع الجغرافي."}
-      </p>
-    </div>
-
-    <div
-      style={{
-        background: topCustomers.length > 0 ? "#f0fdf4" : "#fef2f2",
-        border: topCustomers.length > 0 ? "1px solid #bbf7d0" : "1px solid #fecaca",
-        borderRadius: "16px",
-        padding: "16px",
-      }}
-    >
-      <div style={{ fontSize: "13px", fontWeight: "800", color: topCustomers.length > 0 ? "#166534" : "#991b1b" }}>
-        بيانات العملاء
-      </div>
-      <div style={{ marginTop: "8px", fontSize: "22px", fontWeight: "900", color: "#111827" }}>
-        {topCustomers.length > 0 ? "مكتملة" : "ناقصة"}
-      </div>
-      <p style={{ margin: "8px 0 0", color: "#64748b", fontSize: "13px", lineHeight: "1.7" }}>
-        {topCustomers.length > 0
-          ? "يمكن معرفة العملاء الأعلى قيمة."
-          : "لا توجد بيانات عملاء كافية للتحليل."}
-      </p>
-    </div>
-
-  <div
-    style={{
-      marginTop: "16px",
-      background: "#eef2ff",
-      border: "1px solid #c7d2fe",
-      borderRadius: "16px",
-      padding: "16px",
-      color: "#312e81",
-      lineHeight: "1.9",
-      fontSize: "14px",
-    }}
-  >
-    <strong>قراءة جودة البيانات:</strong>{" "}
-    كلما اكتملت بيانات المنتجات، الأقسام، العملاء، المدن، طرق الدفع، والسلات المتروكة؛ أصبحت التوصيات أدق وأكثر فائدة للتاجر.
-  </div>
-</ChartBox>
+  </ChartBox>
+</div>
 
 <div id="regions-analysis">
   <ChartBox title="تحليل المناطق الإدارية" accent="#14b8a6">
-  {regionsInsights.length > 0 ? (
-    <div style={{ display: "grid", gap: "12px" }}>
-      {regionsInsights.map((region, index) => (
-<div
-  key={index}
-  style={{
-    display: "grid",
-    gridTemplateColumns: "1.4fr 0.8fr 1fr 1.2fr",
-    gap: "12px",
-    alignItems: "center",
-    background: index === 0 ? "#ecfeff" : "#f8fafc",
-    border: index === 0 ? "1px solid #67e8f9" : "1px solid #e2e8f0",
-    borderRadius: "14px",
-    padding: "14px",
-  }}
->
-  <div>
-    <strong style={{ color: "#0f172a" }}>
-      {index === 0 ? "🏆 " : ""}
-      {region.region || "غير محدد"}
-    </strong>
+    {regionsInsights.length > 0 ? (
+      <div style={{ display: "grid", gap: "12px" }}>
+        {regionsInsights.map((region, index) => (
+          <div
+            key={index}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.4fr 0.8fr 1fr 1.2fr",
+              gap: "12px",
+              alignItems: "center",
+              background: index === 0 ? "#ecfeff" : "#f8fafc",
+              border:
+                index === 0
+                  ? "1px solid #67e8f9"
+                  : "1px solid #e2e8f0",
+              borderRadius: "14px",
+              padding: "14px",
+            }}
+          >
+            <div>
+              <strong style={{ color: "#0f172a" }}>
+                {index === 0 ? "🏆 " : ""}
+                {region.region || "غير محدد"}
+              </strong>
 
-    <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "13px" }}>
-      المدن: {(region.cities || []).join("، ") || "غير محدد"}
-    </p>
-  </div>
+              <p
+                style={{
+                  margin: "6px 0 0",
+                  color: "#64748b",
+                  fontSize: "13px",
+                }}
+              >
+                المدن: {(region.cities || []).join("، ") || "غير محدد"}
+              </p>
+            </div>
 
-          <div style={{ textAlign: "center" }}>
-            <div style={{ color: "#64748b", fontSize: "12px" }}>الطلبات</div>
-            <strong>{region.total_orders || 0}</strong>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ color: "#64748b", fontSize: "12px" }}>
+                الطلبات
+              </div>
+              <strong>{region.total_orders || 0}</strong>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              <div style={{ color: "#64748b", fontSize: "12px" }}>
+                الإيرادات
+              </div>
+              <strong>{region.total_revenue || 0} ريال</strong>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              <div style={{ color: "#64748b", fontSize: "12px" }}>
+                متوسط الطلب
+              </div>
+
+              <strong>
+                {region.total_orders > 0
+                  ? Math.round(
+                      (region.total_revenue || 0) /
+                        region.total_orders
+                    )
+                  : 0}{" "}
+                ريال
+              </strong>
+            </div>
           </div>
-
-          <div style={{ textAlign: "center" }}>
-            <div style={{ color: "#64748b", fontSize: "12px" }}>الإيرادات</div>
-            <strong>{region.total_revenue || 0} ريال</strong>
-          </div>
-
-          <div style={{ textAlign: "center" }}>
-            <div style={{ color: "#64748b", fontSize: "12px" }}>متوسط الطلب</div>
-            <strong>
-              {region.total_orders > 0
-                ? Math.round((region.total_revenue || 0) / region.total_orders)
-                : 0}{" "}
-              ريال
-            </strong>
-          </div>
-        </div>
-      ))}
-    </div>
-  ) : (
-    <div style={{ color: "#64748b", lineHeight: "1.8" }}>
-      لا توجد بيانات مناطق كافية حتى الآن.
-    </div>
-  )}
-</ChartBox>
-
-  <div id="visual-charts">
+        ))}
+      </div>
+    ) : (
+      <div style={{ color: "#64748b", lineHeight: "1.8" }}>
+        لا توجد بيانات مناطق كافية حتى الآن.
+      </div>
+    )}
+  </ChartBox>
+</div>
 <ChartsClient
   summary={summary}
   topCities={topCities}
