@@ -3,7 +3,9 @@ export default function DataQualitySection({
   styles,
 }) {
   return (
-    <section style={styles.section}>
+    <section
+      id="data-quality"
+      style={styles.section}>
       <p style={styles.sectionEyebrow}>جودة البيانات</p>
 
       <h2 style={styles.sectionTitle}>
