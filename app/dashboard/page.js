@@ -346,6 +346,12 @@ const dataQualityAlerts = [
           >
             تحديث لوحة التحكم
           </a>
+              <a
+  href={`/charts?merchant_id=${merchantId}`}
+  style={styles.refreshButton}
+>
+  لوحة الرسوم والتحليلات
+</a>
         </div>
       </div>
 
