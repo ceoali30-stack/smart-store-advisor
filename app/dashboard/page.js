@@ -1,3 +1,4 @@
+import TodayPrioritiesSection from "./TodayPrioritiesSection";
 import DataQualitySection from "./DataQualitySection";
 import RecommendationsSection from "./RecommendationsSection";
 import TopProductsTable from "./TopProductsTable";
