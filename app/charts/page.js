@@ -861,71 +861,16 @@ id="abandoned-carts"
     )}
   </ChartBox>
 
-  <ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
-    {topCustomers.length > 0 ? (
-      <div style={{ display: "grid", gap: "12px" }}>
-        {topCustomers.slice(0, 5).map((item, index) => {
-          const totalRevenue = Number(item.total_revenue || 0);
-          const totalOrders = Number(item.total_orders || 0);
-          const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-          return (
-            <div
-              key={index}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.4fr 0.8fr 1fr 1fr",
-                gap: "12px",
-                alignItems: "center",
-                background: index === 0 ? "#eff6ff" : "#f8fafc",
-                border: index === 0 ? "1px solid #93c5fd" : "1px solid #e2e8f0",
-                borderRadius: "14px",
-                padding: "12px 14px",
-              }}
-            >
-              <div>
-                <div style={{ fontWeight: "800", color: "#0f172a" }}>
-                  {index === 0 ? "🏆 " : ""}
-                  {item.name || "عميل غير محدد"}
-                </div>
-                <div style={{ fontSize: "12px", color: "#64748b", marginTop: "4px" }}>
-                  العميل رقم {index + 1}
-                </div>
-              </div>
-
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "12px", color: "#64748b" }}>الطلبات</div>
-                <strong style={{ color: "#0f172a" }}>{totalOrders}</strong>
-              </div>
-
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "12px", color: "#64748b" }}>إجمالي الشراء</div>
-                <strong style={{ color: "#16a34a" }}>
-                  {totalRevenue.toLocaleString("ar-SA")} ريال
-                </strong>
-              </div>
-
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "12px", color: "#64748b" }}>متوسط الفاتورة</div>
-                <strong style={{ color: "#2563eb" }}>
-                  {Math.round(avgOrder).toLocaleString("ar-SA")} ريال
-                </strong>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    ) : (
-      <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
-        <strong style={{ color: "#0f172a" }}>
-          لا توجد بيانات عملاء كافية حتى الآن.
-        </strong>
-        <p style={{ margin: "10px 0 0" }}>
-          عند توفر بيانات العملاء، سيظهر هنا أكثر العملاء تكرارًا وشراءً لمساعدة التاجر على بناء عروض ولاء واستهداف العملاء الأعلى قيمة.
-        </p>
-      </div>
-    )}
-  </ChartBox>
+<ChartBox title="أكثر 5 عملاء شراءً" accent="#0ea5e9">
+  <div style={{ color: "#64748b", lineHeight: "1.8", fontSize: "15px" }}>
+    <strong style={{ color: "#0f172a" }}>
+      قسم العملاء قيد المراجعة.
+    </strong>
+    <p style={{ margin: "10px 0 0" }}>
+      سيتم إعادة تفعيل تحليل العملاء بعد تثبيت بنية الصفحة.
+    </p>
+  </div>
+</ChartBox>
 </div>
 </div>
 </main>
