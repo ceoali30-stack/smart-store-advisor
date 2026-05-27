@@ -117,16 +117,21 @@ export default async function DashboardPage({ searchParams }) {
       ? onlyLowStockProducts
       : lowStockProducts;
 
- const stagnantProducts = lowStockProducts
+const topProductsMap = {};
+
+(salesInsights?.top_products || []).forEach((product) => {
+  topProductsMap[product.product_name] = product;
+});
+
+const stagnantProducts = lowStockProducts
   .filter((product) => {
     const quantity = Number(product.quantity || 0);
 
-    const soldCount = Number(
-      product.sold_count ||
-      product.sales_count ||
-      product.total_sold ||
-      0
-    );
+    const salesData =
+      topProductsMap[product.name] ||
+      topProductsMap[product.product_name];
+
+    const soldCount = Number(salesData?.sold_count || 0);
 
     return quantity > 0 && soldCount === 0;
   })
