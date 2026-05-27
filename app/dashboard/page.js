@@ -1257,5 +1257,4 @@ demoNotice: {
   lineHeight: "1.7",
 },
     
-  },
 };
