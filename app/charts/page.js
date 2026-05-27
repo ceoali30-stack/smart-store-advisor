@@ -246,6 +246,7 @@ const maxCustomerValue = Math.max(
       </div>
 
       <div
+ id="charts-summary"
         style={{
           display: "grid",
          gridTemplateColumns: "repeat(2, minmax(320px, 1fr))",
@@ -378,6 +379,7 @@ const maxCustomerValue = Math.max(
   </div>
 </div>
 <section
+id="merchant-decisions"
  className="print-section"
   style={{
     background: "white",
@@ -477,6 +479,7 @@ const maxCustomerValue = Math.max(
 </section>
 
 <div
+id="regions-map"
   className="print-section"
   style={{
     width: "100%",
@@ -487,6 +490,7 @@ const maxCustomerValue = Math.max(
 </div>
           
 <section
+id="abandoned-carts"
  className="print-section"
   style={{
     background: "white",
@@ -556,7 +560,8 @@ const maxCustomerValue = Math.max(
   </div>
 </section>         
 
-<ChartBox title="مؤشرات جودة البيانات" accent="#6366f1">
+<div id="data-quality">
+  <ChartBox title="مؤشرات جودة البيانات" accent="#6366f1">
   <div
     style={{
       display: "grid",
@@ -564,6 +569,7 @@ const maxCustomerValue = Math.max(
       gap: "14px",
     }}
   >
+    </div>
     <div
       style={{
         background: topProducts.length > 0 ? "#f0fdf4" : "#fef2f2",
@@ -666,7 +672,8 @@ const maxCustomerValue = Math.max(
   </div>
 </ChartBox>
 
-<ChartBox title="تحليل المناطق الإدارية" accent="#14b8a6">
+<div id="regions-analysis">
+  <ChartBox title="تحليل المناطق الإدارية" accent="#14b8a6">
   {regionsInsights.length > 0 ? (
     <div style={{ display: "grid", gap: "12px" }}>
       {regionsInsights.map((region, index) => (
@@ -683,6 +690,7 @@ const maxCustomerValue = Math.max(
             padding: "14px",
           }}
         >
+               </div>
           <div>
             <strong style={{ color: "#0f172a" }}>
               {index === 0 ? "🏆 " : ""}
@@ -721,13 +729,15 @@ const maxCustomerValue = Math.max(
     </div>
   )}
 </ChartBox>
-  
+
+  <div id="visual-charts">
 <ChartsClient
   summary={summary}
   topCities={topCities}
   paymentMethods={salesInsights?.payment_methods_insights || []}
   salesChannels={salesInsights?.sales_channels_insights || []}
 />
+  </div>
       <div
         style={{
   display: "grid",
