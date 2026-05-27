@@ -222,7 +222,9 @@ const maxCustomerValue = Math.max(
 >
   هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي. الهدف الحالي هو اختبار التحليلات وطريقة العرض.
 </div>
-      
+
+<ChartsQuickNav />
+    
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <a
             href={`/dashboard?merchant_id=${merchantId}`}
