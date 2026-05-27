@@ -1,3 +1,4 @@
+import TopProductsTable from "./TopProductsTable";
 import HealthSection from "./HealthSection";
 import NavBar from "./NavBar";
 import PrintButton from "./PrintButton";
