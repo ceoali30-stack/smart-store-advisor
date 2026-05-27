@@ -653,7 +653,6 @@ id="abandoned-carts"
           : "لا توجد بيانات عملاء كافية للتحليل."}
       </p>
     </div>
-  </div>
 
   <div
     style={{
