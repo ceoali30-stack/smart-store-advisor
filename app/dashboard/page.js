@@ -1,3 +1,4 @@
+import RecommendationsSection from "./RecommendationsSection";
 import TopProductsTable from "./TopProductsTable";
 import HealthSection from "./HealthSection";
 import NavBar from "./NavBar";
