@@ -800,6 +800,7 @@ id="abandoned-carts"
     )}
   </ChartBox>
 </div>
+    <div id="visual-charts">
 <ChartsClient
   summary={summary}
   topCities={topCities}
