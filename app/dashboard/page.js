@@ -336,7 +336,7 @@ const dataQualityAlerts = [
           <h1 style={styles.mainTitle}>مستشار المتجر الذكي</h1>
           <p style={styles.mutedWhite}>رقم المتجر: {merchantId}</p>
         </div>
-
+    
         <div style={styles.actions}>
           <SyncOrdersButton merchantId={merchantId} />
           <PrintButton />
@@ -349,6 +349,11 @@ const dataQualityAlerts = [
         </div>
       </div>
 
+<div style={styles.demoNotice}>
+  هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي.
+  الهدف الحالي هو اختبار التحليلات وطريقة العرض.
+</div>
+              
       <section style={styles.healthSection}>
         <div style={styles.healthCircle}>
           <div style={styles.healthNumber}>{storeHealthPercentage}%</div>
@@ -1232,11 +1237,25 @@ const styles = {
     lineHeight: "1.8",
   },
 
-  errorBox: {
-    background: "white",
-    padding: "28px",
-    borderRadius: "16px",
-    border: "1px solid #fecaca",
-    color: "#991b1b",
+ errorBox: {
+  background: "white",
+  padding: "28px",
+  borderRadius: "16px",
+  border: "1px solid #fecaca",
+  color: "#991b1b",
+},
+
+demoNotice: {
+  background: "#fffbeb",
+  border: "1px solid #fde68a",
+  color: "#92400e",
+  padding: "12px 16px",
+  borderRadius: "12px",
+  marginBottom: "20px",
+  fontSize: "14px",
+  fontWeight: "700",
+  lineHeight: "1.7",
+},
+    
   },
 };
