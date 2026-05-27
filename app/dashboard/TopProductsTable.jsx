@@ -5,7 +5,9 @@ export default function TopProductsTable({
   EmptyBox,
 }) {
   return (
-    <section style={styles.section}>
+    <section
+       id="top-products"
+      style={styles.section}>
       <p style={styles.sectionEyebrow}>المنتجات</p>
 
       <h2 style={styles.sectionTitle}>أفضل المنتجات مبيعًا</h2>
