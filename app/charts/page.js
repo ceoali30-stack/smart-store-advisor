@@ -1,3 +1,4 @@
+import ChartsQuickNav from "./ChartsQuickNav";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
