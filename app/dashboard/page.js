@@ -1,3 +1,4 @@
+import DataQualitySection from "./DataQualitySection";
 import RecommendationsSection from "./RecommendationsSection";
 import TopProductsTable from "./TopProductsTable";
 import HealthSection from "./HealthSection";
