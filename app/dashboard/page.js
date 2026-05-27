@@ -117,9 +117,20 @@ export default async function DashboardPage({ searchParams }) {
       ? onlyLowStockProducts
       : lowStockProducts;
 
-  const stagnantProducts = lowStockProducts
-    .filter((product) => Number(product.quantity || 0) > 0)
-    .slice(0, 10);
+ const stagnantProducts = lowStockProducts
+  .filter((product) => {
+    const quantity = Number(product.quantity || 0);
+
+    const soldCount = Number(
+      product.sold_count ||
+      product.sales_count ||
+      product.total_sold ||
+      0
+    );
+
+    return quantity > 0 && soldCount === 0;
+  })
+  .slice(0, 10);
 
   const totalProductsCount = Number(
   products.length || lowStockProducts.length || 0
