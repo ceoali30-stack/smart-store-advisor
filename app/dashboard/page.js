@@ -1,3 +1,4 @@
+import QuickNav from "./QuickNav";
 import KpiSummarySection from "./KpiSummarySection";
 import TodayPrioritiesSection from "./TodayPrioritiesSection";
 import DataQualitySection from "./DataQualitySection";
