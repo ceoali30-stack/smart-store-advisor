@@ -238,6 +238,44 @@ const productsWithCost = productsForDataQuality.filter(
     .sort((a, b) => b.profit - a.profit)
     .slice(0, 10);
 
+  const productsWithoutCost = productsForDataQuality.filter(
+  (product) => Number(product.cost_price || product.raw_data?.cost_price || 0) <= 0
+).length;
+
+const productsWithoutPrice = productsForDataQuality.filter(
+  (product) => Number(product.price || 0) <= 0
+).length;
+
+const productsWithoutName = productsForDataQuality.filter(
+  (product) => !product.name
+).length;
+
+const ordersWithoutCity = Number(
+  salesInsights?.summary?.orders_without_city || 0
+);
+
+const dataQualityAlerts = [
+  {
+    title: "منتجات بدون سعر تكلفة",
+    value: productsWithoutCost,
+    message: "تؤثر على حساب الربحية والهامش.",
+  },
+  {
+    title: "منتجات بدون سعر بيع",
+    value: productsWithoutPrice,
+    message: "تؤثر على دقة تحليل الإيرادات.",
+  },
+  {
+    title: "منتجات بدون اسم",
+    value: productsWithoutName,
+    message: "تجعل التقارير أقل وضوحًا.",
+  },
+  {
+    title: "طلبات بدون مدينة",
+    value: ordersWithoutCity,
+    message: "تؤثر على تحليل المناطق والمدن.",
+  },
+];
   const marketingSuggestions = [];
 
   if (topProduct !== "غير متوفر") {
@@ -432,6 +470,23 @@ const productsWithCost = productsForDataQuality.filter(
         )}
       </section>
 
+          <section style={styles.section}>
+  <p style={styles.sectionEyebrow}>جودة البيانات</p>
+  <h2 style={styles.sectionTitle}>تنبيهات تؤثر على دقة التحليل</h2>
+
+  <div style={styles.cardsGrid}>
+    {dataQualityAlerts.map((item, index) => (
+      <div key={index} style={styles.kpiCard}>
+        <p style={styles.kpiTitle}>{item.title}</p>
+        <h3 style={styles.kpiValue}>{item.value}</h3>
+        <p style={{ margin: "8px 0 0", color: "#64748b", lineHeight: "1.7" }}>
+          {item.message}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+      
       <section style={styles.section}>
         <p style={styles.sectionEyebrow}>التوصيات</p>
         <h2 style={styles.sectionTitle}>توصيات ذكية لتحسين الأداء</h2>
