@@ -69,6 +69,54 @@ export async function GET(request) {
           order.grand_total ||
           0
       );
+    const cleanText = (value, fallback = "غير محدد") => {
+  if (!value) return fallback;
+
+  const text = String(value).trim();
+
+  if (
+    text === "" ||
+    text.toLowerCase() === "null" ||
+    text.toLowerCase() === "undefined" ||
+    text === "-"
+  ) {
+    return fallback;
+  }
+
+  return text;
+};
+
+const normalizeCity = (order) => {
+  return cleanText(
+    order.city ||
+      order.customer_city ||
+      order.shipping_city ||
+      order.billing_city,
+    "غير محدد"
+  );
+};
+
+const normalizePaymentMethod = (order) => {
+  return cleanText(
+    order.payment_method_label || order.payment_method,
+    "غير محدد"
+  );
+};
+
+const normalizeSalesChannel = (order) => {
+  return cleanText(
+    order.sales_channel || order.source || order.source_details,
+    "غير محدد"
+  );
+};
+
+const normalizeProductName = (item) => {
+  return cleanText(item.product_name, "منتج غير معروف");
+};
+
+const normalizeCategoryName = (item) => {
+  return cleanText(item.category_name, "غير مصنف");
+};
 
     const getTopKey = (obj) => {
       const entries = Object.entries(obj || {});
@@ -114,7 +162,7 @@ export async function GET(request) {
 const productMap = {};
 
 for (const item of safeItems) {
-  const name = item.product_name || "منتج غير معروف";
+  const name = normalizeProductName(item);
 
   if (!productMap[name]) {
     productMap[name] = {
@@ -139,7 +187,7 @@ const topProducts = Object.values(productMap).sort(
     const categoryMap = {};
 
     for (const item of safeItems) {
-      const category = item.category_name || "غير مصنف";
+      const category = normalizeCategoryName(item);
 
       if (!categoryMap[category]) {
         categoryMap[category] = {
@@ -227,12 +275,7 @@ const topProducts = Object.values(productMap).sort(
     const ordersByCity = {};
 
     safeOrders.forEach((order) => {
-      const city =
-        order.city ||
-        order.customer_city ||
-        order.shipping_city ||
-        order.billing_city ||
-        "غير محدد";
+const city = normalizeCity(order);
 
       if (!ordersByCity[city]) {
         ordersByCity[city] = {
@@ -314,14 +357,12 @@ const topProducts = Object.values(productMap).sort(
         ordersByRegion[region].cities.push(city);
       }
 
-      const paymentMethod =
-        order.payment_method_label || order.payment_method || "غير محدد";
+const paymentMethod = normalizePaymentMethod(order);
 
       ordersByRegion[region].payment_methods[paymentMethod] =
         (ordersByRegion[region].payment_methods[paymentMethod] || 0) + 1;
 
-      const source =
-        order.sales_channel || order.source || order.source_details || "غير محدد";
+const source = normalizeSalesChannel(order);
 
       ordersByRegion[region].sales_channels[source] =
         (ordersByRegion[region].sales_channels[source] || 0) + 1;
