@@ -289,15 +289,6 @@ const city = normalizeCity(order);
       ordersByCity[city].total_revenue += getOrderTotal(order);
     });
 
-const normalizeArabicText = (value) => {
-  return cleanText(value, "")
-    .replace(/[إأآا]/g, "ا")
-    .replace(/ة/g, "ه")
-    .replace(/ى/g, "ي")
-    .replace(/\s+/g, " ")
-    .trim();
-};
-
 const cityToRegion = {
   الرياض: "منطقة الرياض",
   الخرج: "منطقة الرياض",
@@ -345,7 +336,6 @@ const cityToRegion = {
   القريات: "منطقة الجوف",
 };
 
-const getRegionFromCity = (city) => {
   const normalizedCity = normalizeArabicText(city);
 
   if (!normalizedCity) return "غير محدد";
@@ -363,7 +353,7 @@ const getRegionFromCity = (city) => {
         order.billing_city ||
         "غير محدد";
 
-     const region = getRegionFromCity(city);
+     const region = cityToRegion[city] || "غير محدد";
       const orderTotal = getOrderTotal(order);
 
       if (!ordersByRegion[region]) {
