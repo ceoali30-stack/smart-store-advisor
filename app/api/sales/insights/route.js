@@ -450,3 +450,14 @@ return Response.json({
   sales_channels_insights: salesChannelsInsights,
   recommendations,
 });
+} catch (error) {
+  return Response.json(
+    {
+      success: false,
+      message: "Unexpected server error",
+      error: String(error),
+    },
+    { status: 500 }
+  );
+}
+}
