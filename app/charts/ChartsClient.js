@@ -279,7 +279,6 @@ return (
             </BarChart>
           </ResponsiveContainer>
         </div>
-  </div>
  </div>
 </div>
             <div
