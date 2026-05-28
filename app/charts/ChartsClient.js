@@ -171,12 +171,12 @@ return (
           مقارنة الأداء
         </h3>
 
-        <div style={{ width: "100%", height: "260px" }}>
+        <div style={{ width: "100%", height: "300px" }}>
           <ResponsiveContainer>
             <BarChart data={performanceData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
-              <XAxis dataKey="name" stroke="#e5e7eb" />
-              <YAxis stroke="#e5e7eb" />
+              <XAxis dataKey="name" stroke="#e5e7eb" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#e5e7eb" tick={{ fontSize: 11 }} />
               <Tooltip />
               <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#f97316" />
             </BarChart>
@@ -242,12 +242,12 @@ return (
           أكثر 3 مدن طلبًا
         </h3>
 
-        <div style={{ width: "100%", height: "210px" }}>
+        <div style={{ width: "100%", height: "240px" }}>
           <ResponsiveContainer>
             <BarChart data={topCitiesData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
-              <XAxis dataKey="name" stroke="#e5e7eb" />
-              <YAxis stroke="#e5e7eb" />
+              <XAxis dataKey="name" stroke="#e5e7eb" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#e5e7eb" tick={{ fontSize: 11 }} />
               <Tooltip />
               <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#22c55e" />
             </BarChart>
