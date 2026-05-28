@@ -242,7 +242,7 @@ return (
           أكثر 3 مدن طلبًا
         </h3>
 
-        <div style={{ width: "100%", height: "240px" }}>
+        <div style={{ width: "100%", height: "300px" }}>
           <ResponsiveContainer>
             <BarChart data={topCitiesData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.16)" />
