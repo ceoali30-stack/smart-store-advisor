@@ -281,7 +281,8 @@ return (
         </div>
  </div>
 </div>
-            <div
+            
+<div
   style={{
     background: "rgba(255,255,255,0.08)",
     border: "1px solid rgba(255,255,255,0.12)",
@@ -297,7 +298,7 @@ return (
   <div
     style={{
       display: "grid",
-      gap: "12px",
+      gap: "20px",
       color: "#e5e7eb",
       fontSize: "13px",
       lineHeight: "1.8",
