@@ -291,7 +291,7 @@ return (
     minHeight: "260px",
   }}
 >
-  <h3 style={{ margin: "0 0 14px", fontSize: "18px" }}>
+  <h3 style={{ margin: "0 0 20px", fontSize: "18px" }}>
     قراءة تفصيلية
   </h3>
 
@@ -300,7 +300,7 @@ return (
       display: "grid",
       gap: "20px",
       color: "#e5e7eb",
-      fontSize: "13px",
+      fontSize: "18px",
       lineHeight: "1.8",
     }}
   >
