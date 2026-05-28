@@ -184,6 +184,22 @@ return (
         </div>
       </div>
 
+<div
+  style={{
+    marginTop: "12px",
+    background: "rgba(255,255,255,0.08)",
+    borderRadius: "14px",
+    padding: "12px",
+    color: "#e5e7eb",
+    fontSize: "13px",
+    lineHeight: "1.8",
+  }}
+>
+  <strong style={{ color: "white" }}>ماذا يعني هذا؟</strong>
+  <br />
+  يقارن هذا الرسم بين الطلبات، متوسط قيمة الطلب، والإيرادات لمساعدة التاجر على معرفة هل النمو قادم من عدد الطلبات أم من قيمة الفاتورة.
+</div>
+            
       <div
         style={{
           background: "rgba(255,255,255,0.08)",
