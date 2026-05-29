@@ -1,29 +1,38 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { embedded } from "@salla.sa/embedded-sdk";
 
 export default function EmbeddedDashboardPage() {
-  useEffect(() => {
-    async function initEmbedded() {
-      try {
-        await embedded.init({ debug: true });
+  const [info, setInfo] = useState(null);
 
-        embedded.page.setTitle("مستشار المتجر الذكي");
+  useEffect(() => {
+    async function init() {
+      try {
+        await embedded.init();
+
+        const result = await embedded.auth.introspect();
+
+        console.log("INTROSPECT RESULT:", result);
+
+        setInfo(result);
 
         embedded.ready();
-      } catch (error) {
-        console.error("Salla Embedded SDK error:", error);
+      } catch (e) {
+        console.error(e);
       }
     }
 
-    initEmbedded();
+    init();
   }, []);
 
   return (
-    <main style={{ padding: "40px", direction: "rtl", fontFamily: "Arial" }}>
-      <h1>مستشار المتجر الذكي</h1>
-      <p>تم تحميل الصفحة المضمنة بنجاح.</p>
-    </main>
+    <div style={{ padding: 40, direction: "rtl" }}>
+      <h1>اختبار بيانات المتجر</h1>
+
+      <pre>
+        {JSON.stringify(info, null, 2)}
+      </pre>
+    </div>
   );
 }
