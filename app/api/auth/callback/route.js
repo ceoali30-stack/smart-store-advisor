@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { createMerchantSession } from "../../lib/session";
+import { createMerchantSession } from "../../../lib/session";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
