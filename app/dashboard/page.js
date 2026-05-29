@@ -208,10 +208,9 @@ const productsInStockCount =
   Math.max(0, totalProductsCount - lowStockCount);
 
 const stockHealthScore =
-  productsWithKnownStockCount > 0
-    ? Math.min(25, (productsInStockCount / productsWithKnownStockCount) * 25)
+  totalProductsCount > 0
+    ? Math.max(0, 25 - Math.min(25, (lowStockCount / totalProductsCount) * 10))
     : 0;
-
   const stagnantHealthScore =
     totalProductsCount > 0
       ? Math.max(
