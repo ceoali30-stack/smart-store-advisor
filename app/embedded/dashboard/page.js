@@ -1,25 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { embedded } from "@salla.sa/embedded-sdk";
 
 export default function EmbeddedDashboardPage() {
-  const [info, setInfo] = useState(null);
-
   useEffect(() => {
     async function init() {
       try {
-        await embedded.init();
+        await embedded.init({ debug: true });
 
         const result = await embedded.auth.introspect();
 
-        console.log("INTROSPECT RESULT:", result);
+        if (!result?.isVerified || !result?.data?.merchant_id) {
+          embedded.ready();
+          return;
+        }
 
-        setInfo(result);
+        const merchantId = result.data.merchant_id;
 
+        embedded.page.setTitle("مستشار المتجر الذكي");
         embedded.ready();
-      } catch (e) {
-        console.error(e);
+
+        window.location.href = `/dashboard?merchant_id=${merchantId}`;
+      } catch (error) {
+        console.error("Embedded dashboard error:", error);
+        embedded.ready();
       }
     }
 
@@ -27,12 +32,9 @@ export default function EmbeddedDashboardPage() {
   }, []);
 
   return (
-    <div style={{ padding: 40, direction: "rtl" }}>
-      <h1>اختبار بيانات المتجر</h1>
-
-      <pre>
-        {JSON.stringify(info, null, 2)}
-      </pre>
-    </div>
+    <main style={{ padding: 40, direction: "rtl", fontFamily: "Arial" }}>
+      <h1>جاري فتح مستشار المتجر الذكي...</h1>
+      <p>يتم التحقق من بيانات المتجر وتحميل لوحة التحكم.</p>
+    </main>
   );
 }
