@@ -202,8 +202,7 @@ const productsWithCost = productsForDataQuality.filter(
   (product) => Number(product.cost_price || product.raw_data?.cost_price || 0) > 0
 ).length;
 
- const productsWithKnownStockCount =
-  Number(dashboardData?.products_with_known_stock_count || 0);
+ const productsWithKnownStockCount = totalProductsCount;
 
 const productsInStockCount =
   Math.max(0, totalProductsCount - lowStockCount);
