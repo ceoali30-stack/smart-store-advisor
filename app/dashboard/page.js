@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+import { verifyMerchantSession } from "../lib/session";
+
 import QuickNav from "./QuickNav";
 import KpiSummarySection from "./KpiSummarySection";
 import TodayPrioritiesSection from "./TodayPrioritiesSection";
@@ -27,13 +30,15 @@ function formatNumber(value) {
 
 export default async function DashboardPage({ searchParams }) {
   const params = await searchParams;
-  const stockFilter = params?.stock || "all";
-  const merchantId = params?.merchant_id;
+const stockFilter = params?.stock || "all";
 
-  if (!merchantId) {
-    redirect("/");
-  }
+const cookieStore = await cookies();
+const sessionCookie = cookieStore.get("merchant_session")?.value;
+const merchantId = verifyMerchantSession(sessionCookie);
 
+if (!merchantId) {
+  redirect("/");
+}
   const { data: merchant, error: merchantError } = await supabase
     .from("merchants")
     .select("merchant_id")
@@ -62,7 +67,7 @@ export default async function DashboardPage({ searchParams }) {
 
   try {
     const res = await fetch(
-      `${baseUrl}/api/dashboard?merchant_id=${merchantId}`,
+     `${baseUrl}/api/dashboard`
       { cache: "no-store" }
     );
 
@@ -77,7 +82,7 @@ export default async function DashboardPage({ searchParams }) {
 
   try {
     const syncRes = await fetch(
-      `${baseUrl}/api/sync/status?merchant_id=${merchantId}`,
+     `${baseUrl}/api/sync/status`
       { cache: "no-store" }
     );
     syncStatus = await syncRes.json();
@@ -87,7 +92,7 @@ export default async function DashboardPage({ searchParams }) {
 
   try {
     const salesRes = await fetch(
-      `${baseUrl}/api/sales/insights?merchant_id=${merchantId}`,
+      `${baseUrl}/api/sales/insights`
       { cache: "no-store" }
     );
     salesInsights = await salesRes.json();
