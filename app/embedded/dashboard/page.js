@@ -1,6 +1,4 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createMerchantSession } from "../../lib/session";
 
 export default async function EmbeddedDashboardPage({ searchParams }) {
   const params = await searchParams;
@@ -16,15 +14,5 @@ export default async function EmbeddedDashboardPage({ searchParams }) {
     redirect("/");
   }
 
-  const cookieStore = await cookies();
-
-  cookieStore.set("merchant_session", createMerchantSession(String(merchantId)), {
-    path: "/",
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 60 * 60 * 24 * 30,
-  });
-
-  redirect("/dashboard");
+  redirect(`/dashboard?merchant_id=${merchantId}`);
 }
