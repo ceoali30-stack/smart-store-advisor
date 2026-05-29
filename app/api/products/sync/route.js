@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+import { verifyMerchantSession } from "../../../lib/session";
+
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -8,17 +11,16 @@ const supabase = createClient(
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const merchantId = searchParams.get("merchant_id");
+    const cookieStore = await cookies();
+const sessionCookie = cookieStore.get("merchant_session")?.value;
+const merchantId = verifyMerchantSession(sessionCookie);
 
-    if (!merchantId) {
-      return Response.json(
-        {
-          success: false,
-          message: "merchant_id is required"
-        },
-        { status: 400 }
-      );
-    }
+if (!merchantId) {
+  return Response.json(
+    { success: false, message: "Unauthorized" },
+    { status: 401 }
+  );
+}
 
     const { data: merchant, error: merchantError } = await supabase
       .from("merchants")
