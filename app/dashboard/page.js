@@ -67,7 +67,7 @@ if (!merchantId) {
 
   try {
     const res = await fetch(
-     `${baseUrl}/api/dashboard`
+    `${baseUrl}/api/dashboard`,
       { cache: "no-store" }
     );
 
