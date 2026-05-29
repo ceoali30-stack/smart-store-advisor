@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createMerchantSession } from "@/app/lib/session";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -130,9 +131,19 @@ export async function GET(request) {
       );
     }
 
-    return Response.redirect(
-      `https://smart-store-advisor.vercel.app/dashboard?merchant_id=${merchantId}`
-    );
+  const sessionValue = createMerchantSession(String(merchantId));
+    
+const redirectResponse = Response.redirect(
+  "https://smart-store-advisor.vercel.app/dashboard"
+);
+
+redirectResponse.headers.append(
+  "Set-Cookie",
+  `merchant_session=${sessionValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`
+);
+
+return redirectResponse;
+    
   } catch (error) {
     return Response.json(
       {
