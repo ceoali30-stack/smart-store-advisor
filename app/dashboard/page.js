@@ -206,7 +206,7 @@ const productsWithCost = productsForDataQuality.filter(
   Number(dashboardData?.products_with_known_stock_count || 0);
 
 const productsInStockCount =
-  Number(dashboardData?.products_in_stock_count || 0);
+  Math.max(0, totalProductsCount - lowStockCount);
 
 const stockHealthScore =
   productsWithKnownStockCount > 0
