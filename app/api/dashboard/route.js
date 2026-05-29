@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { verifyMerchantSession } from "../../../lib/session";
+import { verifyMerchantSession } from "../../lib/session";
 
 import { createClient } from "@supabase/supabase-js";
 
