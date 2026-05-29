@@ -82,7 +82,7 @@ if (!merchantId) {
 
   try {
     const syncRes = await fetch(
-     `${baseUrl}/api/sync/status`
+     `${baseUrl}/api/sync/status`,
       { cache: "no-store" }
     );
     syncStatus = await syncRes.json();
@@ -92,7 +92,7 @@ if (!merchantId) {
 
   try {
     const salesRes = await fetch(
-      `${baseUrl}/api/sales/insights`
+      `${baseUrl}/api/sales/insights`,
       { cache: "no-store" }
     );
     salesInsights = await salesRes.json();
