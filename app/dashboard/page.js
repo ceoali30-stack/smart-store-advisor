@@ -34,7 +34,9 @@ const stockFilter = params?.stock || "all";
 
 const cookieStore = await cookies();
 const sessionCookie = cookieStore.get("merchant_session")?.value;
+  console.log("SESSION COOKIE =", sessionCookie);
 const merchantId = verifyMerchantSession(sessionCookie);
+  console.log("MERCHANT ID =", merchantId);
 
 if (!merchantId) {
   redirect("/");
