@@ -34,6 +34,9 @@ const stockFilter = params?.stock || "all";
 
 const cookieStore = await cookies();
 const sessionCookie = cookieStore.get("merchant_session")?.value;
+  const authHeaders = sessionCookie
+  ? { Cookie: `merchant_session=${sessionCookie}` }
+  : {};
 
 const merchantId =
   verifyMerchantSession(sessionCookie) ||
@@ -70,10 +73,13 @@ if (!merchantId) {
   let salesInsights = null;
 
   try {
-    const res = await fetch(
-    `${baseUrl}/api/dashboard`,
-      { cache: "no-store" }
-    );
+ const res = await fetch(
+  `${baseUrl}/api/dashboard`,
+  {
+    cache: "no-store",
+    headers: authHeaders,
+  }
+);
 
     data = await res.json();
 
@@ -85,10 +91,13 @@ if (!merchantId) {
   }
 
   try {
-    const syncRes = await fetch(
-     `${baseUrl}/api/sync/status`,
-      { cache: "no-store" }
-    );
+const syncRes = await fetch(
+  `${baseUrl}/api/sync/status`,
+  {
+    cache: "no-store",
+    headers: authHeaders,
+  }
+);
     syncStatus = await syncRes.json();
   } catch (err) {
     syncStatus = null;
@@ -96,9 +105,12 @@ if (!merchantId) {
 
   try {
     const salesRes = await fetch(
-      `${baseUrl}/api/sales/insights`,
-      { cache: "no-store" }
-    );
+  `${baseUrl}/api/sales/insights`,
+  {
+    cache: "no-store",
+    headers: authHeaders,
+  }
+);
     salesInsights = await salesRes.json();
   } catch (err) {
     salesInsights = null;
