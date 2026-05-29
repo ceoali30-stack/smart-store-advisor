@@ -14,8 +14,10 @@ export async function GET(request) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  const response = NextResponse.redirect(new URL("/dashboard", request.url));
-
+const response = NextResponse.redirect(
+  new URL(`/dashboard?merchant_id=${merchantId}`, request.url)
+);
+  
   response.cookies.set(
     "merchant_session",
     createMerchantSession(String(merchantId)),
