@@ -202,10 +202,16 @@ const productsWithCost = productsForDataQuality.filter(
   (product) => Number(product.cost_price || product.raw_data?.cost_price || 0) > 0
 ).length;
 
-  const stockHealthScore =
-    totalProductsCount > 0
-      ? Math.max(0, 25 - Math.min(25, (lowStockCount / totalProductsCount) * 25))
-      : 0;
+ const productsWithKnownStockCount =
+  Number(dashboardData?.products_with_known_stock_count || 0);
+
+const productsInStockCount =
+  Number(dashboardData?.products_in_stock_count || 0);
+
+const stockHealthScore =
+  productsWithKnownStockCount > 0
+    ? Math.min(25, (productsInStockCount / productsWithKnownStockCount) * 25)
+    : 0;
 
   const stagnantHealthScore =
     totalProductsCount > 0
