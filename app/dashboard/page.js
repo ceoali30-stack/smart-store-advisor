@@ -1,3 +1,4 @@
+import SyncStatusSection from "./components/SyncStatusSection";
 import InventoryWatchSection from "./components/InventoryWatchSection";
 import StagnantProductsSection from "./components/StagnantProductsSection";
 import ProfitabilitySection from "./components/ProfitabilitySection";
@@ -485,27 +486,10 @@ const dataQualityAlerts = [
   EmptyBox={EmptyBox}
 />
 
-      <section style={styles.section}>
-        <p style={styles.sectionEyebrow}>حالة المزامنة</p>
-        <h2 style={styles.sectionTitle}>آخر حالة اتصال مع سلة</h2>
-
-        <div style={styles.syncBox}>
-          <p>
-            الحالة:{" "}
-            <strong>
-              {syncStatus?.success === true
-                ? "متصل"
-                : syncStatus?.success === false
-                ? "يوجد تنبيه"
-                : "غير متوفر"}
-            </strong>
-          </p>
-          <p>
-            آخر تحديث:{" "}
-            <strong>{syncStatus?.last_sync_at || "غير متوفر"}</strong>
-          </p>
-        </div>
-      </section>
+<SyncStatusSection
+  syncStatus={syncStatus}
+  styles={styles}
+/>
     </main>
   );
 }
