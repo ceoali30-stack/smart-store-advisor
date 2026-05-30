@@ -1,4 +1,3 @@
-
 export default function SalesSummarySection({
   totalRevenueValue,
   totalOrdersCount,
@@ -14,50 +13,44 @@ export default function SalesSummarySection({
 }) {
   return (
     <section style={styles.section}>
+      <p style={styles.sectionEyebrow}>تحليلات المبيعات</p>
       <h2 style={styles.sectionTitle}>ملخص المبيعات</h2>
 
-      <div style={styles.kpiGrid}>
+      <div style={styles.cardsGrid}>
+        <KpiCard title="إجمالي الإيرادات" value={formatCurrency(totalRevenueValue)} />
+        <KpiCard title="إجمالي الطلبات" value={formatNumber(totalOrdersCount)} />
+        <KpiCard title="إجمالي القطع المباعة" value={formatNumber(totalItemsSold)} />
+
         <KpiCard
-          title="إجمالي المبيعات"
-          value={formatCurrency(totalRevenueValue)}
-          note="إجمالي قيمة الطلبات"
+          title="متوسط القطع في الطلب"
+          value={
+            averageItemsPerOrder
+              ? averageItemsPerOrder.toFixed(2)
+              : "غير متوفر"
+          }
+        />
+
+        <KpiCard title="أفضل منتج" value={topProduct} />
+
+        <KpiCard
+          title="عدد مرات بيع أفضل منتج"
+          value={
+            salesInsights?.top_products?.[0]?.sold_count
+              ? `${salesInsights.top_products[0].sold_count} عملية`
+              : "غير متوفر"
+          }
         />
 
         <KpiCard
-          title="عدد الطلبات"
-          value={formatNumber(totalOrdersCount)}
-          note="إجمالي الطلبات المسجلة"
+          title="الكمية المباعة لأفضل منتج"
+          value={
+            salesInsights?.top_products?.[0]?.quantity_sold
+              ? `${salesInsights.top_products[0].quantity_sold} قطعة`
+              : "غير متوفر"
+          }
         />
 
-        <KpiCard
-          title="المنتجات المباعة"
-          value={formatNumber(totalItemsSold)}
-          note="إجمالي الكميات المباعة"
-        />
-
-        <KpiCard
-          title="متوسط المنتجات لكل طلب"
-          value={formatNumber(averageItemsPerOrder)}
-          note="مؤشر مهم لزيادة متوسط السلة"
-        />
-      </div>
-
-      <div style={styles.insightBox}>
-        <div>
-          <strong>أفضل منتج:</strong>{" "}
-          {topProduct?.product_name || "لا توجد بيانات كافية"}
-        </div>
-
-        <div>
-          <strong>أفضل مدينة:</strong>{" "}
-          {topCity?.city || "لا توجد بيانات كافية"}
-        </div>
-
-        <div>
-          <strong>قراءة سريعة:</strong>{" "}
-          {salesInsights ||
-            "كلما زادت جودة بيانات الطلبات والمنتجات أصبحت التوصيات أدق."}
-        </div>
+        <KpiCard title="أعلى مدينة / منطقة" value={topCity} />
       </div>
     </section>
   );
