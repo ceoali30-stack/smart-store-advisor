@@ -1,3 +1,4 @@
+import DashboardHeader from "./components/DashboardHeader";
 import SyncStatusSection from "./components/SyncStatusSection";
 import InventoryWatchSection from "./components/InventoryWatchSection";
 import StagnantProductsSection from "./components/StagnantProductsSection";
@@ -13,8 +14,6 @@ import RecommendationsSection from "./RecommendationsSection";
 import TopProductsTable from "./TopProductsTable";
 import HealthSection from "./HealthSection";
 import NavBar from "./NavBar";
-import PrintButton from "./PrintButton";
-import SyncOrdersButton from "./SyncOrdersButton";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 const supabase = createClient(
@@ -365,31 +364,10 @@ const dataQualityAlerts = [
     <main style={styles.page}>
       <NavBar />
 
-      <div style={styles.topBar}>
-        <div>
-          <p style={styles.mutedWhite}>لوحة تحكم المتجر</p>
-          <h1 style={styles.mainTitle}>مستشار المتجر الذكي</h1>
-          <p style={styles.mutedWhite}>رقم المتجر: {merchantId}</p>
-        </div>
-
-    
-        <div style={styles.actions}>
-          <SyncOrdersButton merchantId={merchantId} />
-          <PrintButton />
-          <a
-            href={`/dashboard?merchant_id=${merchantId}`}
-            style={styles.refreshButton}
-          >
-            تحديث لوحة التحكم
-          </a>
-              <a
-  href={`/charts?merchant_id=${merchantId}`}
-  style={styles.refreshButton}
->
-  لوحة الرسوم والتحليلات
-</a>
-        </div>
-      </div>
+<DashboardHeader
+  merchantId={merchantId}
+  styles={styles}
+/>
 
 <div style={styles.demoNotice}>
   هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي.
