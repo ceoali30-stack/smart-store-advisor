@@ -1,3 +1,4 @@
+import DemoNotice from "./components/DemoNotice";
 import DashboardHeader from "./components/DashboardHeader";
 import SyncStatusSection from "./components/SyncStatusSection";
 import InventoryWatchSection from "./components/InventoryWatchSection";
@@ -369,10 +370,7 @@ const dataQualityAlerts = [
   styles={styles}
 />
 
-<div style={styles.demoNotice}>
-  هذه البيانات من متجر تجريبي، وقد لا تعكس أداء متجر حقيقي.
-  الهدف الحالي هو اختبار التحليلات وطريقة العرض.
-</div>
+<DemoNotice styles={styles} />
 
     <QuickNav styles={styles} />
               
