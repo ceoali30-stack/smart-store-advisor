@@ -1,3 +1,5 @@
+import SalesSummarySection from "./components/SalesSummarySection";
+
 import { cookies } from "next/headers";
 import { verifyMerchantSession } from "../lib/session";
 
