@@ -1,8 +1,6 @@
-
-
+import SalesSummarySection from "./components/SalesSummarySection";
 import { cookies } from "next/headers";
 import { verifyMerchantSession } from "../lib/session";
-
 import QuickNav from "./QuickNav";
 import KpiSummarySection from "./KpiSummarySection";
 import TodayPrioritiesSection from "./TodayPrioritiesSection";
@@ -15,7 +13,6 @@ import PrintButton from "./PrintButton";
 import SyncOrdersButton from "./SyncOrdersButton";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -430,43 +427,19 @@ const dataQualityAlerts = [
   PriorityCard={PriorityCard}
 />
 
-<section style={styles.section}>
-  <p style={styles.sectionEyebrow}>تحليلات المبيعات</p>
-  <h2 style={styles.sectionTitle}>ملخص المبيعات</h2>
-
-  <div style={styles.cardsGrid}>
-    <KpiCard title="إجمالي الإيرادات" value={formatCurrency(totalRevenueValue)} />
-    <KpiCard title="إجمالي الطلبات" value={formatNumber(totalOrdersCount)} />
-    <KpiCard title="إجمالي القطع المباعة" value={formatNumber(totalItemsSold)} />
-
-    <KpiCard
-      title="متوسط القطع في الطلب"
-      value={averageItemsPerOrder ? averageItemsPerOrder.toFixed(2) : "غير متوفر"}
-    />
-
-    <KpiCard title="أفضل منتج" value={topProduct} />
-
-    <KpiCard
-      title="عدد مرات بيع أفضل منتج"
-      value={
-        salesInsights?.top_products?.[0]?.sold_count
-          ? `${salesInsights.top_products[0].sold_count} عملية`
-          : "غير متوفر"
-      }
-    />
-
-    <KpiCard
-      title="الكمية المباعة لأفضل منتج"
-      value={
-        salesInsights?.top_products?.[0]?.quantity_sold
-          ? `${salesInsights.top_products[0].quantity_sold} قطعة`
-          : "غير متوفر"
-      }
-    />
-
-    <KpiCard title="أعلى مدينة / منطقة" value={topCity} />
-  </div>
-</section>
+<SalesSummarySection
+  totalRevenueValue={totalRevenueValue}
+  totalOrdersCount={totalOrdersCount}
+  totalItemsSold={totalItemsSold}
+  averageItemsPerOrder={averageItemsPerOrder}
+  topProduct={topProduct}
+  topCity={topCity}
+  salesInsights={salesInsights}
+  styles={styles}
+  KpiCard={KpiCard}
+  formatCurrency={formatCurrency}
+  formatNumber={formatNumber}
+/>
 
 <TopProductsTable
   salesInsights={salesInsights}
