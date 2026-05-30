@@ -585,7 +585,7 @@ const styles = {
 
   topBar: {
     color: "white",
-    padding: "24px",
+    padding: "16px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -625,15 +625,15 @@ quickNavLink: {
 },
 
   mainTitle: {
-    margin: "6px 0",
-    fontSize: "30px",
+    margin: "4px 0",
+    fontSize: "22px",
     fontWeight: "800",
   },
 
   mutedWhite: {
     margin: 0,
     color: "#cbd5e1",
-    fontSize: "14px",
+    fontSize: "12px",
   },
 
   actions: {
@@ -646,11 +646,11 @@ quickNavLink: {
   refreshButton: {
     background: "white",
     color: "#0f172a",
-    padding: "10px 16px",
+    padding: "8px 14px",
     borderRadius: "10px",
     textDecoration: "none",
     fontWeight: "700",
-    fontSize: "14px",
+    fontSize: "13px",
   },
 
   healthSection: {
