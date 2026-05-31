@@ -35,31 +35,25 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
-
 function formatCurrency(value) {
   const number = Number(value || 0);
   return `${number.toLocaleString("ar-SA")} ريال`;
 }
-
 function formatNumber(value) {
   return Number(value || 0).toLocaleString("ar-SA");
 }
-
 export default async function DashboardPage({ searchParams }) {
  const params = await searchParams;
 const stockFilter = params?.stock || "all";
-
 const cookieStore = await cookies();
 const sessionCookie = cookieStore.get("merchant_session")?.value;
   const authHeaders = sessionCookie
   ? { Cookie: `merchant_session=${sessionCookie}` }
   : {};
-
 const merchantId =
   verifyMerchantSession(sessionCookie) ||
   params?.merchant_id ||
   null;
-
 if (!merchantId) {
   redirect("/");
 }
@@ -68,7 +62,6 @@ if (!merchantId) {
     .select("merchant_id")
     .eq("merchant_id", String(merchantId))
     .maybeSingle();
-
   if (merchantError || !merchant) {
     return (
       <main style={styles.page}>
@@ -79,16 +72,13 @@ if (!merchantId) {
       </main>
     );
   }
-
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
     "https://smart-store-advisor.vercel.app";
-
   let data = null;
   let error = null;
   let syncStatus = null;
   let salesInsights = null;
-
   try {
  const res = await fetch(
   `${baseUrl}/api/dashboard`,
@@ -97,16 +87,13 @@ if (!merchantId) {
     headers: authHeaders,
   }
 );
-
     data = await res.json();
-
     if (!res.ok || data?.success === false) {
       error = data?.message || "Failed to load dashboard data";
     }
   } catch (err) {
     error = String(err);
   }
-
   try {
 const syncRes = await fetch(
   `${baseUrl}/api/sync/status`,
@@ -119,7 +106,6 @@ const syncRes = await fetch(
   } catch (err) {
     syncStatus = null;
   }
-
   try {
     const salesRes = await fetch(
   `${baseUrl}/api/sales/insights`,
@@ -132,7 +118,6 @@ const syncRes = await fetch(
   } catch (err) {
     salesInsights = null;
   }
-
   if (error) {
     return (
       <main style={styles.page}>
@@ -143,36 +128,29 @@ const syncRes = await fetch(
       </main>
     );
   }
-
   const products = data?.products || [];
   const lowStockProducts = data?.low_stock_products || [];
-
   const outOfStockProducts = lowStockProducts.filter(
     (product) => Number(product.quantity || 0) === 0
   );
-
   const onlyLowStockProducts = lowStockProducts.filter(
     (product) => Number(product.quantity || 0) > 0
   );
-
   const filteredLowStockProducts =
     stockFilter === "out"
       ? outOfStockProducts
       : stockFilter === "low"
       ? onlyLowStockProducts
       : lowStockProducts;
-
 const stagnantProducts = getStagnantProducts(
   lowStockProducts,
   salesInsights
 );
-
   const totalProductsCount = Number(
   products.length || lowStockProducts.length || 0
 );
   const lowStockCount = Number(lowStockProducts.length || 0);
   const stagnantCount = Number(stagnantProducts.length || 0);
-
   const totalOrdersCount = Number(salesInsights?.summary?.total_orders || 0);
   const totalRevenueValue = Number(salesInsights?.summary?.total_revenue || 0);
   const averageOrderValue = Number(
@@ -182,33 +160,25 @@ const stagnantProducts = getStagnantProducts(
   const averageItemsPerOrder = Number(
     salesInsights?.summary?.average_items_per_order || 0
   );
-
   const topProduct =
     salesInsights?.top_products?.[0]?.product_name ||
     salesInsights?.top_products?.[0]?.name ||
     "غير متوفر";
-
   const topCity =
     salesInsights?.regions_insights?.[0]?.city ||
     salesInsights?.regions_insights?.[0]?.region ||
     "غير متوفر";
-
 const productsForDataQuality =
   products.length > 0 ? products : lowStockProducts;
-
 const productsWithPrice = productsForDataQuality.filter(
   (product) => Number(product.price || 0) > 0
 ).length;
-
 const productsWithCost = productsForDataQuality.filter(
   (product) => Number(product.cost_price || product.raw_data?.cost_price || 0) > 0
 ).length;
-
  const productsWithKnownStockCount = totalProductsCount;
-
 const productsInStockCount =
   Math.max(0, totalProductsCount - lowStockCount);
-
 const {
   stockHealthScore,
   stagnantHealthScore,
@@ -228,9 +198,7 @@ const {
   productsWithPrice,
   productsWithCost,
 });
-
 const profitableProducts = getProfitableProducts(lowStockProducts);
-  
 const dataQualityAlerts = getDataQualityAlerts(
   productsForDataQuality,
   salesInsights
@@ -242,20 +210,15 @@ const marketingSuggestions = getMarketingSuggestions({
   averageOrderValue,
   formatCurrency,
 });
-
   return (
     <main style={styles.page}>
       <NavBar />
-
 <DashboardHeader
   merchantId={merchantId}
   styles={styles}
 />
-
 <DemoNotice styles={styles} />
-
-    <QuickNav styles={styles} />
-              
+    <QuickNav styles={styles} />         
       <HealthSection
   storeHealthPercentage={storeHealthPercentage}
   storeHealthLabel={storeHealthLabel}
@@ -268,7 +231,6 @@ const marketingSuggestions = getMarketingSuggestions({
   styles={styles}
   HealthItem={HealthItem}
 />
-
      <KpiSummarySection
   totalRevenueValue={totalRevenueValue}
   totalOrdersCount={totalOrdersCount}
@@ -281,14 +243,12 @@ const marketingSuggestions = getMarketingSuggestions({
   formatCurrency={formatCurrency}
   formatNumber={formatNumber}
 />
-
       <TodayPrioritiesSection
   outOfStockProducts={outOfStockProducts}
   onlyLowStockProducts={onlyLowStockProducts}
   styles={styles}
   PriorityCard={PriorityCard}
 />
-
 <SalesSummarySection
   totalRevenueValue={totalRevenueValue}
   totalOrdersCount={totalOrdersCount}
@@ -302,32 +262,27 @@ const marketingSuggestions = getMarketingSuggestions({
   formatCurrency={formatCurrency}
   formatNumber={formatNumber}
 />
-
 <TopProductsTable
   salesInsights={salesInsights}
   styles={styles}
   formatCurrency={formatCurrency}
   EmptyBox={EmptyBox}
 />
-  
       <ProfitabilitySection
   profitableProducts={profitableProducts}
   styles={styles}
   formatCurrency={formatCurrency}
   EmptyBox={EmptyBox}
 />
-
        <DataQualitySection
   dataQualityAlerts={dataQualityAlerts}
   styles={styles}
-/>
-      
+/>    
      <RecommendationsSection
   marketingSuggestions={marketingSuggestions}
   styles={styles}
   EmptyBox={EmptyBox}
 />
-
 <InventoryWatchSection
   merchantId={merchantId}
   stockFilter={stockFilter}
@@ -336,14 +291,12 @@ const marketingSuggestions = getMarketingSuggestions({
   formatCurrency={formatCurrency}
   EmptyBox={EmptyBox}
 />
-
 <StagnantProductsSection
   stagnantProducts={stagnantProducts}
   styles={styles}
   formatCurrency={formatCurrency}
   EmptyBox={EmptyBox}
 />
-
 <SyncStatusSection
   syncStatus={syncStatus}
   styles={styles}
