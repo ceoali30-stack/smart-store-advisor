@@ -132,3 +132,51 @@ export function getStoreHealth({
     storeHealthMessage,
   };
 }
+export function getDataQualityAlerts(
+  productsForDataQuality,
+  salesInsights
+) {
+  const productsWithoutCost = productsForDataQuality.filter(
+    (product) =>
+      Number(
+        product.cost_price ||
+          product.raw_data?.cost_price ||
+          0
+      ) <= 0
+  ).length;
+
+  const productsWithoutPrice = productsForDataQuality.filter(
+    (product) => Number(product.price || 0) <= 0
+  ).length;
+
+  const productsWithoutName = productsForDataQuality.filter(
+    (product) => !product.name
+  ).length;
+
+  const ordersWithoutCity = Number(
+    salesInsights?.summary?.orders_without_city || 0
+  );
+
+  return [
+    {
+      title: "منتجات بدون سعر تكلفة",
+      value: productsWithoutCost,
+      message: "تؤثر على حساب الربحية والهامش.",
+    },
+    {
+      title: "منتجات بدون سعر بيع",
+      value: productsWithoutPrice,
+      message: "تؤثر على دقة تحليل الإيرادات.",
+    },
+    {
+      title: "منتجات بدون اسم",
+      value: productsWithoutName,
+      message: "تجعل التقارير أقل وضوحًا.",
+    },
+    {
+      title: "طلبات بدون مدينة",
+      value: ordersWithoutCity,
+      message: "تؤثر على تحليل المناطق والمدن.",
+    },
+  ];
+}
