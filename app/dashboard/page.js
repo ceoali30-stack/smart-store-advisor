@@ -3,6 +3,7 @@ import {
   getProfitableProducts,
   getStoreHealth,
   getDataQualityAlerts,
+  getMarketingSuggestions,
 } from "./services/dashboardCalculations";
 import {
   HealthItem,
@@ -234,39 +235,13 @@ const dataQualityAlerts = getDataQualityAlerts(
   productsForDataQuality,
   salesInsights
 );
-  const marketingSuggestions = [];
-
-  if (topProduct !== "غير متوفر") {
-    marketingSuggestions.push({
-      title: "روّج للمنتج الأعلى مبيعًا",
-      message: `المنتج "${topProduct}" يحقق مبيعات جيدة. اجعله ظاهرًا في الصفحة الرئيسية أو أضفه إلى حملة قصيرة.`,
-    });
-  }
-
-  if (outOfStockProducts.length > 0) {
-    marketingSuggestions.push({
-      title: "أعد توفير المنتجات النافدة",
-      message:
-        "لديك منتجات نفد مخزونها. هذه المنتجات قد تسبب خسارة مبيعات مباشرة إذا كانت ما زالت مطلوبة.",
-    });
-  }
-
-  if (onlyLowStockProducts.length > 0) {
-    marketingSuggestions.push({
-      title: "راجع المنتجات منخفضة المخزون",
-      message:
-        "تجنب إطلاق حملات قوية على منتجات مخزونها منخفض حتى لا تنفد سريعًا وتخسر الطلبات.",
-    });
-  }
-
-  if (averageOrderValue > 0) {
-    marketingSuggestions.push({
-      title: "ارفع متوسط قيمة الطلب",
-      message: `متوسط قيمة الطلب هو ${formatCurrency(
-        averageOrderValue
-      )}. جرّب عروض مثل الشحن المجاني فوق مبلغ معين أو خصم عند شراء منتجين.`,
-    });
-  }
+const marketingSuggestions = getMarketingSuggestions({
+  topProduct,
+  outOfStockProducts,
+  onlyLowStockProducts,
+  averageOrderValue,
+  formatCurrency,
+});
 
   return (
     <main style={styles.page}>
