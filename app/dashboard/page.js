@@ -1,6 +1,7 @@
 import {
   getStagnantProducts,
   getProfitableProducts,
+  getStoreHealth,
 } from "./services/dashboardCalculations";
 import {
   HealthItem,
@@ -206,63 +207,25 @@ const productsWithCost = productsForDataQuality.filter(
 const productsInStockCount =
   Math.max(0, totalProductsCount - lowStockCount);
 
-const stockHealthScore =
-  totalProductsCount > 0
-    ? Math.max(0, 25 - Math.min(25, (lowStockCount / totalProductsCount) * 10))
-    : 0;
-  const stagnantHealthScore =
-    totalProductsCount > 0
-      ? Math.max(
-          0,
-          20 - Math.min(20, (stagnantCount / totalProductsCount) * 20)
-        )
-      : 0;
-
-  const salesHealthScore =
-    totalOrdersCount > 0 && totalRevenueValue > 0 ? 20 : 0;
-
-  const averageOrderHealthScore =
-    averageOrderValue >= 100
-      ? 15
-      : averageOrderValue >= 50
-      ? 10
-      : averageOrderValue > 0
-      ? 5
-      : 0;
-
-  const productDataHealthScore =
-    totalProductsCount > 0
-      ? Math.round(
-          ((productsWithPrice + productsWithCost) / (totalProductsCount * 2)) *
-            20
-        )
-      : 0;
-
-  const storeHealthPercentage = Math.round(
-    stockHealthScore +
-      stagnantHealthScore +
-      salesHealthScore +
-      averageOrderHealthScore +
-      productDataHealthScore
-  );
-
-  const storeHealthLabel =
-    storeHealthPercentage >= 85
-      ? "ممتاز"
-      : storeHealthPercentage >= 70
-      ? "جيد"
-      : storeHealthPercentage >= 50
-      ? "متوسط"
-      : "يحتاج تحسين";
-
-  const storeHealthMessage =
-    storeHealthPercentage >= 85
-      ? "المتجر في حالة قوية، ركّز على التوسع وزيادة الحملات."
-      : storeHealthPercentage >= 70
-      ? "المتجر جيد، لكن توجد فرص لتحسين المخزون والمبيعات."
-      : storeHealthPercentage >= 50
-      ? "المتجر متوسط ويحتاج متابعة المنتجات الراكدة والمخزون."
-      : "المتجر يحتاج تدخل واضح في المخزون والمبيعات وبيانات المنتجات.";
+const {
+  stockHealthScore,
+  stagnantHealthScore,
+  salesHealthScore,
+  averageOrderHealthScore,
+  productDataHealthScore,
+  storeHealthPercentage,
+  storeHealthLabel,
+  storeHealthMessage,
+} = getStoreHealth({
+  totalProductsCount,
+  lowStockCount,
+  stagnantCount,
+  totalOrdersCount,
+  totalRevenueValue,
+  averageOrderValue,
+  productsWithPrice,
+  productsWithCost,
+});
 
 const profitableProducts = getProfitableProducts(lowStockProducts);
   
