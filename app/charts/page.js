@@ -1,3 +1,5 @@
+import ChartBox from "./components/ChartBox";
+import BarItem from "./components/BarItem";
 import TopCustomersChart from "./TopCustomersChart";
 import ChartsQuickNav from "./ChartsQuickNav";
 import { createClient } from "@supabase/supabase-js";
@@ -16,86 +18,6 @@ function getBaseUrl() {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return "http://localhost:3000";
 }
-
-function BarItem({ label, value, max }) {
- const numericValue = Number(String(value || 0).replace(/[^\d.]/g, ""));
-const percent = max > 0 ? Math.min(100, Math.round((numericValue / max) * 100)) : 0;
-
-  return (
-    <div style={{ marginBottom: "14px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-        <strong>{label}</strong>
-        <span>{value}</span>
-      </div>
-
-      <div
-        style={{
-          height: "12px",
-          background: "#e5e7eb",
-          borderRadius: "999px",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            width: `${percent}%`,
-            height: "100%",
-            background: "#111827",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function ChartBox({ title, children, accent = "#2563eb" }) {
-  return (
-    <section
-      className="print-card"
-      style={{
-        position: "relative",
-        background: "white",
-        padding: "22px",
-        borderRadius: "18px",
-        boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
-        border: "1px solid #e5e7eb",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: "6px",
-          height: "100%",
-          background: accent,
-        }}
-      />
-
-      <h2
-        style={{
-          margin: "0 0 14px",
-          fontSize: "15px",
-          fontWeight: "800",
-          color: "#64748b",
-        }}
-      >
-        {title}
-      </h2>
-
-     <div
-  style={{
-    color: "#0f172a",
-    lineHeight: "1.6",
-  }}
->
-  {children}
-</div>
-    </section>
-  );
-}
-
 export default async function ChartsPage({ searchParams }) {
   const params = await searchParams;
   const merchantId = params?.merchant_id;
