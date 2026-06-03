@@ -1,11 +1,8 @@
-
 import ChartsHeader from "./components/ChartsHeader";
-import ChartsQuickNav from "./ChartsQuickNav";
 import PrintButton from "../dashboard/PrintButton";
 import ChartBox from "./components/ChartBox";
 import BarItem from "./components/BarItem";
 import TopCustomersChart from "./TopCustomersChart";
-import ChartsQuickNav from "./ChartsQuickNav";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
@@ -15,7 +12,6 @@ const supabase = createClient(
 );
 import SaudiRegionsMap from "./SaudiRegionsMap";
 import ChartsClient from "./ChartsClient";
-import PrintButton from "../dashboard/PrintButton";
 
 function getBaseUrl() {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
