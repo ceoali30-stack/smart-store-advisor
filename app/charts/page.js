@@ -1,3 +1,4 @@
+import MerchantDecisionsSection from "./components/MerchantDecisionsSection";
 import ExecutiveInsightCards from "./components/ExecutiveInsightCards";
 import ChartsSummaryCards from "./components/ChartsSummaryCards";
 import ChartsHeader from "./components/ChartsHeader";
@@ -7,14 +8,12 @@ import BarItem from "./components/BarItem";
 import TopCustomersChart from "./TopCustomersChart";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 import SaudiRegionsMap from "./SaudiRegionsMap";
 import ChartsClient from "./ChartsClient";
-
 function getBaseUrl() {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
@@ -23,17 +22,14 @@ function getBaseUrl() {
 export default async function ChartsPage({ searchParams }) {
   const params = await searchParams;
   const merchantId = params?.merchant_id;
-
   if (!merchantId) {
     redirect("/");
   }
-
   const { data: merchant, error: merchantError } = await supabase
     .from("merchants")
     .select("merchant_id")
     .eq("merchant_id", String(merchantId))
     .maybeSingle();
-
   if (merchantError || !merchant) {
     return (
       <main style={{ padding: "40px", fontFamily: "Arial, sans-serif" }}>
@@ -42,21 +38,17 @@ export default async function ChartsPage({ searchParams }) {
       </main>
     );
   }
-
   const baseUrl = "https://smart-store-advisor.vercel.app";
   let salesInsights = null;
-
   try {
     const res = await fetch(
       `${baseUrl}/api/sales/insights?merchant_id=${merchantId}`,
       { cache: "no-store" }
     );
-
     salesInsights = await res.json();
   } catch (error) {
     salesInsights = null;
   }
-
   const summary = salesInsights?.summary || {};
   const topProducts = salesInsights?.top_products || [];
   const topCategories = salesInsights?.top_categories || [];
@@ -72,7 +64,6 @@ const topSalesChannel = salesInsights?.sales_channels_insights?.[0];
     ...topProducts.map((item) => Number(item.total_quantity || item.quantity || 0)),
     1
   );
-
   const maxCategoryValue = Math.max(
     ...topCategories.map((item) => Number(item.total_quantity || item.quantity || 0)),
     1
@@ -81,7 +72,6 @@ const maxCustomerValue = Math.max(
   ...topCustomers.map((item) => Number(item.total_revenue || 0)),
   1
 );
-  
  return (
   <main
     style={{
@@ -105,60 +95,10 @@ const maxCustomerValue = Math.max(
   topSalesChannel={topSalesChannel}
   recommendations={recommendations}
 />
-    <section
-id="merchant-decisions"
- className="print-section"
-  style={{
-    background: "white",
-    padding: "22px",
-    borderRadius: "22px",
-    boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
-    border: "1px solid #e5e7eb",
-    borderRight: "6px solid #f97316",
-    marginBottom: "24px",
-  }}
->
-  <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
-    ملخص قرارات التاجر
-  </h2>
-
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-      gap: "14px",
-    }}
-  >
-    <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "14px", minHeight: "110px" }}>
-      <strong style={{ color: "#9a3412" }}>متوسط قيمة الطلب:</strong>
-      <p style={{ margin: "8px 0 0", color: "#334155" }}>
-        {summary.average_order_value || 0} ريال — كلما ارتفع متوسط الفاتورة زادت فرصة الربح من نفس عدد العملاء.
-      </p>
-    </div>
-
-    <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "14px", minHeight: "110px" }}>
-      <strong style={{ color: "#1d4ed8" }}>إجمالي الطلبات:</strong>
-      <p style={{ margin: "8px 0 0", color: "#334155" }}>
-        {summary.total_orders || 0} طلب — هذا الرقم يساعد على قياس نشاط المتجر وحجم الطلب الفعلي.
-      </p>
-    </div>
-
-    <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "14px", padding: "14px", minHeight: "110px" }}>
-      <strong style={{ color: "#15803d" }}>أفضل مدينة طلبًا:</strong>
-      <p style={{ margin: "8px 0 0", color: "#334155" }}>
-        {topCities.length > 0 ? topCities[0].city || "غير محدد" : "غير متوفر"} — يمكن استهداف هذه المدينة بعروض خاصة أو حملات تسويقية محلية.
-      </p>
-    </div>
-
-    <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "14px", minHeight: "110px" }}>
-      <strong style={{ color: "#0f172a" }}>ملاحظة بيانات:</strong>
-      <p style={{ margin: "8px 0 0", color: "#334155" }}>
-        إذا كانت المنتجات أو الأقسام غير ظاهرة، فهذا يعني أن بيانات عناصر الطلب أو تصنيف المنتجات لم تكتمل بعد في المزامنة.
-      </p>
-    </div>
-  </div>
-</section>
-
+<MerchantDecisionsSection
+  summary={summary}
+  topCities={topCities}
+/>
  <section
  className="print-section"
   style={{
@@ -174,7 +114,6 @@ id="merchant-decisions"
   <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
     توصيات ذكية للتاجر
   </h2>
-
   <div
     style={{
       display: "grid",
@@ -188,14 +127,12 @@ id="merchant-decisions"
         ركّز العروض أو الإعلانات على {topCities?.[0]?.city || "المدينة الأعلى طلبًا"} لأنها تظهر كأقوى منطقة طلب حاليًا.
       </p>
     </div>
-
     <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: "14px", padding: "14px" }}>
       <strong style={{ color: "#1d4ed8" }}>ارفع متوسط السلة</strong>
       <p style={{ margin: "8px 0 0", color: "#334155" }}>
         جرّب عرضًا مثل: اشترِ بمبلغ أعلى واحصل على خصم أو شحن مجاني.
       </p>
     </div>
-
     <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "14px" }}>
       <strong style={{ color: "#9a3412" }}>حسّن بيانات المنتجات</strong>
       <p style={{ margin: "8px 0 0", color: "#334155" }}>
@@ -204,7 +141,6 @@ id="merchant-decisions"
     </div>
   </div>
 </section>
-
 <div
 id="regions-map"
   className="print-section"
@@ -215,7 +151,6 @@ id="regions-map"
 >
   <SaudiRegionsMap regionsInsights={regionsInsights} />
 </div>
-
 <section
   id="abandoned-carts"
   className="print-section"
@@ -238,7 +173,6 @@ id="regions-map"
   >
     تحليل السلات المتروكة
   </h2>
-
   <div
     style={{
       display: "grid",
@@ -263,7 +197,6 @@ id="regions-map"
       >
         عدد السلات المتروكة
       </div>
-
       <div
         style={{
           marginTop: "8px",
@@ -275,7 +208,6 @@ id="regions-map"
         {abandonedCartsSummary?.count || 0}
       </div>
     </div>
-
     <div
       style={{
         background: "#fff7ed",
@@ -293,7 +225,6 @@ id="regions-map"
       >
         قيمة السلات المتروكة
       </div>
-
       <div
         style={{
           marginTop: "8px",
@@ -305,7 +236,6 @@ id="regions-map"
         {abandonedCartsSummary?.total_value || 0} ريال
       </div>
     </div>
-
     <div
       style={{
         background: "#eff6ff",
@@ -323,7 +253,6 @@ id="regions-map"
       >
         ملاحظة ذكية
       </div>
-
       <p
         style={{
           margin: "10px 0 0",
@@ -337,7 +266,6 @@ id="regions-map"
     </div>
   </div>
 </section>
-  
 <section
   id="abandoned-carts"
   className="print-section"
@@ -354,7 +282,6 @@ id="regions-map"
   <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
     السلات المتروكة
   </h2>
-
   <div style={{ color: "#64748b", lineHeight: "1.8" }}>
     لا توجد بيانات سلات متروكة حاليًا، أو لم تظهر بعد من مزامنة سلة.
   </div>
@@ -387,7 +314,6 @@ id="regions-map"
         >
           بيانات المنتجات
         </div>
-
         <div
           style={{
             marginTop: "8px",
@@ -398,7 +324,6 @@ id="regions-map"
         >
           {topProducts.length > 0 ? "مكتملة" : "ناقصة"}
         </div>
-
         <p
           style={{
             margin: "8px 0 0",
@@ -412,7 +337,6 @@ id="regions-map"
             : "لا يمكن تحديد المنتجات الأعلى مبيعًا حتى تظهر عناصر الطلبات."}
         </p>
       </div>
-
       <div
         style={{
           background: topCategories.length > 0 ? "#f0fdf4" : "#fef2f2",
@@ -432,7 +356,6 @@ id="regions-map"
         >
           بيانات الأقسام
         </div>
-
         <div
           style={{
             marginTop: "8px",
@@ -443,7 +366,6 @@ id="regions-map"
         >
           {topCategories.length > 0 ? "مكتملة" : "ناقصة"}
         </div>
-
         <p
           style={{
             margin: "8px 0 0",
@@ -457,7 +379,6 @@ id="regions-map"
             : "لا يمكن تحليل أداء الأقسام حتى ترتبط المنتجات بتصنيفاتها."}
         </p>
       </div>
-
       <div
         style={{
           background: topCities.length > 0 ? "#f0fdf4" : "#fef2f2",
@@ -488,7 +409,6 @@ id="regions-map"
         >
           {topCities.length > 0 ? "مكتملة" : "ناقصة"}
         </div>
-
         <p
           style={{
             margin: "8px 0 0",
@@ -502,7 +422,6 @@ id="regions-map"
             : "لا توجد بيانات مدن كافية لتحليل التوزيع الجغرافي."}
         </p>
       </div>
-
       <div
         style={{
           background: topCustomers.length > 0 ? "#f0fdf4" : "#fef2f2",
@@ -522,7 +441,6 @@ id="regions-map"
         >
           بيانات العملاء
         </div>
-
         <div
           style={{
             marginTop: "8px",
@@ -533,7 +451,6 @@ id="regions-map"
         >
           {topCustomers.length > 0 ? "مكتملة" : "ناقصة"}
         </div>
-
         <p
           style={{
             margin: "8px 0 0",
@@ -548,7 +465,6 @@ id="regions-map"
         </p>
       </div>
     </div>
-
     <div
       style={{
         marginTop: "16px",
@@ -567,7 +483,6 @@ id="regions-map"
     </div>
   </ChartBox>
 </div>
-
 <div id="regions-analysis">
   <ChartBox title="تحليل المناطق الإدارية" accent="#14b8a6">
     {regionsInsights.length > 0 ? (
@@ -594,7 +509,6 @@ id="regions-map"
                 {index === 0 ? "🏆 " : ""}
                 {region.region || "غير محدد"}
               </strong>
-
               <p
                 style={{
                   margin: "6px 0 0",
@@ -605,26 +519,22 @@ id="regions-map"
                 المدن: {(region.cities || []).join("، ") || "غير محدد"}
               </p>
             </div>
-
             <div style={{ textAlign: "center" }}>
               <div style={{ color: "#64748b", fontSize: "12px" }}>
                 الطلبات
               </div>
               <strong>{region.total_orders || 0}</strong>
             </div>
-
             <div style={{ textAlign: "center" }}>
               <div style={{ color: "#64748b", fontSize: "12px" }}>
                 الإيرادات
               </div>
               <strong>{region.total_revenue || 0} ريال</strong>
             </div>
-
             <div style={{ textAlign: "center" }}>
               <div style={{ color: "#64748b", fontSize: "12px" }}>
                 متوسط الطلب
               </div>
-
               <strong>
                 {region.total_orders > 0
                   ? Math.round(
@@ -683,7 +593,6 @@ id="regions-map"
       </div>
     )}
   </ChartBox>
-
   <ChartBox title="أكثر الأقسام مبيعًا">
     {topCategories.length > 0 ? (
       topCategories.slice(0, 5).map((item, index) => (
@@ -705,7 +614,6 @@ id="regions-map"
       </div>
     )}
   </ChartBox>
-
 <TopCustomersChart
   topCustomers={topCustomers}
   ChartBox={ChartBox}
