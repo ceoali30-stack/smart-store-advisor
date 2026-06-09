@@ -1,32 +1,13 @@
+import { regionsConstant } from "./constants/regionsConstant";
 "use client";
-
 import { useEffect, useMemo, useRef, useState } from "react";
-
-const regionsConstant = {
-  SA01: { nameAr: "منطقة الرياض", cities: "الرياض، الخرج، المجمعة" },
-  SA02: { nameAr: "منطقة مكة المكرمة", cities: "مكة، جدة، الطائف" },
-  SA03: { nameAr: "منطقة المدينة المنورة", cities: "المدينة، ينبع، العلا" },
-  SA04: { nameAr: "المنطقة الشرقية", cities: "الدمام، الخبر، الأحساء" },
-  SA05: { nameAr: "منطقة القصيم", cities: "بريدة، عنيزة، الرس" },
-  SA06: { nameAr: "منطقة حائل", cities: "حائل" },
-  SA07: { nameAr: "منطقة تبوك", cities: "تبوك، الوجه، ضباء" },
-  SA08: { nameAr: "منطقة الحدود الشمالية", cities: "عرعر، رفحاء، طريف" },
-  SA09: { nameAr: "منطقة جازان", cities: "جازان، صبيا، أبو عريش" },
-  SA10: { nameAr: "منطقة نجران", cities: "نجران" },
-  SA11: { nameAr: "منطقة الباحة", cities: "الباحة، بلجرشي" },
-  SA12: { nameAr: "منطقة الجوف", cities: "سكاكا، القريات" },
-  SA14: { nameAr: "منطقة عسير", cities: "أبها، خميس مشيط" },
-};
-
 export default function SaudiRegionsMap() {
   const containerRef = useRef(null);
-
   const [svgContent, setSvgContent] = useState("");
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [insights, setInsights] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
   const [colorMetric, setColorMetric] = useState("revenue");
-  
   useEffect(() => {
     async function loadSvg() {
       try {
@@ -37,7 +18,6 @@ export default function SaudiRegionsMap() {
         console.error("Error loading sa.svg:", error);
       }
     }
-
     loadSvg();
   }, []);
 
@@ -51,10 +31,8 @@ export default function SaudiRegionsMap() {
           setLoadingInsights(false);
           return;
         }
-
         const res = await fetch(`/api/sales/insights?merchant_id=${merchantId}`);
         const data = await res.json();
-
         if (data?.success) {
           setInsights(data);
         }
@@ -64,64 +42,48 @@ export default function SaudiRegionsMap() {
         setLoadingInsights(false);
       }
     }
-
     loadInsights();
   }, []);
-
   const regionStats = useMemo(() => {
     if (!selectedRegion || !insights?.regions_insights) return null;
-
     return insights.regions_insights.find(
       (item) => item.region === selectedRegion.nameAr
     );
   }, [selectedRegion, insights]);
-
   useEffect(() => {
     if (!svgContent || !containerRef.current) return;
-
     const svg = containerRef.current.querySelector("svg");
     if (!svg) return;
-
    svg.removeAttribute("width");
 svg.removeAttribute("height");
-
 svg.style.width = "100%";
 svg.style.height = "700px";
 svg.style.display = "block";
 svg.style.margin = "0 auto";
-
 svg.setAttribute(
   "viewBox",
   "0 0 1000 1000"
 );
-
 svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-
     const paths = svg.querySelectorAll("path");
-
 const maxRevenue = Math.max(
   ...(insights?.regions_insights || []).map(
     (r) => r.total_revenue || 0
   ),
   1
 );
-
 function getRegionColor(regionName, regionId) {
   const regionData = insights?.regions_insights?.find(
     (r) => r.region === regionName
   );
-
   if (!regionData) return "#e5e7eb";
-
 const value =
   colorMetric === "orders"
     ? regionData.total_orders || 0
     : regionData.total_revenue || 0;
-  
   const mappedRegionsNames = Object.values(regionsConstant).map(
   (r) => r.nameAr
 );
-
 const maxValue = Math.max(
   ...(insights?.regions_insights || [])
     .filter((r) => mappedRegionsNames.includes(r.region))
@@ -132,20 +94,15 @@ const maxValue = Math.max(
     ),
   1
 );
-
   const ratio = value / maxValue;
-
   if (ratio > 0.7) return "#166534";
   if (ratio > 0.4) return "#16a34a";
  if (ratio > 0) return "#4ade80";
-  
   return "#e5e7eb";
 }
-    
 paths.forEach((path) => {
   const id = path.getAttribute("id");
   const region = regionsConstant[id];
-
   if (!region) {
     path.style.cursor = "default";
     path.style.fill = "#e5e7eb";
@@ -153,37 +110,30 @@ paths.forEach((path) => {
     path.style.strokeWidth = "1";
     return;
   }
-
   path.style.cursor = "pointer";
   path.style.fill = getRegionColor(region.nameAr, id);
   path.style.stroke = "#ffffff";
   path.style.strokeWidth = "1";
-
   const handleMouseEnter = () => {
     path.style.opacity = "0.8";
   };
-
   const handleMouseLeave = () => {
     path.style.opacity = "1";
     path.style.fill = getRegionColor(region.nameAr, id);
   };
-
   path.addEventListener("mouseenter", handleMouseEnter);
   path.addEventListener("mouseleave", handleMouseLeave);
-
   path._cleanup = () => {
     path.removeEventListener("mouseenter", handleMouseEnter);
     path.removeEventListener("mouseleave", handleMouseLeave);
   };
 });
-
     return () => {
       paths.forEach((path) => {
         if (path._cleanup) path._cleanup();
       });
     };
  }, [svgContent, selectedRegion, insights, colorMetric]);
-
  return (
   <section className="w-full py-2" dir="rtl">
     <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
@@ -197,7 +147,6 @@ paths.forEach((path) => {
           </p>
         </div>
       </div>
-
       <div
   style={{
     display: "grid",
@@ -219,7 +168,6 @@ paths.forEach((path) => {
     overflow: "hidden",
   }}
 >
-
 <div
   style={{
     display: "flex",
@@ -258,7 +206,6 @@ paths.forEach((path) => {
     حسب الطلبات
   </button>
 </div>
-  
           <div
             ref={containerRef}
            style={{
@@ -272,7 +219,6 @@ paths.forEach((path) => {
               const id = path.getAttribute("id");
               const region = regionsConstant[id];
               if (!region) return;
-
               setSelectedRegion({ id, ...region });
             }}
             dangerouslySetInnerHTML={{ __html: svgContent }}
@@ -317,7 +263,6 @@ paths.forEach((path) => {
   ))}
 </div>
         </div>
-
         <aside
   style={{
     background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
@@ -375,7 +320,6 @@ paths.forEach((path) => {
         >
           تحليل المنطقة
         </p>
-
         <h3
           style={{
             fontSize: "34px",
@@ -386,7 +330,6 @@ paths.forEach((path) => {
           {selectedRegion.nameAr}
         </h3>
       </div>
-
       <div
         style={{
           display: "grid",
@@ -434,7 +377,6 @@ paths.forEach((path) => {
             >
               {item.title}
             </p>
-
             <p
               style={{
                 fontSize: "24px",
@@ -447,7 +389,6 @@ paths.forEach((path) => {
           </div>
         ))}
       </div>
-
       <div
         style={{
           display: "flex",
