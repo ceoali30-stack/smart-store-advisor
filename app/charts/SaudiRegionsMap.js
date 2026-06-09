@@ -225,6 +225,7 @@ paths.forEach((path) => {
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />
 <MapLegend />
+            </div>
         <aside
   style={{
     background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
