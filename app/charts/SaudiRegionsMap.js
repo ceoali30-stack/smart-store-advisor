@@ -1,5 +1,5 @@
-import { regionsConstant } from "./constants/regionsConstant";
 "use client";
+import { regionsConstant } from "./constants/regionsConstant";
 import { useEffect, useMemo, useRef, useState } from "react";
 export default function SaudiRegionsMap() {
   const containerRef = useRef(null);
