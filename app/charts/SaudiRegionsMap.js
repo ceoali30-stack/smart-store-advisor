@@ -214,7 +214,6 @@ paths.forEach((path) => {
             onClick={(e) => {
               const path = e.target.closest("path");
               if (!path) return;
-
               const id = path.getAttribute("id");
               const region = regionsConstant[id];
               if (!region) return;
@@ -222,11 +221,12 @@ paths.forEach((path) => {
             }}
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />
-<MapLegend />
-<RegionDetailsPanel
-  selectedRegion={selectedRegion}
-  regionStats={regionStats}
-/>
+          <MapLegend />
+        </div>
+        <RegionDetailsPanel
+          selectedRegion={selectedRegion}
+          regionStats={regionStats}
+        />
       </div>
     </div>
   </section>
