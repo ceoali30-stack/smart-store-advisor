@@ -117,26 +117,6 @@ id="regions-map"
 <AbandonedCartsSection
   abandonedCartsSummary={abandonedCartsSummary}
 />
-<section
-  id="abandoned-carts"
-  className="print-section"
-  style={{
-    background: "white",
-    padding: "22px",
-    borderRadius: "22px",
-    boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
-    border: "1px solid #e5e7eb",
-    borderRight: "6px solid #ef4444",
-    marginBottom: "24px",
-  }}
->
-  <h2 style={{ margin: "0 0 18px", fontSize: "18px", color: "#0f172a" }}>
-    السلات المتروكة
-  </h2>
-  <div style={{ color: "#64748b", lineHeight: "1.8" }}>
-    لا توجد بيانات سلات متروكة حاليًا، أو لم تظهر بعد من مزامنة سلة.
-  </div>
-</section>
 <div id="data-quality">
   <ChartBox title="مؤشرات جودة البيانات" accent="#6366f1">
     <div
