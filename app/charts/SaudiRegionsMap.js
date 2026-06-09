@@ -1,4 +1,5 @@
 "use client";
+import MapLegend from "./components/MapLegend";
 import { regionsConstant } from "./constants/regionsConstant";
 import { useEffect, useMemo, useRef, useState } from "react";
 export default function SaudiRegionsMap() {
@@ -223,46 +224,7 @@ paths.forEach((path) => {
             }}
             dangerouslySetInnerHTML={{ __html: svgContent }}
           />
-            <div
-  style={{
-    display: "flex",
-    gap: "14px",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "18px",
-    flexWrap: "wrap",
-    fontSize: "13px",
-    color: "#475569",
-  }}
->
-  {[
-    { label: "مبيعات عالية", color: "#166534" },
-    { label: "مبيعات متوسطة", color: "#16a34a" },
-    { label: "مبيعات منخفضة", color: "#4ade80" },
-    { label: "لا توجد بيانات", color: "#e5e7eb" },
-  ].map((item) => (
-    <div
-      key={item.label}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
-      }}
-    >
-      <span
-        style={{
-          width: "14px",
-          height: "14px",
-          borderRadius: "4px",
-          background: item.color,
-          border: "1px solid #cbd5e1",
-        }}
-      />
-      <span>{item.label}</span>
-    </div>
-  ))}
-</div>
-        </div>
+<MapLegend />
         <aside
   style={{
     background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
