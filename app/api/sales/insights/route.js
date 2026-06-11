@@ -1,3 +1,7 @@
+import {
+  getOrderTotal,
+  getTopKey,
+} from "./services/salesHelpers";
 import { cookies } from "next/headers";
 import { verifyMerchantSession } from "../../../lib/session";
 
@@ -59,22 +63,6 @@ if (abandonedCartsError) {
 const safeOrders = orders || [];
 const safeItems = items || [];
 const safeAbandonedCarts = abandonedCarts || [];
-
-const getOrderTotal = (order) =>
-  Number(
-    order.total_amount ||
-      order.total ||
-      order.amount ||
-      order.grand_total ||
-      0
-  );
-
-const getTopKey = (obj) => {
-  const entries = Object.entries(obj || {});
-  if (entries.length === 0) return "لا توجد بيانات";
-  return entries.sort((a, b) => b[1] - a[1])[0][0];
-};
-
 const totalOrders = safeOrders.length;
 
 const totalRevenue = safeOrders.reduce(
