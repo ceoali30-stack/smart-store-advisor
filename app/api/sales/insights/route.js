@@ -9,7 +9,11 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY);
 export async function GET(request) {try {const cookieStore = await cookies();
 const sessionCookie = cookieStore.get("merchant_session")?.value;
-const merchantId = verifyMerchantSession(sessionCookie);
+const { searchParams } = new URL(request.url);
+
+const merchantId =
+  verifyMerchantSession(sessionCookie) ||
+  searchParams.get("merchant_id");
 if (!merchantId) {
   return Response.json(
     { success: false, message: "Unauthorized" },
