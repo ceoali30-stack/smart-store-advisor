@@ -107,8 +107,8 @@ const syncRes = await fetch(
     syncStatus = null;
   }
   try {
-    const salesRes = await fetch(
-  `${baseUrl}/api/sales/insights`,
+  const salesRes = await fetch(
+  `${baseUrl}/api/sales/insights?merchant_id=${merchantId}`,
   {
     cache: "no-store",
     headers: authHeaders,
